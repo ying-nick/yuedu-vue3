@@ -75,6 +75,7 @@ module.exports = {
       },
       //搜索代理LRY_API(小说，漫画)
       "/novel/*": {
+        // timeout: 10000,
         target: "http://api.pingcc.cn/", // 目标服务器地址
         secure: false, // 目标服务器地址是否是安全协议
         changeOrigin: true, // 是否修改来源, 为true时会让目标服务器以为是webpack-dev-server发出的请求!服务端和服务端的请求是没有跨域的
