@@ -5,6 +5,8 @@ import 'element-plus/lib/theme-chalk/index.css';
 import router from './router'
 import store from './store'
 import 'lib-flexible'
+import 'dayjs/locale/zh-cn'
+import locale from 'element-plus/lib/locale/lang/zh-cn'
 
 const app = createApp(App)
-app.use(ElementPlus).use(store).use(router).mount('#app')
+app.use(ElementPlus,{locale}).use(store).use(router).mount('#app')
