@@ -1,0 +1,9 @@
+export const LunboURL = "/api/getlunbo"    //获取图片轮播的地址
+export const NewsList = "/api/getnewslist"  //获取新闻列表地址
+export const CommentsURL = "/api/getcomments"   //:id  获取评论列表
+export const NewInfoURL ="/api/getnew"     //:id  新闻详情
+export const PostCommentURL = "/api/postcomment"    //:id  发表评论   POST
+export const ImageCategoryURL ="/api/getimgcategory"  //:id  获取图片分类列表
+export const ImagesURL ="/api/getimages"   //:id 获取图片数组
+export const ImageInfoURL ="/api/getimageInfo"  //:id  获取图片信息
+export const ThumimagesURL ="/api/getthumimages" //:id  获取图片的缩略图数组
