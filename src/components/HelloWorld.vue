@@ -39,8 +39,8 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'HelloWorld',
   props: {
-    msg: String
-  }
+    msg: String,
+  },
 })
 </script>
 
@@ -48,6 +48,7 @@ export default defineComponent({
 <style scoped lang="less">
 h3 {
   margin: 40px 0 0;
+  font-size: 57px;
 }
 ul {
   list-style-type: none;
