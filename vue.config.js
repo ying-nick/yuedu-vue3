@@ -1,20 +1,17 @@
 // 官网配置： https://cli.vuejs.org/zh/config/#filenamehashing
 
-const path = require('path')
-const debug = process.env.NODE_ENV !== 'production'
+const path = require("path");
+const debug = process.env.NODE_ENV !== "production";
 
 module.exports = {
-
   // 部署应用包时的基本URL，如果是生产环境，部署到 /cli-study/dist 路径；如果是开发环境，部署到根路径
-  publicPath: !debug
-    ? '/'
-    : '/',
+  publicPath: !debug ? "/" : "/",
 
   // 输出文件路径
-  outputDir: 'dist',
+  outputDir: "dist",
 
   // 放置生成的静态资源 (js、css、img、fonts) 的 (相对于 outputDir 的) 目录。
-  assetsDir: 'static',
+  assetsDir: "static",
 
   // 默认情况下，生成的静态资源在它们的文件名中包含了 hash 以便更好的控制缓存
   filenameHashing: true,
@@ -35,45 +32,54 @@ module.exports = {
   configureWebpack: {
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, './src')
+        "@": path.resolve(__dirname, "./src")
       }
     }
   },
 
   // webpack的链式操作，允许对内部的 webpack 配置进行更细粒度的修改
   // 参考： https://cli.vuejs.org/zh/guide/webpack.html#%E9%93%BE%E5%BC%8F%E6%93%8D%E4%BD%9C-%E9%AB%98%E7%BA%A7
-  chainWebpack: (config) => {
+  chainWebpack: config => {
     if (debug) {
-
       // 本地开发配置
     } else {
-
       // 生产开发配置
     }
   },
 
   // css的相关配置
-  css: {
-  },
+  css: {},
 
   // 所有 webpack-dev-server 的选项都支持
   devServer: {
     open: true,
-    host: '127.0.0.1',
+    host: "127.0.0.1",
     port: 3000,
     https: false,
     hotOnly: false,
     proxy: {
       //凡是以api开头的请求路径都用下面的代理
-      '/api/*': {
-        target: 'http://1.15.157.130:8899/', // 目标服务器地址
-        secure: false,                    // 目标服务器地址是否是安全协议
-        changeOrigin: true,               // 是否修改来源, 为true时会让目标服务器以为是webpack-dev-server发出的请求!服务端和服务端的请求是没有跨域的
-        //pathRewrite: {'^/api': '/'}     // 将/api开头的请求地址, /api 改为 /, 即 /api/xx 改为 /xx
+      "/api/*": {
+        target: "", // 目标服务器地址
+        secure: false, // 目标服务器地址是否是安全协议
+        changeOrigin: true, // 是否修改来源, 为true时会让目标服务器以为是webpack-dev-server发出的请求!服务端和服务端的请求是没有跨域的
+        pathRewrite: { "^/api": "/" } // 将/api开头的请求地址, /api 改为 /, 即 /api/xx 改为 /xx
+      },
+      "/novel/*": {
+        target: "http://api.pingcc.cn/", // 目标服务器地址
+        secure: false, // 目标服务器地址是否是安全协议
+        changeOrigin: true, // 是否修改来源, 为true时会让目标服务器以为是webpack-dev-server发出的请求!服务端和服务端的请求是没有跨域的
+        pathRewrite: { "^/novel": "/" } // 将/api开头的请求地址, /api 改为 /, 即 /api/xx 改为 /xx
+      },
+      "/lgn/*": {
+        target: "https://y-nick.com:3000/", // 目标服务器地址
+        secure: false, // 目标服务器地址是否是安全协议
+        changeOrigin: true, // 是否修改来源, 为true时会让目标服务器以为是webpack-dev-server发出的请求!服务端和服务端的请求是没有跨域的
+        pathRewrite: { "^/lgn": "/" } // 将/api开头的请求地址, /api 改为 /, 即 /api/xx 改为 /xx
       }
     }
   },
 
   // 第三方插件配置
   pluginOptions: {}
-}
+};
