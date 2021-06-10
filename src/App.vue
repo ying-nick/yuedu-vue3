@@ -1,7 +1,6 @@
 <template>
   <div id="container">
     <headx></headx>
-    <router-view></router-view>
   </div>
 
 </template>
@@ -17,7 +16,4 @@ export default defineComponent({
 </script>
 
 <style lang="less">
-#container {
-  background-color: #f5f5f5;
-}
 </style>

@@ -29,7 +29,9 @@
     <div class="navsheet">
       <el-tabs v-model="state.activeName" @tab-click="handleClick">
         <el-tab-pane label="首页" name="0">首页</el-tab-pane>
-        <el-tab-pane label="分类" name="1"></el-tab-pane>
+        <el-tab-pane label="分类" name="1">
+          <detail></detail>
+        </el-tab-pane>
         <el-tab-pane label="排行榜" name="2">排行榜</el-tab-pane>
         <el-tab-pane label="漫画" name="3">漫画</el-tab-pane>
       </el-tabs>
@@ -37,34 +39,28 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
-import { useRouter } from "vue-router";
-import category from "@/views/Category.vue";
-
-type IState = {
-  activeName: string;
-  input: string;
-};
-
+import { defineComponent, ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import detail from '@/views/Category.vue'
 export default defineComponent({
-  // components: {
-  //   category
-  // },
-  setup() {
-    const router = useRouter();
-    const state = reactive({
-      activeName: "0",
-      input: ""
-    });
-    function handleClick() {
+  components: {
+    detail,
+  },
+  setup(props, context) {
+    const router = useRouter()
+    let state = reactive({
+      activeName: '0',
+      input: '',
+    })
+    function handleClick(row: any, event: any) {
       // console.log(row,event)
-      // router.push('/')
+      router.push('/detail')
     }
     function search() {
       //  console.log(state.input)
     }
     function tologin() {
-      router.push("/login");
+      router.push('/login')
     }
     function tohome() {}
     return {
@@ -72,10 +68,10 @@ export default defineComponent({
       handleClick,
       search,
       tologin,
-      tohome
-    };
-  }
-});
+      tohome,
+    }
+  },
+})
 </script>
 
 <style lang="less" scoped>
@@ -121,7 +117,7 @@ export default defineComponent({
     }
     .el-tabs__item {
       color: white;
-      font: "Helvetica Neue Light", "Microsoft YaHei", sans-serif, "宋体";
+      font: 'Helvetica Neue Light', 'Microsoft YaHei', sans-serif, '宋体';
     }
   }
 }
