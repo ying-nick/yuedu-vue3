@@ -59,29 +59,55 @@ module.exports = {
     hotOnly: false,
     proxy: {
       //凡是以api开头的请求路径都用下面的代理
+      //追书神器代理
       "/zs/*": {
         target: "http://api.zhuishushenqi.com/", // 目标服务器地址
         secure: false, // 目标服务器地址是否是安全协议
         changeOrigin: true, // 是否修改来源, 为true时会让目标服务器以为是webpack-dev-server发出的请求!服务端和服务端的请求是没有跨域的
         pathRewrite: { "^/zs": "/" } // 将/api开头的请求地址, /api 改为 /, 即 /api/xx 改为 /xx
       },
+      //追书图片
+      "/pic/*": {
+        target: "https://statics.zhuishushenqi.com/", // 目标服务器地址
+        secure: false, // 目标服务器地址是否是安全协议
+        changeOrigin: true, // 是否修改来源, 为true时会让目标服务器以为是webpack-dev-server发出的请求!服务端和服务端的请求是没有跨域的
+        pathRewrite: { "^/pic": "/" } // 将/api开头的请求地址, /api 改为 /, 即 /api/xx 改为 /xx
+      },
+      //搜索代理LRY_API(小说，漫画)
       "/novel/*": {
+        // timeout: 10000,
         target: "http://api.pingcc.cn/", // 目标服务器地址
         secure: false, // 目标服务器地址是否是安全协议
         changeOrigin: true, // 是否修改来源, 为true时会让目标服务器以为是webpack-dev-server发出的请求!服务端和服务端的请求是没有跨域的
         pathRewrite: { "^/novel": "/" } // 将/api开头的请求地址, /api 改为 /, 即 /api/xx 改为 /xx
       },
+      //登录注册
       "/lgn/*": {
         target: "https://y-nick.com:3000/", // 目标服务器地址
         secure: false, // 目标服务器地址是否是安全协议
         changeOrigin: true, // 是否修改来源, 为true时会让目标服务器以为是webpack-dev-server发出的请求!服务端和服务端的请求是没有跨域的
         pathRewrite: { "^/lgn": "/" } // 将/api开头的请求地址, /api 改为 /, 即 /api/xx 改为 /xx
       },
+      //精品小说屋代理
       "/jp/*": {
         target: "http://47.106.243.172:8888/book/", // 目标服务器地址
         secure: false, // 目标服务器地址是否是安全协议
         changeOrigin: true, // 是否修改来源, 为true时会让目标服务器以为是webpack-dev-server发出的请求!服务端和服务端的请求是没有跨域的
         pathRewrite: { "^/jp": "/" } // 将/api开头的请求地址, /api 改为 /, 即 /api/xx 改为 /xx
+      },
+      //有妖气api
+      "/yyq/*": {
+        target: "https://app.u17.com/v3/appV3_3/android/phone/", // 目标服务器地址
+        secure: false, // 目标服务器地址是否是安全协议
+        changeOrigin: true, // 是否修改来源, 为true时会让目标服务器以为是webpack-dev-server发出的请求!服务端和服务端的请求是没有跨域的
+        pathRewrite: { "^/yyq": "/" } // 将/api开头的请求地址, /api 改为 /, 即 /api/xx 改为 /xx
+      },
+      //漫画站api
+      "/mhz/*": {
+        target: "http://puppeteer.hlzblog.top/api/", // 目标服务器地址
+        secure: false, // 目标服务器地址是否是安全协议
+        changeOrigin: true, // 是否修改来源, 为true时会让目标服务器以为是webpack-dev-server发出的请求!服务端和服务端的请求是没有跨域的
+        pathRewrite: { "^/mhz": "/" } // 将/api开头的请求地址, /api 改为 /, 即 /api/xx 改为 /xx
       }
     }
   },
