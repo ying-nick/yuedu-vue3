@@ -5,14 +5,10 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
-// import layout from "@/components/layout.vue"
+
 export default defineComponent({
-  components:{
-      // layout
-  },
-  setup() {
-    
-  },
+  components: {},
+  setup() {},
 })
 </script>
 
