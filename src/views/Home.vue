@@ -1,4 +1,6 @@
+
 <template>
+<<<<<<< HEAD
   <div class="container">
     <div class="firstCo">
       <el-row :gutter="4">
@@ -21,10 +23,14 @@
       </el-row>
     </div>
     <div></div>
+=======
+  <div>
+    <button @click="btn">跳转</button>
+>>>>>>> c7281049850ecf5ffe56492c15d8bc447a4f14da
   </div>
 </template>
-
 <script lang="ts">
+<<<<<<< HEAD
 import { defineComponent,reactive ,toRefs} from "vue";
 import zgaxios from "@/tools/zgaxios";
 import { ClickListsUrl } from "@/tools/api";
@@ -66,3 +72,22 @@ export default defineComponent({
   margin: 0 Auto;
 }
 </style>
+=======
+import { defineComponent } from 'vue'
+import zgaxios from '@/tools/zgaxios'
+import { detailUrl } from '@/tools/api'
+export default defineComponent({
+  setup() {
+    const btn = async () => {
+      let {
+        data: {
+          data: { data },
+        },
+      } = await zgaxios('GET', detailUrl)
+      console.log(data[0])
+    }
+    return { btn }
+  },
+})
+</script>
+>>>>>>> c7281049850ecf5ffe56492c15d8bc447a4f14da

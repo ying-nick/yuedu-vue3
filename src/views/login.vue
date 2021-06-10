@@ -1,19 +1,14 @@
 <template>
-  <div id="container">
-    <headx></headx>
+  <div>
+    登录界面
   </div>
-
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
-import headx from '@/components/header.vue'
+
 export default defineComponent({
-  components: {
-    headx,
-  },
+  components: {},
   setup() {},
 })
 </script>
 
-<style lang="less">
-</style>
