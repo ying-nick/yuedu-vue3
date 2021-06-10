@@ -15,7 +15,6 @@
           </el-input>
         </el-col>
         <el-col :span="8">
-     
               <div class="dv">
                   <span>我的书架</span>
                   <span @click="tologin">登录</span>
@@ -26,13 +25,12 @@
       </el-row>
     </div>
     <div class="navsheet">
-      <el-tabs v-model="state.activeName" @tab-click="handleClick">
-        <el-tab-pane label="首页" name="0"></el-tab-pane>
-        <el-tab-pane label="分类" name="1"></el-tab-pane>
-        <el-tab-pane label="排行榜" name="2"></el-tab-pane>
-        <el-tab-pane label="漫画" name="3"></el-tab-pane>
-
-      </el-tabs>
+      <el-menu :default-active="state.activeIndex" router class="el-menu-demo" mode="horizontal" @select="handleSelect">
+        <el-menu-item index="/home">首页</el-menu-item>
+        <el-menu-item index="/charts">排行榜</el-menu-item>
+        <el-menu-item index="/catagory">分类</el-menu-item>
+        <el-menu-item index="/cartoons">漫画</el-menu-item>
+      </el-menu>
     </div>
   </div>
 </template>
@@ -43,14 +41,11 @@ export default defineComponent({
   setup(props,context) {
     const router=useRouter()
     let state = reactive({
-      activeName: "0",
+      activeIndex: "0",
       input:''
       
     });
-    function handleClick(row:any,event:any) {
-      // console.log(row,event)
-      // router.push('/')
-    }
+   
     function search(){
       //  console.log(state.input)
     }
@@ -60,12 +55,14 @@ export default defineComponent({
     function tohome(){
       
     }
+    function handleSelect(){
+
+    }
     return {
       state,
-      handleClick,
       search,
       tologin,
-      tohome
+      handleSelect
     };
   }
 });
@@ -105,21 +102,7 @@ export default defineComponent({
   
 }
 .navsheet {
-  /deep/.el-tabs__nav-wrap {
-    background-color: #f80;
-    .el-tabs__nav {
-      margin-left: 300px;
-    }
-    .el-tabs__active-bar {
-      background-color: white;
-      height: 4px;
-      //  margin-left: 300px;
-    }
-    .el-tabs__item {
-      color: white;
-      font: "Helvetica Neue Light", "Microsoft YaHei", sans-serif, "宋体";
-    }
-  }
+  
   
 }
 </style>
