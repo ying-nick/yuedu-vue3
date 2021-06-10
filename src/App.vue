@@ -1,16 +1,18 @@
 <template>
   <div id="container">
-    <home></home>
+     <headx></headx>
+    <router-view></router-view>
+    
   </div>
   
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
-import home from "@/views/Home.vue"
+import headx from "@/components/header.vue"
 export default defineComponent({
-  components:{
-     home
-  },
+   components:{
+      headx
+   },
   setup() {
     
   },
