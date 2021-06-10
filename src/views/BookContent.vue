@@ -20,7 +20,7 @@
             }}</a>
           </div>
         </div>
-        <div class="Countfoot">正文({{ count.length + 1 }})</div>
+        <div class="Countfoot">正文({{ totalList.length + 1 }})</div>
         <el-row :gutter="20">
           <el-col :span="8" v-for="item in count" :key="item" class="flow">
             <div class="grid-content bg-purple now" id="now">
@@ -33,12 +33,10 @@
       <div class="footer">
         <el-pagination
           layout="prev, pager, next"
-          :total="count.length"
+          :total="totalList.length"
           page-size="100"
           hide-on-single-page
           @current-change="sizechange"
-          @prev-click="prev"
-          @next-click="next"
         ></el-pagination>
       </div>
     </el-main>
@@ -52,8 +50,8 @@ import zgaxios from "../tools/zgaxios";
 export default defineComponent({
   setup(props, context) {
     const text: any = reactive({
-      list: [],//根据page来获取
-      count: [],
+      list: [],
+      count: [],//根据page来获取
       totalList:[]//总数据
     });
     const getList = async () => {
@@ -69,25 +67,22 @@ export default defineComponent({
       let { data } = await zgaxios("GET", `${detailList}11710`);
       // console.log(data);
       if (data.code == 0) {
-        text.count = data.data.data;
+        text.totalList = data.data.data;
+        text.count = text.totalList.slice(0,99)
         console.log(data.data.data);
       }
     };
     getcatalogue();
     const sizechange = function(page) {
-      console.log("sizechangesizechangesizechangesizechange",page);
+      console.log(page);
+      let first = (page-1)*100
+      let last = page*100
+      text.count = text.totalList.slice(first,last)
     };
-    const prev = function() {
-      console.log("2");
-    };
-    const next = function() {
-      console.log("3");
-    };
+
     return {
       ...toRefs(text),
       sizechange,
-      prev,
-      next
     };
   }
 });
