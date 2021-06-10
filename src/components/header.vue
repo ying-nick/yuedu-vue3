@@ -68,6 +68,9 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+.container{
+  background-color: #f5f5f5;
+}
 .head {
   width: auto;
   height: 100px;
