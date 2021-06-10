@@ -1,0 +1,1 @@
+export const ClickListsUrl = "/zs/ranking/54d43437d47d13ff21cad58b"    //获取点击榜的地址
