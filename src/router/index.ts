@@ -11,6 +11,14 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     name: 'login',
     component: () => import( '../views/login.vue')
+  },
+  {
+    path: '/category',
+    name: 'Category',
+    component: () => import( '../views/Category.vue'),
+    meta: {
+      title: "分类"
+    }
   }
 ]
 

@@ -2,64 +2,71 @@
   <div class="container">
     <div class="head">
       <el-row :gutter="20">
-        <el-col :span="8"><span class="title">悦读</span></el-col>
+        <el-col :span="8">
+          <span class="title">悦读</span>
+        </el-col>
         <el-col :span="8">
           <el-input
-            
             v-model="state.input"
             placeholder="书名、作者、关键字"
             size="medium"
             suffix-icon="el-icon-search"
           >
-            <template #append ><span @click="search">搜索</span></template>
+            <template #append>
+              <span @click="search">搜索</span>
+            </template>
           </el-input>
         </el-col>
         <el-col :span="8">
-     
-              <div class="dv">
-                  <span>我的书架</span>
-                  <span @click="tologin">登录</span>
-                  <span>注册</span>
-              </div>
-       
+          <div class="dv">
+            <span>我的书架</span>
+            <span @click="tologin">登录</span>
+            <span>注册</span>
+          </div>
         </el-col>
       </el-row>
     </div>
     <div class="navsheet">
       <el-tabs v-model="state.activeName" @tab-click="handleClick">
         <el-tab-pane label="首页" name="0">首页</el-tab-pane>
-        <el-tab-pane label="分类" name="1">分类</el-tab-pane>
+        <el-tab-pane label="分类" name="1"></el-tab-pane>
         <el-tab-pane label="排行榜" name="2">排行榜</el-tab-pane>
         <el-tab-pane label="漫画" name="3">漫画</el-tab-pane>
-
       </el-tabs>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, reactive } from "vue";
-import { useRouter  } from "vue-router"
+import { defineComponent, reactive } from "vue";
+import { useRouter } from "vue-router";
+import category from "@/views/Category.vue";
+
+type IState = {
+  activeName: string;
+  input: string;
+};
+
 export default defineComponent({
-  setup(props,context) {
-    const router=useRouter()
-    let state = reactive({
+  // components: {
+  //   category
+  // },
+  setup() {
+    const router = useRouter();
+    const state = reactive({
       activeName: "0",
-      input:''
-      
+      input: ""
     });
-    function handleClick(row:any,event:any) {
+    function handleClick() {
       // console.log(row,event)
       // router.push('/')
     }
-    function search(){
+    function search() {
       //  console.log(state.input)
     }
-    function tologin(){
-       router.push('/login')
+    function tologin() {
+      router.push("/login");
     }
-    function tohome(){
-      
-    }
+    function tohome() {}
     return {
       state,
       handleClick,
@@ -77,32 +84,29 @@ export default defineComponent({
   height: 100px;
   line-height: 100px;
   text-align: center;
-  /deep/.el-input__inner{
+  /deep/.el-input__inner {
     border-color: rgb(255, 136, 0);
-    
   }
-  .dv{
-    span{
-        margin: 0 20px;
-        cursor: pointer;
+  .dv {
+    span {
+      margin: 0 20px;
+      cursor: pointer;
     }
-    span:hover{
-        color:#f80 ;
-        
+    span:hover {
+      color: #f80;
     }
-   
   }
-  .title{
+  .title {
     font-size: 30px;
-    font-style:italic;
+    font-style: italic;
   }
-  /deep/.el-input-group__append, .el-input-group__prepend{
-       background-color: #f80;
-       border: 1px solid #f80;
-       color: white;
-       cursor: pointer;
+  /deep/.el-input-group__append,
+  .el-input-group__prepend {
+    background-color: #f80;
+    border: 1px solid #f80;
+    color: white;
+    cursor: pointer;
   }
-  
 }
 .navsheet {
   /deep/.el-tabs__nav-wrap {
@@ -120,6 +124,5 @@ export default defineComponent({
       font: "Helvetica Neue Light", "Microsoft YaHei", sans-serif, "宋体";
     }
   }
-  
 }
 </style>
