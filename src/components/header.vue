@@ -18,7 +18,7 @@
      
               <div class="dv">
                   <span>我的书架</span>
-                  <span>登录</span>
+                  <span @click="tologin">登录</span>
                   <span>注册</span>
               </div>
        
@@ -55,7 +55,7 @@ export default defineComponent({
       //  console.log(state.input)
     }
     function tologin(){
-       state.activeName=''
+       router.push('/login')
     }
     function tohome(){
       
@@ -66,7 +66,6 @@ export default defineComponent({
       search,
       tologin,
       tohome
-  
     };
   }
 });
