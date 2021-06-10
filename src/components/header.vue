@@ -27,10 +27,10 @@
     </div>
     <div class="navsheet">
       <el-tabs v-model="state.activeName" @tab-click="handleClick">
-        <el-tab-pane label="首页" name="0">首页</el-tab-pane>
-        <el-tab-pane label="分类" name="1">分类</el-tab-pane>
-        <el-tab-pane label="排行榜" name="2">排行榜</el-tab-pane>
-        <el-tab-pane label="漫画" name="3">漫画</el-tab-pane>
+        <el-tab-pane label="首页" name="0"></el-tab-pane>
+        <el-tab-pane label="分类" name="1"></el-tab-pane>
+        <el-tab-pane label="排行榜" name="2"></el-tab-pane>
+        <el-tab-pane label="漫画" name="3"></el-tab-pane>
 
       </el-tabs>
     </div>
