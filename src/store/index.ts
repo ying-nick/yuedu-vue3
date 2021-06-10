@@ -3,9 +3,10 @@ import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
   state: {
-    details:[]
+    searchList:[]
   },
   mutations: {
+    
   },
   actions: {
   },

@@ -5,9 +5,9 @@
         <el-col :span="6" class="col"><span class="title">悦读</span></el-col>
         <el-col :span="12" class="col">
           <div class="seach">
-            <el-input placeholder="请输入书名，关键字" v-model="input2" class="inp">
+            <el-input placeholder="请输入书名，关键字" v-model="input2" class="inp" @keyup.enter="bookSeach">
               <template #append>
-                <el-button icon="el-icon-search"></el-button>
+                <el-button icon="el-icon-search" @click="bookSeach"></el-button>
               </template>
             </el-input>
           </div>
@@ -38,18 +38,33 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
-import detail from '@/views/Detail.vue'
+import { ElMessage } from 'element-plus'
+import zgaxios from '@/tools/zgaxios'
+import { searchUrl } from '@/tools/api'
+
 export default defineComponent({
-  components: {
-    detail,
-  },
   setup(props, context) {
     const router = useRouter()
     let state = reactive({
       input2: '',
     })
-    function search() {
-      //  console.log(state.input)
+    function bookSeach() {
+      if (!state.input2) return
+      // console.log(state.input2)
+      search()
+    }
+    const search = async () => {
+      try {
+        let {
+          data: {
+            data: { data },
+          },
+        } = await zgaxios('GET', `${searchUrl}/${state.input2}/1/10`)
+        console.log(data)
+      } catch (error) {
+        // console.log(error)
+        ElMessage.error('错误，该书不存在或已被移除')
+      }
     }
     function tologin() {
       router.push('/login')
@@ -57,7 +72,7 @@ export default defineComponent({
     function tohome() {}
     return {
       ...toRefs(state),
-      search,
+      bookSeach,
       tologin,
       tohome,
     }
@@ -91,14 +106,18 @@ export default defineComponent({
           height: 50%;
           width: 80%;
           border: 1px solid #f80;
+          outline: none;
           .el-input-group__append {
             background-color: #f80;
             // border: 1px solid #f80;
             color: white;
             cursor: pointer;
+            height: 100%;
           }
           input {
             height: 100%;
+            outline: none;
+            border: none;
           }
         }
       }
@@ -134,12 +153,13 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f80;
+  // background-color: #f80;
   .menu {
-    width: 80%;
+    width: 95%;
     background-color: #f80;
     li {
       color: #fff;
+      margin-left: 50px;
     }
   }
 }
