@@ -31,21 +31,30 @@
         </el-row>
       </div>
       <div class="footer">
-       <el-pagination background layout="prev, pager, next" :total="1000">
-      </el-pagination>
+        <el-pagination
+          layout="prev, pager, next"
+          :total="count.length"
+          page-size="100"
+          hide-on-single-page
+          @current-change="sizechange"
+          @prev-click="prev"
+          @next-click="next"
+        ></el-pagination>
       </div>
     </el-main>
   </el-container>
 </template>
 <script lang='ts'>
+import Pagination from "../components/Pagination/index.vue";
 import { defineComponent, toRefs, ref, reactive } from "vue";
 import { detailUrl, detailList } from "../tools/api";
 import zgaxios from "../tools/zgaxios";
 export default defineComponent({
   setup(props, context) {
     const text: any = reactive({
-      list: [],
-      count: []
+      list: [],//根据page来获取
+      count: [],
+      totalList:[]//总数据
     });
     const getList = async () => {
       let { data } = await zgaxios("GET", `${detailUrl}斗罗大陆`);
@@ -57,7 +66,6 @@ export default defineComponent({
     };
     getList();
     const getcatalogue = async () => {
-      // console.log(text.list.fictionId);
       let { data } = await zgaxios("GET", `${detailList}11710`);
       // console.log(data);
       if (data.code == 0) {
@@ -66,8 +74,20 @@ export default defineComponent({
       }
     };
     getcatalogue();
+    const sizechange = function(page) {
+      console.log("sizechangesizechangesizechangesizechange",page);
+    };
+    const prev = function() {
+      console.log("2");
+    };
+    const next = function() {
+      console.log("3");
+    };
     return {
-      ...toRefs(text)
+      ...toRefs(text),
+      sizechange,
+      prev,
+      next
     };
   }
 });
