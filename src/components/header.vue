@@ -30,7 +30,7 @@
       <el-tabs v-model="state.activeName" @tab-click="handleClick">
         <el-tab-pane label="首页" name="0">首页</el-tab-pane>
         <el-tab-pane label="分类" name="1">
-          <detail></detail>
+          <Category></Category>
         </el-tab-pane>
         <el-tab-pane label="排行榜" name="2">排行榜</el-tab-pane>
         <el-tab-pane label="漫画" name="3">漫画</el-tab-pane>
@@ -41,10 +41,11 @@
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import detail from '@/views/Category.vue'
+import Category from '@/views/Category.vue'
+
 export default defineComponent({
   components: {
-    detail,
+    Category,
   },
   setup(props, context) {
     const router = useRouter()
