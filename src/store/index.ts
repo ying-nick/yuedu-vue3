@@ -1,15 +1,19 @@
 import { createStore } from 'vuex'
 import createPersistedState from "vuex-persistedstate";
 
-export default createStore({
+const store = {
   state: {
-    details:[]
+    bookId: '',
   },
   mutations: {
+    
   },
   actions: {
   },
   modules: {
   },
+  getters: {
+  },
   plugins: [createPersistedState()]
-})
+}
+export default createStore(store)
