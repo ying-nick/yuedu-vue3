@@ -24,7 +24,7 @@
       </el-row>
     </div>
     <div class="navsheet">
-      <el-menu :default-active="activeIndex" router class="el-menu-demo" mode="horizontal" @select="handleSelect">
+      <el-menu :default-active="activeIndex" router class="el-menu-demo menu" mode="horizontal" @select="handleSelect">
         <el-menu-item index="/home">首页</el-menu-item>
         <el-menu-item index="/">排行榜</el-menu-item>
         <el-menu-item index="/detail">分类</el-menu-item>
@@ -130,8 +130,18 @@ export default defineComponent({
   }
 }
 .navsheet {
-  background-color: #f80;
   width: 100%;
   height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f80;
+  .menu {
+    width: 80%;
+    background-color: #f80;
+    li {
+      color: #fff;
+    }
+  }
 }
 </style>
