@@ -39,28 +39,34 @@
 import { defineComponent, ref, reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { useStore } from 'vuex'
 import zgaxios from '@/tools/zgaxios'
 import { searchUrl } from '@/tools/api'
 
 export default defineComponent({
   setup(props, context) {
+    //获取store中的信息
+    const { state, getters, dispatch, commit } = useStore()
     const router = useRouter()
-    let state = reactive({
+    let states = reactive({
       input2: '',
     })
     function bookSeach() {
-      if (!state.input2) return
+      if (!states.input2) return
       // console.log(state.input2)
       search()
     }
     const search = async () => {
       try {
         let {
-          data: {
-            data: { data },
-          },
-        } = await zgaxios('GET', `${searchUrl}/${state.input2}/1/10`)
-        console.log(data)
+          data: { data },
+        } = await zgaxios('GET', `${searchUrl}/${states.input2}/1/10`)
+        if (!data) throw new Error('无数据')
+        // console.log(data)
+        data.title=states.input2
+        commit('getSearchData', data)
+        states.input2 = ''
+        router.push('/searchList')
       } catch (error) {
         // console.log(error)
         ElMessage.error('错误，该书不存在或已被移除')
@@ -71,7 +77,7 @@ export default defineComponent({
     }
     function tohome() {}
     return {
-      ...toRefs(state),
+      ...toRefs(states),
       bookSeach,
       tologin,
       tohome,
