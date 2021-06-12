@@ -39,10 +39,10 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElLoading } from 'element-plus'
 import { useStore } from 'vuex'
 import zgaxios from '@/tools/zgaxios'
-import { searchUrl } from '@/tools/api'
+import { searchUrl, searchUrlYnv } from '@/tools/api'
 
 export default defineComponent({
   setup(props, context) {
@@ -56,6 +56,17 @@ export default defineComponent({
       if (!states.input2) return
       // console.log(state.input2)
       search()
+    }
+    const openFullScreen2 = () => {
+      const loading = ElLoading.service({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)',
+      })
+      setTimeout(() => {
+        loading.close()
+      }, 2000)
     }
     const search = async () => {
       /*   try {
@@ -72,19 +83,53 @@ export default defineComponent({
         // console.log(error)
         ElMessage.error('错误，该书不存在或已被移除')
       } */
+
       try {
-        let {
-          data,
-        } = await zgaxios('GET', `${searchUrl}/${states.input2}/1/10`)
-        if (!data) throw new Error('无数据')
-        // console.log(data)
-        data.title = states.input2
-        commit('getSearchData', data)
-        states.input2 = ''
-        router.push('/searchList')
+        const loading = ElLoading.service({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)',
+        })
+        let { data } = await zgaxios('GET', searchUrlYnv, {
+          params: {
+            keyWord: states.input2,
+            pageNum: 1,
+            pageSize: 1000,
+          },
+        })
+        let { result } = data
+        // console.log(result)
+        if (result.code == 1009) {
+          loading.close()
+          ElMessage.error('操作太频繁，请10s后再试')
+          return
+        } else if (result.code == 102) {
+          loading.close()
+          ElMessage.error('错误，该书不存在或已被移除')
+          return
+        } else if (result.code == 0) {
+          loading.close()
+          let book = data.data
+          let ynv = {
+            title: states.input2,
+            list: book.list,
+            size: book.pageSize,
+            count: book.total,
+            from: book.pageNum,
+          }
+          // console.log(ynv)
+          // console.log(book)
+          commit('getSearchData', ynv)
+          states.input2 = ''
+          router.push('/searchList')
+        } else {
+          loading.close()
+          throw new Error('无数据')
+        }
       } catch (error) {
         // console.log(error)
-        ElMessage.error('错误，该书不存在或已被移除')
+        ElMessage.error('错误，该书不存在已被移除')
       }
     }
     function tologin() {
