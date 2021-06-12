@@ -22,15 +22,15 @@
                 ></el-input>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="submitForm()">登录</el-button>
+                <el-button type="warning" @click="submitForm()">登录</el-button>
               </el-form-item>
             </el-form>
           </div>
         </el-col>
         <el-col :span="10">
           <div class="formright">
-           <h1>还没有注册账号？</h1>
-           <el-button type="warning" @click="toregister">立即注册</el-button>
+            <h1>还没有注册账号？</h1>
+            <el-button type="warning" @click="toregister">立即注册</el-button>
           </div>
         </el-col>
       </el-row>
@@ -41,8 +41,10 @@
 import { defineComponent, reactive, ref } from "vue";
 import zgaxios from "@/tools/zgaxios";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 export default defineComponent({
   setup() {
+    const { state, getters, dispatch, commit } = useStore();
     const router = useRouter();
     let Form = reactive({
       name: "",
@@ -64,16 +66,30 @@ export default defineComponent({
             `lgn/login/cellphone?phone=${Form.name}&password=${Form.password}`
           );
           if (data.code == 200) {
+            let userinfo = {
+              user: ""
+            };
+            let getuserinfo = async () => {
+              let { data } = await zgaxios("POST", "lgn/user/account");
+              userinfo.user = data.profile.nickname;
+              let doAdd = () => {
+                commit("adduserinfo");
+              };
+              doAdd()
+            };
+            getuserinfo();
             router.push("/home");
+          } else {
+            alert("密码或账号错误");
           }
         };
         login();
       }
     }
-    function toregister(){
-       router.push('/register')
+    function toregister() {
+      router.push("/register");
     }
-    return { Form, rules, submitForm,toregister};
+    return { Form, rules, submitForm, toregister,commit };
   }
 });
 </script>
@@ -86,6 +102,8 @@ export default defineComponent({
   // display: flex;
   .formleft {
     height: 500px;
+    display: flex;
+    flex-direction: column;
     h1 {
       margin-left: 30%;
       height: 50px;
@@ -99,6 +117,11 @@ export default defineComponent({
   }
   .formright {
     height: 500px;
+  }
+  .el-button {
+    background-color: #f80;
+    width: 50%;
+    border-radius: 20px;
   }
 }
 </style>
