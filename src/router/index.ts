@@ -8,26 +8,42 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/home',
     name: 'Home',
-    component: Home
+    component: Home,
+    meta: {
+      title: "首页"
+    }
   },
   {
-    path: '/searchList',
+    path: '/searchList/:title',
     name: 'searchList',
-    component:  () => import('../views/SearchList.vue')
+    component: () => import('../views/SearchList.vue'),
+    meta: {
+      title: "搜索"
+    }
   },
   {
     path: '/login',
     name: 'login',
-    component: () => import( '../views/login.vue')
+    component: () => import('../views/login.vue') ,
+    meta: {
+      title: "登录"
+    }
   },
   {
     path: '/detail',
     name: 'detail',
     component: () => import('../views/Detail.vue'),
-    children: [
-     { path: "1",
-      component: () => import('../views/1.vue')}
-    ]
+    meta: {
+      title: "书籍分类"
+    }
+  },
+  {
+    path: '/bookdetails/:title',
+    name: 'bookdetails',
+    component: () => import('../views/BookDetails.vue'),
+    meta: {
+      title: "书籍详情"
+    }
   }
 ]
 

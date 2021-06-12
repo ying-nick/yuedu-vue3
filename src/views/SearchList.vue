@@ -10,10 +10,11 @@
         justifyContent: 'space-between',
         'align-items': 'center' }">
           <div class="bookimg">
-            <img :src="'http://pt.yuenov.com:18888'+item.coverImg" alt="图片丢失" style="width:102px;height:136px">
+            <img :src="'http://pt.yuenov.com:18888'+item.coverImg" alt="图片丢失" style="width:102px;height:136px;cursor: pointer;"
+              @click="bookdetail(item.bookId)">
           </div>
           <div class="bookcenter">
-            <h3>{{item.title}}</h3>
+            <h3 @click="bookdetail(item.bookId)">{{item.title}}</h3>
             <div>{{item.desc}}</div>
             <p>{{item.author}}</p>
           </div>
@@ -27,18 +28,18 @@
             </div>
             <el-row style="width:100%" :gutter="10">
               <el-col :span="12">
-                <el-button type="danger">书籍详情</el-button>
+                <el-button type="danger" style="width:90%" @click="bookdetail(item.bookId)">书籍详情</el-button>
               </el-col>
               <el-col :span="12">
-                <el-button type="success">加入书架</el-button>
+                <el-button type="success" style="width:90%">加入书架</el-button>
               </el-col>
 
             </el-row>
           </div>
         </el-card>
       </div>
-      <div>
-        <el-pagination background layout="prev, pager, next" :total="count" class="page">
+      <div class="pages">
+        <el-pagination background layout="prev, pager, next" :total="count" @current-change="handleCurrentChange">
         </el-pagination>
       </div>
 
@@ -66,6 +67,7 @@ export default defineComponent({
         return start <= index && index <= end
       })
     }
+    //计算属性
     const staduce = computed(() => {
       return (str) => {
         switch (str) {
@@ -85,7 +87,17 @@ export default defineComponent({
         }
       }
     })
-    return { ...toRefs(lists), staduce, words }
+    //页码切换
+    function handleCurrentChange(val) {
+      // console.log(`当前页: ${val}`)
+      let start = (val - 1) * 10
+      let end = start + 9
+      lists.list = booklist(list, start, end)
+    }
+    function bookdetail(id) {
+      console.log(id)
+    }
+    return { ...toRefs(lists), staduce, words, handleCurrentChange, bookdetail }
   },
 })
 </script>
@@ -124,6 +136,10 @@ export default defineComponent({
           display: flex;
           flex-direction: column;
           justify-content: space-around;
+          h3:hover {
+            color: #f80;
+            cursor: pointer;
+          }
           div {
             overflow: hidden;
             text-overflow: ellipsis;
@@ -132,7 +148,7 @@ export default defineComponent({
             overflow: hidden;
             /*! autoprefixer: off */
             -webkit-box-orient: vertical;
-            width: 80%;
+            width: 95%;
           }
         }
         .bookright {
@@ -143,6 +159,13 @@ export default defineComponent({
           justify-content: space-between;
         }
       }
+    }
+    .pages {
+      width: 100%;
+      height: 105px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
     }
   }
 }

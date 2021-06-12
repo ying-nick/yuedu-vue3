@@ -2,7 +2,9 @@
   <div id="container">
     <div class="head">
       <el-row :gutter="10" class="el">
-        <el-col :span="6" class="col"><span class="title">悦读</span></el-col>
+        <el-col :span="6" class="col">
+          <span class="title">悦读</span>
+        </el-col>
         <el-col :span="12" class="col">
           <div class="seach">
             <el-input placeholder="请输入书名，关键字" v-model="input2" class="inp" @keyup.enter="bookSeach">
@@ -24,7 +26,7 @@
       </el-row>
     </div>
     <div class="navsheet">
-      <el-menu :default-active="activeIndex" router class="el-menu-demo menu" mode="horizontal" @select="handleSelect">
+      <el-menu :default-active="route.path" router class="el-menu-demo menu" mode="horizontal" @select="handleSelect">
         <el-menu-item index="/home">首页</el-menu-item>
         <el-menu-item index="/">排行榜</el-menu-item>
         <el-menu-item index="/detail">分类</el-menu-item>
@@ -32,13 +34,13 @@
       </el-menu>
     </div>
 
-    <router-view></router-view>
+    <router-view :key="key"></router-view>
   </div>
 
 </template>
 <script lang="ts">
-import { defineComponent, ref, reactive, toRefs } from 'vue'
-import { useRouter } from 'vue-router'
+import { defineComponent, ref, reactive, toRefs, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElLoading } from 'element-plus'
 import { useStore } from 'vuex'
 import zgaxios from '@/tools/zgaxios'
@@ -49,25 +51,19 @@ export default defineComponent({
     //获取store中的信息
     const { state, getters, dispatch, commit } = useStore()
     const router = useRouter()
+    const route = useRoute()
     let states = reactive({
       input2: '',
+    })
+    const key = computed(() => {
+      return route.fullPath
     })
     function bookSeach() {
       if (!states.input2) return
       // console.log(state.input2)
       search()
     }
-    const openFullScreen2 = () => {
-      const loading = ElLoading.service({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)',
-      })
-      setTimeout(() => {
-        loading.close()
-      }, 2000)
-    }
+
     const search = async () => {
       /*   try {
         let {
@@ -121,8 +117,9 @@ export default defineComponent({
           // console.log(ynv)
           // console.log(book)
           commit('getSearchData', ynv)
+          let url = `/searchList/${states.input2}`
           states.input2 = ''
-          router.push('/searchList')
+          router.push(url)
         } else {
           loading.close()
           throw new Error('无数据')
@@ -141,6 +138,8 @@ export default defineComponent({
       bookSeach,
       tologin,
       tohome,
+      key,
+      route,
     }
   },
 })

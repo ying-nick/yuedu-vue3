@@ -8,5 +8,15 @@ import 'lib-flexible'
 import 'dayjs/locale/zh-cn'
 import locale from 'element-plus/lib/locale/lang/zh-cn'
 
+declare var document: any;
+router.beforeEach((to, from, next) => {
+  /* 路由发生变化修改页面title */
+  if (to.meta.title) {
+    document.title = to.meta.title
+  }
+  next()
+})
+
 const app = createApp(App)
+
 app.use(ElementPlus,{locale}).use(store).use(router).mount('#app')
