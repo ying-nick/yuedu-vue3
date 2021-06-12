@@ -72,6 +72,20 @@ export default defineComponent({
         // console.log(error)
         ElMessage.error('错误，该书不存在或已被移除')
       } */
+      try {
+        let {
+          data,
+        } = await zgaxios('GET', `${searchUrl}/${states.input2}/1/10`)
+        if (!data) throw new Error('无数据')
+        // console.log(data)
+        data.title = states.input2
+        commit('getSearchData', data)
+        states.input2 = ''
+        router.push('/searchList')
+      } catch (error) {
+        // console.log(error)
+        ElMessage.error('错误，该书不存在或已被移除')
+      }
     }
     function tologin() {
       router.push('/login')
