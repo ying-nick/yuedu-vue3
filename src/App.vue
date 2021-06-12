@@ -31,6 +31,7 @@
         <el-menu-item index="/">漫画</el-menu-item>
       </el-menu>
     </div>
+
     <router-view></router-view>
   </div>
 
@@ -57,20 +58,20 @@ export default defineComponent({
       search()
     }
     const search = async () => {
-      try {
+      /*   try {
         let {
           data: { data },
         } = await zgaxios('GET', `${searchUrl}/${states.input2}/1/10`)
         if (!data) throw new Error('无数据')
         // console.log(data)
-        data.title=states.input2
+        data.title = states.input2
         commit('getSearchData', data)
         states.input2 = ''
         router.push('/searchList')
       } catch (error) {
         // console.log(error)
         ElMessage.error('错误，该书不存在或已被移除')
-      }
+      } */
     }
     function tologin() {
       router.push('/login')
@@ -113,6 +114,7 @@ export default defineComponent({
           width: 80%;
           border: 1px solid #f80;
           outline: none;
+          background-color: #f80;
           .el-input-group__append {
             background-color: #f80;
             // border: 1px solid #f80;
