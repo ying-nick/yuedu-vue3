@@ -3,6 +3,7 @@
     <div class="head">
       <el-row :gutter="10" class="el">
         <el-col :span="6" class="col">
+          <img :src="require('@/images/book.png')" alt="">
           <span class="title">悦读</span>
         </el-col>
         <el-col :span="12" class="col">
@@ -160,6 +161,22 @@ export default defineComponent({
       height: 95%;
       .col {
         height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img {
+          height: 80%;
+        }
+        span {
+          width: 110px;
+          margin-left: 10px;
+          height: 100%;
+          overflow: hidden;
+          -webkit-line-clamp: 1;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+        }
       }
       .seach {
         height: 100%;
