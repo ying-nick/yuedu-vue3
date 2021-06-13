@@ -15,7 +15,7 @@
         </el-col>
         <el-col :span="6" class="col">
           <div class="dv">
-            <span>我的书架</span>
+            <span @click="tobookshelf">我的书架</span>
             <span @click="tologin">登录</span>
             <span>注册</span>
           </div>
@@ -55,11 +55,15 @@ export default defineComponent({
       router.push('/login')
     }
     function tohome() {}
+    function tobookshelf(e) {
+      router.push('/bookshelf')
+    }
     return {
       ...toRefs(state),
       search,
       tologin,
       tohome,
+      tobookshelf
     }
   },
 })

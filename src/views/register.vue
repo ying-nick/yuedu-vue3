@@ -4,7 +4,7 @@
       <el-row>
         <el-col :span="14">
           <div class="formleft">
-            <h1>注册账号</h1>
+            <div class="caption">注册账号</div>
             <el-form
               :model="Form"
               :rules="rules"
@@ -21,22 +21,50 @@
                   show-password
                 ></el-input>
               </el-form-item>
+
               <el-form-item label="请输入验证码" prop="ctcode">
-                <el-input v-model="Form.ctcode" @input="checkcode"></el-input>
-                <el-button type="warning" @click="sendcode">
-                  发送验证码</el-button
-                >
+                <el-row>
+                  <el-col :span="12">
+                    <el-input
+                      v-model="Form.ctcode"
+                      @input="checkcode"
+                    ></el-input>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-button
+                      type="warning"
+                      @click="sendcode"
+                      v-if="state.flag3"
+                      :disabled="state.dis"
+                      >{{ state.text }}</el-button
+                    >
+                    <el-button
+                      type="warning"
+                      @click="sendcode"
+                      v-if="state.flag2"
+                      disabled
+                      >{{ state.num+'s' }}</el-button
+                    >
+                  </el-col>
+                </el-row>
               </el-form-item>
+
               <el-form-item>
-                <el-button
-                  type="warning"
-                  @click="register"
-                  :disabled="state.flag"
-                  >立即注册</el-button
-                >
-                <el-button type="warning" @click="returntologin"
-                  >返回登录</el-button
-                >
+                <el-row>
+                  <el-col :span="12">
+                    <el-button
+                      type="warning"
+                      @click="register"
+                      :disabled="state.flag"
+                      >立即注册</el-button
+                    >
+                  </el-col>
+                  <el-col :span="12">
+                    <el-button type="warning" @click="returntologin"
+                      >返回登录</el-button
+                    >
+                  </el-col>
+                </el-row>
               </el-form-item>
             </el-form>
           </div>
@@ -45,12 +73,12 @@
       </el-row>
     </div>
   </div>
-  <el-button :plain="true" @click="open4"></el-button>
-  <el-button :plain="true" @click="open5"></el-button>
-  <el-button :plain="true" @click="open6"></el-button>
+  <el-button :plain="true" @click="open4" v-if="false"></el-button>
+  <el-button :plain="true" @click="open5" v-if="false"></el-button>
+  <el-button :plain="true" @click="open6" v-if="false"></el-button>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, ref, watch } from "vue";
+import { defineComponent, reactive } from "vue";
 import zgaxios from "@/tools/zgaxios";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
@@ -81,7 +109,12 @@ export default defineComponent({
       nickname: "",
       exist: "",
       flag: true,
-      message: ""
+      message: "",
+      text: "发送验证码",
+      num: 60,
+      flag2: false,
+      flag3: true,
+      dis: false
     });
 
     //发送验证码
@@ -117,6 +150,19 @@ export default defineComponent({
           state.message = "此号码已经注册过了，请直接登陆";
           open5(state.message);
         } else {
+          let timeid = setInterval(() => {
+            state.dis = true;
+            state.flag3 = false;
+            state.flag2 = true;
+            state.num--;
+            if (state.num <= 0) {
+              clearInterval(timeid);
+              state.flag2 = false;
+              state.flag3 = true;
+              state.dis = false;
+            }
+            console.log(state.num);
+          }, 1000);
           let getcode = async () => {
             let { data } = await zgaxios(
               "POST",
@@ -187,23 +233,48 @@ export default defineComponent({
 .form {
   width: 50%;
   height: 500px;
+  min-width: 1050px;
   background-color: #fff;
-  margin: 100px auto;
+  margin: 50px auto;
+
   .formleft {
     height: 500px;
-    h1 {
-      margin-left: 30%;
-      height: 50px;
-      line-height: 50px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    .caption {
+      width: 100%;
+      color: orange;
+      text-align: center;
+      font-size: 30px;
+      height: 100px;
+      line-height: 100px;
+      text-shadow: 0 0 10px azure, 0 0 20px yellow;
+      filter: saturate(60%);
+      animation: flicker 2s linear infinite;
     }
     .el-form {
+      width: 80%;
       .el-input {
-        width: 50%;
+        width: 95%;
+      }
+      .el-button {
+        width: 90%;
       }
     }
   }
   .formright {
     height: 500px;
-  }
+  } 
 }
+@keyframes flicker {
+    0% {
+      color: orange;
+      filter: saturate(100%) hue-rotate(0deg);
+    }
+    50% {
+      color: white;
+      filter: saturate(200%) hue-rotate(20deg);
+    }
+  }
 </style>

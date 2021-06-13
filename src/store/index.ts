@@ -5,12 +5,14 @@ export default createStore({
   state: {
     details:[],
     user:{
-      user:''
+      nickname:'',
+      avatar:''
     }
       
 
   },
   mutations: {
+    //获取用户信息
     adduserinfo(state,content){
           state.user=content
           console.log(state.user)

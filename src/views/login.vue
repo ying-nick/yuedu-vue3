@@ -4,11 +4,10 @@
       <el-row>
         <el-col :span="14">
           <div class="formleft">
-            <h1>登录悦读</h1>
+            <div class="leftcaption">登录悦读</div>
             <el-form
               :model="Form"
               :rules="rules"
-              label-width="100px"
               class="demo-ruleForm"
             >
               <el-form-item label="" prop="name">
@@ -29,8 +28,10 @@
         </el-col>
         <el-col :span="10">
           <div class="formright">
-            <h1>还没有注册账号？</h1>
-            <el-button type="warning" @click="toregister">立即注册</el-button>
+            <div class="rightcaption">没有账号？</div>
+            <div>
+               <el-button type="warning" @click="toregister">注册</el-button>
+            </div>
           </div>
         </el-col>
       </el-row>
@@ -44,7 +45,7 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 export default defineComponent({
   setup() {
-    const { state, getters, dispatch, commit } = useStore();
+    const { commit } = useStore();
     const router = useRouter();
     let Form = reactive({
       name: "",
@@ -67,15 +68,17 @@ export default defineComponent({
           );
           if (data.code == 200) {
             let userinfo = {
-              user: ""
+              nickname: "",
+              avatar:''
             };
             let getuserinfo = async () => {
               let { data } = await zgaxios("POST", "lgn/user/account");
-              userinfo.user = data.profile.nickname;
-              let doAdd = () => {
-                commit("adduserinfo");
+              userinfo.nickname = data.profile.nickname;
+              userinfo.avatar = data.profile.avatarUrl;
+              let doAdd = (userinfo) => {
+                commit("adduserinfo",userinfo);
               };
-              doAdd()
+              doAdd(userinfo)
             };
             getuserinfo();
             router.push("/home");
@@ -97,17 +100,19 @@ export default defineComponent({
 .form {
   width: 50%;
   height: 300px;
+  min-width: 1050px;
   background-color: #fff;
-  margin: 100px auto;
-  // display: flex;
+  margin: 50px auto;
+  text-align: center;
   .formleft {
     height: 500px;
     display: flex;
     flex-direction: column;
-    h1 {
-      margin-left: 30%;
-      height: 50px;
-      line-height: 50px;
+    text-align: center;
+    .leftcaption {
+      height: 100px;
+      line-height: 100px;
+      font-size: 20px;
     }
     .el-form {
       .el-input {
@@ -117,6 +122,15 @@ export default defineComponent({
   }
   .formright {
     height: 500px;
+    text-align: center;
+    flex-direction: column;
+    .rightcaption{
+      font-size: 20px;
+      line-height: 100px;
+      height: 100px;
+      width: 100%;
+    }
+   
   }
   .el-button {
     background-color: #f80;
