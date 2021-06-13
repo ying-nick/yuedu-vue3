@@ -27,7 +27,7 @@
       </el-row>
     </div>
     <div class="navsheet">
-      <el-menu :default-active="route.path" router class="el-menu-demo menu" mode="horizontal" @select="handleSelect">
+      <el-menu :default-active="route.path" router class="el-menu-demo menu" mode="horizontal">
         <el-menu-item index="/home">首页</el-menu-item>
         <el-menu-item index="/">排行榜</el-menu-item>
         <el-menu-item index="/detail">分类</el-menu-item>
@@ -80,19 +80,18 @@ export default defineComponent({
         // console.log(error)
         ElMessage.error('错误，该书不存在或已被移除')
       } */
-
+      const loading = ElLoading.service({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)',
+      })
       try {
-        const loading = ElLoading.service({
-          lock: true,
-          text: 'Loading',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)',
-        })
         let { data } = await zgaxios('GET', searchUrlYnv, {
           params: {
             keyWord: states.input2,
             pageNum: 1,
-            pageSize: 1000,
+            pageSize: 100,
           },
         })
         let { result } = data
@@ -126,6 +125,7 @@ export default defineComponent({
           throw new Error('无数据')
         }
       } catch (error) {
+        loading.close()
         // console.log(error)
         ElMessage.error('错误，该书不存在已被移除')
       }

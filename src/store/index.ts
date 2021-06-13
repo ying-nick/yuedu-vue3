@@ -4,10 +4,11 @@ import createPersistedState from "vuex-persistedstate";
 type IStore = {
   state: {
     searchData: any;
+    bookDetails: any;
   }
   mutations: {
     getSearchData(state: any, data: any),
-   
+    getBookDetails(state: any, data: any),
   },
   actions: {},
   modules: {},
@@ -16,7 +17,8 @@ type IStore = {
 }
 const store: IStore ={
   state: {
-    searchData:{}
+    searchData: {},
+    bookDetails:{}
   },
   mutations: {
     getSearchData(state, data) {
@@ -24,6 +26,10 @@ const store: IStore ={
       state.searchData = data
       // console.log(data)
       // console.log(state.searchData.count)
+    },
+    getBookDetails(state, data) {
+      state.bookDetails = data
+      // console.log(state.bookDetails)
     }
   },
   actions: {

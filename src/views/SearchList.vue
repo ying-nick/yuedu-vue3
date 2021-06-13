@@ -50,10 +50,16 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, computed } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter, useRoute } from 'vue-router'
+import { ElMessage, ElLoading } from 'element-plus'
+import zgaxios from '@/tools/zgaxios'
+import { detailUrlYnv } from '@/tools/api'
 
 export default defineComponent({
   setup() {
     const { state, getters, dispatch, commit } = useStore()
+      const router = useRouter()
+    const route = useRoute()
     let list = state.searchData.list
     let lists = reactive({
       list: booklist(list),
@@ -94,8 +100,40 @@ export default defineComponent({
       let end = start + 9
       lists.list = booklist(list, start, end)
     }
-    function bookdetail(id) {
-      console.log(id)
+    //详情页跳转
+    async function bookdetail(id) {
+      // console.log(id)
+      const loading = ElLoading.service({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)',
+      })
+      try {
+        let { data } = await zgaxios('GET', detailUrlYnv, {
+          params: {
+            bookId: id,
+          },
+        })
+        let { result } = data
+        // console.log(data)
+        if (result.code == 1009) {
+          loading.close()
+          ElMessage.error('操作太频繁，请10s后再试')
+          return
+        }else if (result.code == 0) {
+          loading.close()
+          commit('getBookDetails', data.data)
+         let url = `/bookdetails/${data.data.title}`
+          router.push(url)
+        }else{
+          throw new Error('无数据')
+        }
+      } catch (error) {
+        loading.close()
+        // console.log(error)
+        ElMessage.error('错误，该书不存在已被移除')
+      }
     }
     return { ...toRefs(lists), staduce, words, handleCurrentChange, bookdetail }
   },

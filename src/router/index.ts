@@ -10,23 +10,25 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Home',
     component: Home,
     meta: {
-      title: "首页"
+      title: "悦读-首页"
     }
   },
   {
     path: '/searchList/:title',
     name: 'searchList',
     component: () => import('../views/SearchList.vue'),
-    meta: {
-      title: "搜索"
-    }
+    beforeEnter: (to, from, next) => {
+      to.meta.title = to.params.title
+      // console.log(to.params.title)
+    next()
+  },
   },
   {
     path: '/login',
     name: 'login',
     component: () => import('../views/login.vue') ,
     meta: {
-      title: "登录"
+      title: "悦读-登录"
     }
   },
   {
@@ -34,16 +36,18 @@ const routes: Array<RouteRecordRaw> = [
     name: 'detail',
     component: () => import('../views/Detail.vue'),
     meta: {
-      title: "书籍分类"
+      title: "悦读-分类"
     }
   },
   {
     path: '/bookdetails/:title',
     name: 'bookdetails',
     component: () => import('../views/BookDetails.vue'),
-    meta: {
-      title: "书籍详情"
-    }
+    beforeEnter: (to, from, next) => {
+      to.meta.title = to.params.title
+      // console.log(to.params.title)
+    next()
+  },
   }
 ]
 
