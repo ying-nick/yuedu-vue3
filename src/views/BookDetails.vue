@@ -84,7 +84,7 @@
           <div class="mainbar">
             <el-divider content-position="left">大家都在看</el-divider>
             <el-carousel :interval="4000" type="card" height="200px" class="mainsee">
-              <el-carousel-item v-for="item in 6" :key="item">
+              <el-carousel-item v-for="item in 6" :key="item" class="mainlist">
                 <h3 class="medium">{{ item }}</h3>
               </el-carousel-item>
             </el-carousel>
@@ -113,7 +113,6 @@ export default defineComponent({
     let states = reactive({
       list: state.bookDetails,
       like: state.bookDetails.recommend,
-      loading: true,
     })
     const staduce = computed(() => {
       return (str) => {
@@ -401,8 +400,12 @@ export default defineComponent({
             font-size: 18px;
           }
           .mainsee {
-            width: 100%;
-            overflow: hidden;
+            background-color: #f5f5f5;
+            .mainlist {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
             ul {
               display: none;
             }
