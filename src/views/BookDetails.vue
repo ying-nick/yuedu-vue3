@@ -83,14 +83,66 @@
           </div>
           <div class="mainbar">
             <el-divider content-position="left">大家都在看</el-divider>
-            <el-carousel :interval="4000" type="card" height="200px" class="mainsee">
-              <el-carousel-item v-for="item in 6" :key="item" class="mainlist">
-                <h3 class="medium">{{ item }}</h3>
-              </el-carousel-item>
-            </el-carousel>
+            <!--    <div class="mainsee">
+              <el-space direction="vertical" alignment="flex-start">
+                <el-skeleton style="width: 90%" :loading="loading" animated :count="5" class="mainlist">
+                  <template #template>
+                    <el-skeleton-item variant="image" style="width: 100px; height: 150px;" />
+                    <div style="padding: 14px;">
+                      <el-skeleton-item variant="h3" style="width: 50%;" />
+                      <div style="display: flex; align-items: center; justify-items: space-between; margin-top: 16px; height: 16px;">
+                        <el-skeleton-item variant="text" style="margin-right: 16px;" />
+                        <el-skeleton-item variant="text" style="width: 30%;" />
+                      </div>
+                    </div>
+                  </template>
+                  <template #default>
+                    <el-card :body-style="{ padding: '0px', marginBottom: '1px' }" v-for="item in lists" :key="item.name">
+                      <img :src="item.imgUrl" class="image multi-content" />
+                      <div style="padding: 14px;">
+                        <span>{{ item.name }}</span>
+                        <div class="bottom card-header">
+                          <span class="time">{{ currentDate }}</span>
+                          <el-button type="text" class="button">操作按钮</el-button>
+                        </div>
+                      </div>
+                    </el-card>
+                  </template>
+                </el-skeleton>
+              </el-space>
+            </div> -->
           </div>
         </div>
-        <div class="footaside"></div>
+        <div class="footaside">
+          <h2>本周热推</h2>
+          <div class="asidedv">
+            <el-skeleton :rows="6" :loading="loading" animated>
+              <template #template>
+
+              </template>
+              <template #default>
+                <el-collapse v-model="activeName" accordion>
+                  <el-collapse-item v-for="(item,index) in weekread" :title="item.title" :name="index" :key="item.title">
+                    <div class="img">
+                      <el-image :src="'http://pt.yuenov.com:18888'+item.coverImg">
+                        <template #error>
+                          <div class="image-slot">
+                            <i class="el-icon-picture-outline"></i>
+                          </div>
+                        </template>
+                      </el-image>
+                    </div>
+                    <div class="weektext">
+                      <span>{{item.author}}</span>
+                      <el-tag type="warning">{{item.categoryName}}</el-tag>
+                    </div>
+                  </el-collapse-item>
+                </el-collapse>
+              </template>
+            </el-skeleton>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>
@@ -102,7 +154,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElLoading } from 'element-plus'
 import { useStore } from 'vuex'
 import zgaxios from '@/tools/zgaxios'
-import { searchUrl, searchUrlYnv } from '@/tools/api'
+import { searchUrl, searchUrlYnv, mostUrlYnv } from '@/tools/api'
 import { timeHandler } from '@/tools/util'
 
 export default defineComponent({
@@ -113,7 +165,20 @@ export default defineComponent({
     let states = reactive({
       list: state.bookDetails,
       like: state.bookDetails.recommend,
+      loading: false,
+      readMost: state.readMost.list,
+      weekread: booklist(state.readMost.list, 49, 99),
+      activeName: 0,
     })
+    //筛选器函数
+    function booklist(arr, begin, last, start = 0, end = 4) {
+      let li = arr.filter((item, index) => {
+        return begin <= index && index <= last
+      })
+      return li.filter((item, index) => {
+        return start <= index && index <= end
+      })
+    }
     const staduce = computed(() => {
       return (str) => {
         switch (str) {
@@ -133,6 +198,32 @@ export default defineComponent({
         }
       }
     })
+    async function getreads() {
+      try {
+        let { data } = await zgaxios('GET', mostUrlYnv, {
+          params: {
+            pageNum: 1,
+            pageSize: 100,
+            type: 'READ_MOST',
+          },
+        })
+        let { result } = data
+        // console.log(data)
+        if (result.code == 0) {
+          commit('getReadMost', data.data)
+          states.loading = false
+        } else {
+          throw new Error('无数据')
+        }
+      } catch (error) {
+        // console.log(error)
+        ElMessage.error('获取不到推荐书单')
+      }
+    }
+    setTimeout(() => {
+      // getreads()
+      // console.log(state.readMost)
+    }, 10000)
     return {
       ...toRefs(states),
       staduce,
@@ -356,6 +447,7 @@ export default defineComponent({
                     overflow: hidden;
                     /*! autoprefixer: off */
                     -webkit-box-orient: vertical;
+                    text-align: center;
                   }
                 }
               }
@@ -399,21 +491,64 @@ export default defineComponent({
             font-weight: 600;
             font-size: 18px;
           }
+
           .mainsee {
-            background-color: #f5f5f5;
-            .mainlist {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            }
-            ul {
-              display: none;
+            width: 100%;
+            .el-space {
+              width: 90%;
+              .mainlist {
+                display: flex;
+              }
             }
           }
         }
       }
       .footaside {
         width: 300px;
+        .asidedv {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .el-collapse {
+            width: 80%;
+            i {
+              display: none;
+            }
+            .el-collapse-item__header {
+              background-color: transparent;
+              display: -webkit-box;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              -webkit-line-clamp: 1;
+              overflow: hidden;
+              /*! autoprefixer: off */
+              -webkit-box-orient: vertical;
+            }
+            .el-collapse-item__wrap {
+              background-color: transparent;
+              .el-collapse-item__content {
+                display: flex;
+                justify-content: space-around;
+                .img {
+                  width: 49px;
+                  height: 68px;
+                  .el-image {
+                    transform: scale(1.2);
+                  }
+                }
+                .weektext {
+                  // flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  span {
+                    padding: 0 10px;
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

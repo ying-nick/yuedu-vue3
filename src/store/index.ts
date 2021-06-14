@@ -5,10 +5,12 @@ type IStore = {
   state: {
     searchData: any;
     bookDetails: any;
+    readMost: any;
   }
   mutations: {
     getSearchData(state: any, data: any),
     getBookDetails(state: any, data: any),
+    getReadMost(state: any, data: any),
   },
   actions: {},
   modules: {},
@@ -18,7 +20,8 @@ type IStore = {
 const store: IStore ={
   state: {
     searchData: {},
-    bookDetails:{}
+    bookDetails: {},
+    readMost:[]
   },
   mutations: {
     getSearchData(state, data) {
@@ -29,6 +32,10 @@ const store: IStore ={
     },
     getBookDetails(state, data) {
       state.bookDetails = data
+      // console.log(state.bookDetails)
+    },
+    getReadMost(state, data) {
+      state.readMost = data
       // console.log(state.bookDetails)
     }
   },
