@@ -83,34 +83,36 @@
           </div>
           <div class="mainbar">
             <el-divider content-position="left">大家都在看</el-divider>
-            <!--    <div class="mainsee">
-              <el-space direction="vertical" alignment="flex-start">
+            <div class="mainsee">
+              <el-space direction="vertical">
                 <el-skeleton style="width: 90%" :loading="loading" animated :count="5" class="mainlist">
                   <template #template>
-                    <el-skeleton-item variant="image" style="width: 100px; height: 150px;" />
-                    <div style="padding: 14px;">
-                      <el-skeleton-item variant="h3" style="width: 50%;" />
-                      <div style="display: flex; align-items: center; justify-items: space-between; margin-top: 16px; height: 16px;">
-                        <el-skeleton-item variant="text" style="margin-right: 16px;" />
-                        <el-skeleton-item variant="text" style="width: 30%;" />
+                    <div class="seelist">
+                      <el-skeleton-item variant="image" style="width: 140px; height: 150px;" />
+                      <div style="padding: 14px;">
+                        <el-skeleton-item variant="h3" style="width: 50%;" />
                       </div>
                     </div>
                   </template>
                   <template #default>
-                    <el-card :body-style="{ padding: '0px', marginBottom: '1px' }" v-for="item in lists" :key="item.name">
-                      <img :src="item.imgUrl" class="image multi-content" />
-                      <div style="padding: 14px;">
-                        <span>{{ item.name }}</span>
-                        <div class="bottom card-header">
-                          <span class="time">{{ currentDate }}</span>
-                          <el-button type="text" class="button">操作按钮</el-button>
-                        </div>
+                    <div class="seelist" v-for="(item) in seelists" :key="item.title">
+                      <div class="seeimg">
+                        <el-image :src="'http://pt.yuenov.com:18888'+item.coverImg">
+                          <template #error>
+                            <div class="image-slot">
+                              <i class="el-icon-picture-outline"></i>
+                            </div>
+                          </template>
+                        </el-image>
                       </div>
-                    </el-card>
+                      <div>
+                        <h3 style="width: 100%;">{{item.title}}</h3>
+                      </div>
+                    </div>
                   </template>
                 </el-skeleton>
               </el-space>
-            </div> -->
+            </div>
           </div>
         </div>
         <div class="footaside">
@@ -118,7 +120,6 @@
           <div class="asidedv">
             <el-skeleton :rows="6" :loading="loading" animated>
               <template #template>
-
               </template>
               <template #default>
                 <el-collapse v-model="activeName" accordion>
@@ -165,10 +166,11 @@ export default defineComponent({
     let states = reactive({
       list: state.bookDetails,
       like: state.bookDetails.recommend,
-      loading: false,
+      loading: true,
       readMost: state.readMost.list,
-      weekread: booklist(state.readMost.list, 49, 99),
+      weekread: booklist(state.readMost.list, 50, 99),
       activeName: 0,
+      seelists: booklist(state.readMost.list, 0, 49),
     })
     //筛选器函数
     function booklist(arr, begin, last, start = 0, end = 4) {
@@ -221,8 +223,8 @@ export default defineComponent({
       }
     }
     setTimeout(() => {
-      // getreads()
-      // console.log(state.readMost)
+      getreads()
+      console.log(state.readMost)
     }, 10000)
     return {
       ...toRefs(states),
@@ -378,6 +380,7 @@ export default defineComponent({
                     margin-top: 10px;
                     display: flex;
                     flex-direction: column;
+                    cursor: pointer;
                     p {
                       width: 100%;
                       margin: 0;
@@ -494,10 +497,56 @@ export default defineComponent({
 
           .mainsee {
             width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             .el-space {
-              width: 90%;
-              .mainlist {
+              // width: 90%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              .el-space__item {
                 display: flex;
+                justify-content: center;
+                align-items: center;
+                .mainlist {
+                  display: flex;
+                  justify-content: space-around;
+                  align-items: center;
+                }
+                .seelist {
+                  width: 140px;
+                  height: 197px;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: center;
+                  align-items: center;
+                  margin: 0 20px;
+                  .seeimg {
+                    width: 140px;
+                    height: 150px;
+                    overflow: hidden;
+                    .el-image {
+                      width: 120px;
+                      height: 150px;
+                      img {
+                        width: 100%;
+                        height: 100%;
+                        transform: scale(1.2);
+                      }
+                    }
+                  }
+                  h3 {
+                    display: -webkit-box;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    -webkit-line-clamp: 1;
+                    overflow: hidden;
+                    /*! autoprefixer: off */
+                    -webkit-box-orient: vertical;
+                    text-align: center;
+                  }
+                }
               }
             }
           }
