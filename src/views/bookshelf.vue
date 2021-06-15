@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="form">
-      <el-tabs :tab-position="data.tabPosition" style="height: 500px;">
+      <el-tabs tab-position="left" style="height: 500px;">
         <!-- 插槽1 -->
         <el-tab-pane label="个人中心">
           <div class="peersonal">
@@ -105,9 +105,8 @@ import { defineComponent, reactive, ref } from "vue";
 import { useStore } from "vuex";
 export default defineComponent({
   setup() {
-    const { state, commit, dispatch } = useStore();
+    const { state, commit } = useStore();
     let data = reactive({
-      tabPosition: "left",
       nickname: state.user.nickname,
       avatar: state.user.avatar,
 
@@ -174,5 +173,4 @@ export default defineComponent({
   color: white;
   background-color: #f80;
 }
-
 </style>
