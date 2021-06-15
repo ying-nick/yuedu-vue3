@@ -40,7 +40,7 @@
                 <div class="bookdetail">
                   <div class="synopsis">{{list.desc}}</div>
                   <div class="bookadd" :style="{background:'url('+require('@/images/bookmark1.png')+') no-repeat'}">
-                    <div class="add">
+                    <div class="add" @click="booksave">
                       <p>加入</p>
                       <p>书架</p>
                     </div>
@@ -64,7 +64,7 @@
                   <h2 class="medium">{{ item.title }}</h2>
                   <el-tag type="warning">{{item.categoryName}}</el-tag>
                   <div class="rectext">{{item.desc}}</div>
-                  <el-button type="danger" round>书籍详情</el-button>
+                  <el-button type="danger" round @click="godetail(item.bookId)">书籍详情</el-button>
                 </el-carousel-item>
               </el-carousel>
             </div>
@@ -82,7 +82,7 @@
             </div>
           </div>
           <div class="mainbar">
-
+            <img :src="require('@/images/change.png')" alt="" class="changesee" @click="chg">
             <el-divider content-position="left">大家都在看</el-divider>
             <div class="mainsee">
               <el-space direction="vertical">
@@ -96,7 +96,7 @@
                     </div>
                   </template>
                   <template #default>
-                    <div class="seelist" v-for="(item) in seelists" :key="item.title">
+                    <div class="seelist" v-for="(item) in seelists" :key="item.title" @click="godetail(item.bookId)">
                       <div class="seeimg">
                         <el-image :src="'http://pt.yuenov.com:18888'+item.coverImg">
                           <template #error>
@@ -125,7 +125,7 @@
               <template #default>
                 <el-collapse v-model="activeName" accordion>
                   <el-collapse-item v-for="(item,index) in weekread" :title="item.title" :name="index" :key="item.title">
-                    <div class="img">
+                    <div class="img" @click="godetail(item.bookId)">
                       <el-image :src="'http://pt.yuenov.com:18888'+item.coverImg">
                         <template #error>
                           <div class="image-slot">
@@ -156,8 +156,10 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElLoading } from 'element-plus'
 import { useStore } from 'vuex'
 import zgaxios from '@/tools/zgaxios'
-import { searchUrl, searchUrlYnv, mostUrlYnv } from '@/tools/api'
+import { searchUrl, searchUrlYnv, mostUrlYnv, detailUrlYnv } from '@/tools/api'
 import { timeHandler } from '@/tools/util'
+let idx = 0
+let num = 100
 
 export default defineComponent({
   setup() {
@@ -172,7 +174,9 @@ export default defineComponent({
       weekread: [],
       activeName: 0,
       seelists: [],
+      idx: 0,
     })
+
     //筛选器函数
     function booklist(arr = [], begin, last, start = 0, end = 4) {
       let li = arr.filter((item, index) => {
@@ -202,12 +206,23 @@ export default defineComponent({
         }
       }
     })
+    //换一换
+    function chg() {
+      idx++
+      let start = idx * 5
+      let end = start + 4
+      states.seelists = booklist(state.readMost.list, 0, num - 6, start, end)
+      if (end == num - 6) {
+        idx = -1
+      }
+    }
+    //推荐列表
     async function getreads() {
       try {
         let { data } = await zgaxios('GET', mostUrlYnv, {
           params: {
             pageNum: 1,
-            pageSize: 100,
+            pageSize: num,
             type: 'READ_MOST',
           },
         })
@@ -216,30 +231,68 @@ export default defineComponent({
         if (result.code == 0) {
           // console.log(data.data)
           commit('getReadMost', data.data)
-          states.weekread = booklist(data.data.list, 50, 99)
-          states.seelists = booklist(data.data.list, 0, 49)
+          states.weekread = booklist(data.data.list, num - 5, num - 1)
+          states.seelists = booklist(data.data.list, 0, num - 6)
           states.loading = false
         } else {
           throw new Error('无数据')
         }
       } catch (error) {
-        // console.log(error)
+        console.log(error)
         ElMessage.error('获取不到推荐书单')
       }
     }
     setTimeout(() => {
       // getreads()
       // console.log(state.readMost)
-       states.weekread = booklist(state.readMost.list, 50, 99)
-      states.seelists = booklist(state.readMost.list, 0, 49)
+      states.weekread = booklist(state.readMost.list, num - 5, num - 1)
+      states.seelists = booklist(state.readMost.list, 0, num - 6)
       states.loading = false
     }, 10000)
-
+    //跳转到详情
+    async function godetail(id) {
+      const loading = ElLoading.service({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)',
+      })
+      try {
+        let { data } = await zgaxios('GET', detailUrlYnv, {
+          params: {
+            bookId: id,
+          },
+        })
+        let { result } = data
+        // console.log(data)
+        if (result.code == 1009) {
+          loading.close()
+          ElMessage.error('操作太频繁，请10s后再试')
+          return
+        } else if (result.code == 0) {
+          loading.close()
+          commit('getBookDetails', data.data)
+          let url = `/bookdetails/${data.data.title}`
+          router.push(url)
+        } else {
+          throw new Error('无数据')
+        }
+      } catch (error) {
+        loading.close()
+        // console.log(error)
+        ElMessage.error('错误，该书不存在已被移除')
+      }
+    }
+    //加入书架
+    function booksave() {}
     return {
       ...toRefs(states),
       staduce,
       words,
       timeHandler,
+      chg,
+      godetail,
+      booksave,
     }
   },
 })
@@ -326,13 +379,27 @@ export default defineComponent({
                 -webkit-box-orient: vertical;
                 // margin-bottom: 20px;
                 h1 {
+                  display: -webkit-box;
                   margin: 0;
                   height: 100%;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  -webkit-line-clamp: 1;
+                  overflow: hidden;
+                  /*! autoprefixer: off */
+                  -webkit-box-orient: vertical;
                 }
                 h3 {
+                  display: -webkit-box;
                   margin: 0;
                   margin-left: 10px;
                   color: #999;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  -webkit-line-clamp: 1;
+                  overflow: hidden;
+                  /*! autoprefixer: off */
+                  -webkit-box-orient: vertical;
                   // height: 100%;
                 }
               }
@@ -498,12 +565,20 @@ export default defineComponent({
           }
         }
         .mainbar {
+          position: relative;
           .el-divider__text {
             background-color: transparent;
             font-weight: 600;
             font-size: 18px;
           }
-
+          .changesee {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            right: 0;
+            top: 0;
+            cursor: pointer;
+          }
           .mainsee {
             width: 100%;
             display: flex;
@@ -531,6 +606,7 @@ export default defineComponent({
                   justify-content: center;
                   align-items: center;
                   margin: 0 20px;
+                  cursor: pointer;
                   .seeimg {
                     width: 140px;
                     height: 150px;
@@ -591,6 +667,7 @@ export default defineComponent({
                 .img {
                   width: 49px;
                   height: 68px;
+                  cursor: pointer;
                   .el-image {
                     transform: scale(1.2);
                   }

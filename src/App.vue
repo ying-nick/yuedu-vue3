@@ -169,7 +169,8 @@ export default defineComponent({
         justify-content: center;
         align-items: center;
         img {
-          height: 80%;
+          height: 57px;
+          width: 57px;
         }
         span {
           width: 110px;
@@ -209,7 +210,7 @@ export default defineComponent({
         }
       }
       .dv {
-        width: 50%;
+        width: 60%;
         height: 100%;
         display: flex;
         justify-content: space-around;

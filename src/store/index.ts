@@ -39,7 +39,8 @@ const store: IStore ={
         type: "玄幻",
         picture: "",
         name: "斗破苍穹1",
-        newpage: "一千一百章"
+        newpage: "一千一百章",
+        bookId:""
       }
     ]
   },
