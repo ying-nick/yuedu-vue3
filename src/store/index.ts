@@ -15,7 +15,8 @@ type IStore = {
     getBookDetails(state: any, data: any),
     getReadMost(state: any, data: any),
     adduserinfo(state:any,data:any),
-    delete(state:any,data:any),
+    delete(state: any, data: any),
+    setBook(state:any, data:any)
   },
   actions: {},
   modules: {},
@@ -72,10 +73,26 @@ delete(state,content){
       state.tableData.splice(index,1)
      }
   })
-},
+    },
+//加入书架
+    setBook(state, data) {
+     let idx=state.tableData.findIndex((item) => {
+        return item.bookId==data.bookId
+     })
+      if (idx == -1) {
+        state.tableData.push(data)
+        console.log(state.tableData)
+      } else {
+        throw new Error('无数据')
+      }
+     
+}
 },
 
   actions: {
+    asysetbook() {
+      
+    }
   },
   getters: {},
   modules: {

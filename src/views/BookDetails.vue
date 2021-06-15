@@ -9,7 +9,7 @@
             </div>
 
             <div class="btn">
-              <el-button type="primary" icon="el-icon-s-unfold">全部目录</el-button>
+              <el-button type="primary" icon="el-icon-s-unfold" @click="ml">全部目录</el-button>
               <el-button type="primary" icon="el-icon-s-management">立即阅读</el-button>
             </div>
           </div>
@@ -176,7 +176,13 @@ export default defineComponent({
       seelists: [],
       idx: 0,
     })
-
+    async function ml() {
+      let data = await zgaxios(
+        'GET',
+        'http://yuenov.com:18888/app/open/api/chapter/getByBookId?bookId=38386'
+      )
+      console.log(data)
+    }
     //筛选器函数
     function booklist(arr = [], begin, last, start = 0, end = 4) {
       let li = arr.filter((item, index) => {
@@ -284,7 +290,17 @@ export default defineComponent({
       }
     }
     //加入书架
-    function booksave() {}
+    function booksave() {
+      let { list } = states
+      let book = {
+        type: list.categoryName,
+        picture: 'http://pt.yuenov.com:18888' + list.coverImg,
+        name: list.title,
+        newpage: list.update.chapterName,
+        bookId: list.bookId,
+      }
+      commit('setBook', book)
+    }
     return {
       ...toRefs(states),
       staduce,
@@ -293,6 +309,7 @@ export default defineComponent({
       chg,
       godetail,
       booksave,
+      ml,
     }
   },
 })
