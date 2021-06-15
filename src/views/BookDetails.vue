@@ -284,7 +284,7 @@ export default defineComponent({
       }
     }
     //加入书架
-    function booksave() {
+    async function booksave() {
       let { list } = states
       let book = {
         type: list.categoryName,
@@ -293,7 +293,21 @@ export default defineComponent({
         newpage: list.update.chapterName,
         bookId: list.bookId,
       }
-      commit('setBook', book)
+      try {
+        await dispatch('asysetbook', book)
+        ElMessage({
+          showClose: true,
+          message: '添加成功',
+          type: 'success',
+        })
+      } catch (error) {
+        // console.log(error)
+        ElMessage({
+          showClose: true,
+          message: '已在书架中,请勿重复添加',
+          type: 'warning',
+        })
+      }
     }
     return {
       ...toRefs(states),

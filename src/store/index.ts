@@ -83,15 +83,15 @@ delete(state,content){
         state.tableData.push(data)
         console.log(state.tableData)
       } else {
-        throw new Error('无数据')
+        throw new Error('书籍已存在')
       }
      
 }
 },
 
   actions: {
-    asysetbook() {
-      
+    asysetbook(ctx,data) {
+      ctx.commit('setBook',data)
     }
   },
   getters: {},
