@@ -14,6 +14,14 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/ranking',
+    name: 'Ranking',
+    component: () => import('../views/RankingList.vue'),
+    meta: {
+      title: "悦读-排行榜"
+    }
+  },
+  {
     path: '/searchList/:title',
     name: 'searchList',
     component: () => import('../views/SearchList.vue'),
