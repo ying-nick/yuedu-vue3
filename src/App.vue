@@ -36,16 +36,6 @@
 <CK></CK>
 </template>
 <script lang="ts">
-<<<<<<< HEAD
-import { defineComponent } from 'vue'
-import headx from '@/components/header.vue'
-
-import CK from '@/views/Home.vue'
-export default defineComponent({
-  components: {
-    headx,
-    CK
-=======
 import { defineComponent, ref, reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import detail from '@/views/Detail.vue'
@@ -71,7 +61,6 @@ export default defineComponent({
       tologin,
       tohome,
     }
->>>>>>> 94b58983cb1782915d7bc7afc1a440ab8695fed9
   },
 })
 </script>

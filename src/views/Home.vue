@@ -14,11 +14,17 @@
                   src="https://statics.zhuishushenqi.com/agent/http%3A%2F%2Fimg.1391.com%2Fapi%2Fv1%2Fbookcenter%2Fcover%2F1%2F1521972%2F1521972_8b0f07ab3f0e4021b3f8281d2274fa1c.jpg%2F"
                   alt=""
                 />
-                {{ item.title }}
+                <!-- 书名 点击跳转书详情 -->
+               <a class="a1"  href="">{{ item.title }}</a> 
+                <!-- 作者名字 -->
+               <span class="sp1">作者：{{item.author}}</span>
+          <!-- 简介 -->
+          <span class="sp2">{{item.shortIntro}}</span>
               </div>
             </div>
           </div>
         </el-col>
+        <!-- 完结榜部分 -->
         <el-col :span="8">
           <div class="grid-content bg-purple">
             <h2 class="wanjiebang">完结榜</h2>
@@ -115,6 +121,7 @@ export default defineComponent({
   margin-left: 0.2rem;
   margin-top: 0.3rem;
 }
+
 .wanjiebang {
   font-size: 0.6rem;
   font-weight: 600;
@@ -130,6 +137,30 @@ export default defineComponent({
   display: inline-block;
   float: left;
   margin: 0 0.4rem;
+  position: relative;
+}
+.a1{
+  text-decoration:none;
+  color: #333;
+  font-size: 0.3rem;
+  position: absolute;
+  margin-left: 0.2rem;
+}
+.sp1{
+  color:#a6a6a6;
+  font-size: 0.2rem;
+  position: absolute;
+  margin-left: 0.2rem;
+  margin-top:0.5rem;
+}
+.sp2{
+   overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;  /*限制在一个块元素显示的文本的行数*/
+    -webkit-box-orient: vertical;
+
 }
 .clickListPics {
   width: 2rem;
