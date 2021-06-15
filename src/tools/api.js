@@ -1,1 +1,4 @@
-export const detailUrl = "/novel/fiction/search/title/斗罗大陆/1/10";
+export const searchUrl = "/novel/fiction/search/title";
+export const searchUrlYnv = "/ynv/app/open/api/book/search";
+export const detailUrlYnv = "/ynv/app/open/api/book/getDetail";
+export const mostUrlYnv = "/ynv/app/open/api/category/discoveryAll";

@@ -59,7 +59,7 @@
 import { defineComponent, reactive, toRefs } from "vue";
 import zgaxios from "@/tools/zgaxios";
 export default defineComponent({
-  name: "Category",
+  name: "catagory",
   components: {},
   setup() {
     const state = reactive({
