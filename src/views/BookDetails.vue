@@ -82,6 +82,7 @@
             </div>
           </div>
           <div class="mainbar">
+            
             <el-divider content-position="left">大家都在看</el-divider>
             <div class="mainsee">
               <el-space direction="vertical">
