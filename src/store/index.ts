@@ -3,36 +3,38 @@ import createPersistedState from "vuex-persistedstate";
 
 type IStore = {
   state: {
-
+    chapter: any,
     searchData: any;
     bookDetails: any;
     readMost: any;
-    details:any;
-    user:any;
-    tableData:any;
+    details: any;
+    user: any;
+    tableData: any;
   }
   mutations: {
     getSearchData(state: any, data: any),
     getBookDetails(state: any, data: any),
     getReadMost(state: any, data: any),
-    adduserinfo(state:any,data:any),
-    delete(state:any,data:any),
+    adduserinfo(state: any, data: any),
+    delete(state: any, data: any),
+    pushList(state: any, data: any),
   },
   actions: {},
   modules: {},
   getters: {},
   plugins: any[]
 }
-const store: IStore ={
+const store: IStore = {
   state: {
+    chapter: '',
     searchData: {},
     bookDetails: {},
-    readMost:[], 
-     details:[],
+    readMost: [],
+    details: [],
     //用户信息
-    user:{
-      nickname:'',
-      avatar:''
+    user: {
+      nickname: '',
+      avatar: ''
     },
     //书架信息
     tableData: [
@@ -60,20 +62,23 @@ const store: IStore ={
       // console.log(state.bookDetails)
     },
     //获取用户信息
-    adduserinfo(state,content){
-      state.user=content
+    adduserinfo(state, content) {
+      state.user = content
       console.log(state.user)
-},
-//从书架删除
-delete(state,content){
-  // console.log(content)
-  state.tableData.map((item,index)=>{
-     if(item.name==content){
-      state.tableData.splice(index,1)
-     }
-  })
-},
-},
+    },
+    //从书架删除
+    delete(state, content) {
+      // console.log(content)
+      state.tableData.map((item, index) => {
+        if (item.name == content) {
+          state.tableData.splice(index, 1)
+        }
+      })
+    },
+    pushList(state, data) {
+      state.chapter = [...data]
+    }
+  },
 
   actions: {
   },

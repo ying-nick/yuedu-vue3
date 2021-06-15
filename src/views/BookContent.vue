@@ -1,9 +1,8 @@
 <template>
-  <el-container>
+  <el-container   v-loading.fullscreen.lock="fullscreenLoading"
+    element-loading-text="目录加载中"
+    element-loading-background="rgba(0, 0, 0, 0.85)">
     <el-main>
-      <div class="head">
-        悦读 > {{ list.fictionType }} > {{ list.title }} > 作品目录
-      </div>
       <div class="content">
         <div class="CountHead">
           <h1>{{ list.title }}</h1>
@@ -11,9 +10,9 @@
             <a class="gra">作者：</a>
             <a class="blac">{{ list.author }}</a>
             <a class="gra">类别：</a>
-            <a class="blac">{{ list.categoryName }}</a>
+            <a class="blac">{{ categoryName }}</a>
             <a class="gra">状态：</a>
-            <a class="blac">{{ list.title }}</a>
+            <a class="blac">{{ staduce }}</a>
             <a class="gra">字数：</a>
             <a class="blac">{{
               list.word 
@@ -23,7 +22,7 @@
         <div class="Countfoot">正文({{ totalList.length + 1 }})</div>
         <el-row :gutter="20">
           <el-col :span="8" v-for="item in count" :key="item" class="flow">
-            <div class="grid-content bg-purple now" id="now">
+            <div class="grid-content bg-purple now" id="now" @click="goToChap(item.id)">
               {{ item.name }}
               <span style="color:red">[免费]</span>
             </div>
@@ -44,56 +43,75 @@
 </template>
 <script lang='ts'>
 import Pagination from "../components/Pagination/index.vue";
-import { defineComponent, toRefs, ref, reactive } from "vue";
+import { defineComponent, toRefs, ref, reactive, computed } from "vue";
 import { detailUrl, detailList } from "../tools/api";
+import { useStore } from 'vuex'
 import zgaxios from "../tools/zgaxios";
+import { useRouter, useRoute } from 'vue-router'
+import axios from 'axios'
+var JSONbigString = require('json-bigint')({"storeAsString": true});
 export default defineComponent({
   setup(props, context) {
+    const store = useStore()
+    const { state,  commit } = useStore()
+    // console.log(state.searchData)
+    let fullscreenLoading = ref(true);
+    const router = useRouter()
     const text: any = reactive({
       list: [],
       count: [],//根据page来获取
-      totalList:[]//总数据
+      totalList:[],//总数据
+      categoryName:state.bookDetails.categoryName,//类名
+      chapterStatus:state.bookDetails.update.chapterStatus,//书本的状态
+      bookId:state.bookDetails.bookId,
     });
-    // const getList = async () => {
-    //   let {data} = await zgaxios("GET", `${detailUrl}?keyWord=斗罗大陆&pageNum=1&pageSize=1`);
-    //   console.log(data.result);
-    //   if (data.result.code == 0) {
-    //     text.list = data.data.list[0]
-        
-    //     console.log(text.list);
-    //   }
-    // };
-    // getList();
+    const staduce = computed(()=>{
+      return text.chapterStatus=='END'? '完本':'连载'
+    })
     const getcatalogue = async () => {
-      let { data } = await zgaxios("GET", `${detailList}?bookId=35707`);
-      // console.log(data.data);
+      
+      let {data}  = await axios('http://yuenov.com/app/open/api/chapter/getByBookId?bookId=35707',{
+         // `transformResponse` 在传递给 then/catch 前，允许修改响应数据
+        transformResponse: [function (data) {
+          // 对 data 进行任意转换处理
+          return JSONbigString.parse(data);
+        }],
+      });
+      // console.log(data,"999999999999999999");
       if (data.result.code == 0) {
         text.list = data.data
         text.totalList = data.data.chapters;
         text.count = text.totalList.slice(0,99)
+        fullscreenLoading.value = false
+        addList()
       }
     };
     getcatalogue();
+    function addList(){
+      store.commit('pushList',text.totalList )
+    }
     const sizechange = function(page) {
       console.log(page);
       let first = (page-1)*100
       let last = page*100
       text.count = text.totalList.slice(first,last)
     };
-
+    function goToChap(id){
+      router.push({
+        path:`/chapter/${id}`,
+      })
+    }
     return {
       ...toRefs(text),
       sizechange,
+      staduce,
+      fullscreenLoading,
+      goToChap,
     };
   }
 });
 </script>
 <style scoped lang="less">
-.head {
-  margin: auto;
-  width: 53%;
-  margin-bottom: 16px;
-}
 .footer {
   text-align: center;
 }

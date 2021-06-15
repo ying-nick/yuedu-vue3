@@ -9,7 +9,7 @@
             </div>
 
             <div class="btn">
-              <el-button type="primary" icon="el-icon-s-unfold">全部目录</el-button>
+              <el-button type="primary" icon="el-icon-s-unfold" @click="goToContent">全部目录</el-button>
               <el-button type="primary" icon="el-icon-s-management">立即阅读</el-button>
             </div>
           </div>
@@ -168,10 +168,11 @@ export default defineComponent({
       like: state.bookDetails.recommend,
       loading: true,
       readMost: state.readMost.list,
-      weekread: booklist(state.readMost.list, 50, 99),
+      weekread: [],
       activeName: 0,
-      seelists: booklist(state.readMost.list, 0, 49),
+      seelists: [],
     })
+    
     //筛选器函数
     function booklist(arr, begin, last, start = 0, end = 4) {
       let li = arr.filter((item, index) => {
@@ -213,6 +214,8 @@ export default defineComponent({
         // console.log(data)
         if (result.code == 0) {
           commit('getReadMost', data.data)
+          states.weekread = booklist(state.readMost.list, 50, 99)
+          states.seelists = booklist(state.readMost.list, 0, 49)
           states.loading = false
         } else {
           throw new Error('无数据')
@@ -223,14 +226,21 @@ export default defineComponent({
       }
     }
     setTimeout(() => {
-      getreads()
-      console.log(state.readMost)
+      // getreads()
+      // console.log(state.readMost)
+      states.weekread = booklist(state.readMost.list, 50, 99)
+      states.seelists = booklist(state.readMost.list, 0, 49)
+      states.loading = false
     }, 10000)
-    return {
+    function goToContent(){
+      router.push('/content')
+    }
+    return {  
       ...toRefs(states),
       staduce,
       words,
       timeHandler,
+      goToContent,
     }
   },
 })

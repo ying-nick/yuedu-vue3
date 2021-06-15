@@ -72,7 +72,19 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/content',
     name: 'content',
-    component: () => import( '../views/BookContent.vue')
+    component: () => import( '../views/BookContent.vue'),
+    meta: {
+      title: "悦读-目录"
+    }
+  },
+  {
+    path: '/chapter/:id',
+    name: 'chapter',
+    props:true,
+    component: () => import( '../views/BookChapter.vue'),
+    meta: {
+      title: "悦读-内容"
+    }
   }
 ]
 
