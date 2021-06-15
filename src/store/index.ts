@@ -3,6 +3,7 @@ import createPersistedState from "vuex-persistedstate";
 
 type IStore = {
   state: {
+    chapterId:any,
     chapter: any,
     searchData: any;
     bookDetails: any;
@@ -18,6 +19,7 @@ type IStore = {
     adduserinfo(state: any, data: any),
     delete(state: any, data: any),
     pushList(state: any, data: any),
+    pushChapterId(state:any,data:any)
   },
   actions: {},
   modules: {},
@@ -26,6 +28,7 @@ type IStore = {
 }
 const store: IStore = {
   state: {
+    chapterId:'',
     chapter: '',
     searchData: {},
     bookDetails: {},
@@ -77,6 +80,9 @@ const store: IStore = {
     },
     pushList(state, data) {
       state.chapter = [...data]
+    },
+    pushChapterId(state, data) {
+      state.chapterId = data
     }
   },
 

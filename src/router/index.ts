@@ -78,9 +78,8 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/chapter/:id',
+    path: '/chapter',
     name: 'chapter',
-    props:true,
     component: () => import( '../views/BookChapter.vue'),
     meta: {
       title: "悦读-内容"

@@ -49,6 +49,7 @@ import { useStore } from 'vuex'
 import zgaxios from "../tools/zgaxios";
 import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
+import { ElMessage, ElLoading } from 'element-plus'
 var JSONbigString = require('json-bigint')({"storeAsString": true});
 export default defineComponent({
   setup(props, context) {
@@ -84,6 +85,9 @@ export default defineComponent({
         text.count = text.totalList.slice(0,99)
         fullscreenLoading.value = false
         addList()
+      }else if(data.result.code == 1009){
+          fullscreenLoading.value = false
+          ElMessage.error('请稍候重新加载页面')
       }
     };
     getcatalogue();
@@ -91,15 +95,14 @@ export default defineComponent({
       store.commit('pushList',text.totalList )
     }
     const sizechange = function(page) {
-      console.log(page);
+      // console.log(page);
       let first = (page-1)*100
       let last = page*100
       text.count = text.totalList.slice(first,last)
     };
     function goToChap(id){
-      router.push({
-        path:`/chapter/${id}`,
-      })
+      store.commit('pushChapterId',id)
+      router.push('/chapter')
     }
     return {
       ...toRefs(text),
