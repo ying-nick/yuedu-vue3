@@ -1,5 +1,6 @@
 <template>
   <div id="container">
+<<<<<<< HEAD
     <div class="head">
       <el-row :gutter="10" class="el">
         <el-col :span="6" class="col"><span class="title">悦读</span></el-col>
@@ -19,6 +20,11 @@
             <span @click="tologin">登录</span>
             <span>注册</span>
           </div>
+=======
+    <headx></headx>
+    <router-view></router-view>
+  </div>
+>>>>>>> xuning
 
         </el-col>
       </el-row>

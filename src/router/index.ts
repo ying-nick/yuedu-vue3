@@ -23,11 +23,20 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/detail',
     name: 'detail',
+<<<<<<< HEAD
     component: () => import('../views/Detail.vue'),
     children: [
      { path: "1",
       component: () => import('../views/1.vue')}
     ]
+=======
+    component: () => import( '../views/Detail.vue')
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import( '../views/register.vue')
+>>>>>>> xuning
   }
 ]
 
