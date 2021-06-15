@@ -214,8 +214,8 @@ export default defineComponent({
         // console.log(data)
         if (result.code == 0) {
           commit('getReadMost', data.data)
-          states.weekread = booklist(state.readMost.list, 50, 99)
-          states.seelists = booklist(state.readMost.list, 0, 49)
+          states.weekread = booklist(data.data, 50, 99)
+          states.seelists = booklist(data.data, 0, 49)
           states.loading = false
         } else {
           throw new Error('无数据')
