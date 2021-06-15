@@ -1,5 +1,13 @@
+
 <template>
   <div>
-    <el-link type="primary">主要链接</el-link>
+    <button>跳转</button>
   </div>
 </template>
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  setup() {},
+})
+</script>

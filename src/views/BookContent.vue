@@ -11,12 +11,12 @@
             <a class="gra">作者：</a>
             <a class="blac">{{ list.author }}</a>
             <a class="gra">类别：</a>
-            <a class="blac">{{ list.fictionType }}</a>
+            <a class="blac">{{ list.categoryName }}</a>
             <a class="gra">状态：</a>
             <a class="blac">{{ list.title }}</a>
             <a class="gra">字数：</a>
             <a class="blac">{{
-              count.length > 1000 ? "10万以上" : "10万以下"
+              list.word 
             }}</a>
           </div>
         </div>
@@ -24,7 +24,7 @@
         <el-row :gutter="20">
           <el-col :span="8" v-for="item in count" :key="item" class="flow">
             <div class="grid-content bg-purple now" id="now">
-              {{ item.title }}
+              {{ item.name }}
               <span style="color:red">[免费]</span>
             </div>
           </el-col>
@@ -54,22 +54,23 @@ export default defineComponent({
       count: [],//根据page来获取
       totalList:[]//总数据
     });
-    const getList = async () => {
-      let { data } = await zgaxios("GET", `${detailUrl}斗罗大陆`);
-      // console.log(data.data.data[0].fictionId);
-      if (data.code == 0) {
-        text.list = data.data.data[0];
-        // console.log(text.list.fictionId);
-      }
-    };
-    getList();
+    // const getList = async () => {
+    //   let {data} = await zgaxios("GET", `${detailUrl}?keyWord=斗罗大陆&pageNum=1&pageSize=1`);
+    //   console.log(data.result);
+    //   if (data.result.code == 0) {
+    //     text.list = data.data.list[0]
+        
+    //     console.log(text.list);
+    //   }
+    // };
+    // getList();
     const getcatalogue = async () => {
-      let { data } = await zgaxios("GET", `${detailList}11710`);
-      // console.log(data);
-      if (data.code == 0) {
-        text.totalList = data.data.data;
+      let { data } = await zgaxios("GET", `${detailList}?bookId=35707`);
+      // console.log(data.data);
+      if (data.result.code == 0) {
+        text.list = data.data
+        text.totalList = data.data.chapters;
         text.count = text.totalList.slice(0,99)
-        console.log(data.data.data);
       }
     };
     getcatalogue();

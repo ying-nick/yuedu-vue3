@@ -1,4 +1,6 @@
-export const detailUrl = "/novel/fiction/search/title/";
-export const detailList = "http://api.pingcc.cn/fictionChapter/search/";
-
-
+export const searchUrl = "/novel/fiction/search/title";
+export const searchUrlYnv = "/ynv/app/open/api/book/search";
+export const detailUrlYnv = "/ynv/app/open/api/book/getDetail";
+export const mostUrlYnv = "/ynv/app/open/api/category/discoveryAll";
+export const detailUrl = '/ynv/app/open/api/book/search';
+export const detailList = '/ynv/app/open/api/chapter/getByBookId'
