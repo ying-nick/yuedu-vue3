@@ -32,6 +32,26 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/register',
+    name: 'register',
+    component: () => import( '../views/register.vue')
+  },
+  {
+    path: '/bookshelf',
+    name: 'bookshelf',
+    component: () => import( '../views/bookshelf.vue')
+  },
+  {
+    path: '/cartoon',
+    name: 'cartoon',
+    component: () => import( '../views/cartoon.vue')
+  },
+  {
+    path: '/cartoon/detail',
+    name: 'cartoondetail',
+    component: () => import( '../views/cartoondetail.vue')
+  },
+  {
     path: '/detail',
     name: 'detail',
     component: () => import('../views/Detail.vue'),

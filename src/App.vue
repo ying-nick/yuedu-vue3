@@ -18,7 +18,7 @@
         </el-col>
         <el-col :span="6" class="col">
           <div class="dv">
-            <span>我的书架</span>
+            <span @click="tobookshelf">我的书架</span>
             <span @click="tologin">登录</span>
             <span>注册</span>
           </div>
@@ -31,7 +31,7 @@
         <el-menu-item index="/home">首页</el-menu-item>
         <el-menu-item index="/">排行榜</el-menu-item>
         <el-menu-item index="/detail">分类</el-menu-item>
-        <el-menu-item index="/">漫画</el-menu-item>
+        <el-menu-item index="/cartoon">漫画</el-menu-item>
       </el-menu>
     </div>
 
@@ -134,11 +134,15 @@ export default defineComponent({
       router.push('/login')
     }
     function tohome() {}
+    function tobookshelf(e) {
+      router.push('/bookshelf')
+    }
     return {
       ...toRefs(states),
       bookSeach,
       tologin,
       tohome,
+      tobookshelf,
       key,
       route,
     }
