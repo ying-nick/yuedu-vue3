@@ -176,13 +176,7 @@ export default defineComponent({
       seelists: [],
       idx: 0,
     })
-    async function ml() {
-      let data = await zgaxios(
-        'GET',
-        'http://yuenov.com:18888/app/open/api/chapter/getByBookId?bookId=38386'
-      )
-      console.log(data)
-    }
+    function ml() {}
     //筛选器函数
     function booklist(arr = [], begin, last, start = 0, end = 4) {
       let li = arr.filter((item, index) => {
