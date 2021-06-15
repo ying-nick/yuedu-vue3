@@ -3,7 +3,6 @@ import createPersistedState from "vuex-persistedstate";
 
 type IStore = {
   state: {
-
     searchData: any;
     bookDetails: any;
     readMost: any;

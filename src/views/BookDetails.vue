@@ -82,7 +82,7 @@
             </div>
           </div>
           <div class="mainbar">
-            
+
             <el-divider content-position="left">大家都在看</el-divider>
             <div class="mainsee">
               <el-space direction="vertical">
@@ -174,10 +174,11 @@ export default defineComponent({
       seelists: [],
     })
     //筛选器函数
-    function booklist(arr, begin, last, start = 0, end = 4) {
+    function booklist(arr = [], begin, last, start = 0, end = 4) {
       let li = arr.filter((item, index) => {
         return begin <= index && index <= last
       })
+      // console.log(li)
       return li.filter((item, index) => {
         return start <= index && index <= end
       })
@@ -213,9 +214,10 @@ export default defineComponent({
         let { result } = data
         // console.log(data)
         if (result.code == 0) {
+          // console.log(data.data)
           commit('getReadMost', data.data)
-          states.weekread = booklist(data.data, 50, 99)
-          states.seelists = booklist(data.data, 0, 49)
+          states.weekread = booklist(data.data.list, 50, 99)
+          states.seelists = booklist(data.data.list, 0, 49)
           states.loading = false
         } else {
           throw new Error('无数据')
@@ -228,10 +230,11 @@ export default defineComponent({
     setTimeout(() => {
       // getreads()
       // console.log(state.readMost)
-      states.weekread = booklist(state.readMost.list, 50, 99)
+       states.weekread = booklist(state.readMost.list, 50, 99)
       states.seelists = booklist(state.readMost.list, 0, 49)
       states.loading = false
     }, 10000)
+
     return {
       ...toRefs(states),
       staduce,
