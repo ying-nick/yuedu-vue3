@@ -61,8 +61,8 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/catagory',
-    name: 'catagory',
+    path: '/category',
+    name: 'category',
     component: () => import( '../views/Category.vue'),
     meta: {
       title: "悦读-分类"
