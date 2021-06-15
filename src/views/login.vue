@@ -4,11 +4,10 @@
       <el-row>
         <el-col :span="14">
           <div class="formleft">
-            <h1>登录悦读</h1>
+            <div class="leftcaption">登录悦读</div>
             <el-form
               :model="Form"
               :rules="rules"
-              label-width="100px"
               class="demo-ruleForm"
             >
               <el-form-item label="" prop="name">
@@ -22,15 +21,17 @@
                 ></el-input>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="submitForm()">登录</el-button>
+                <el-button type="warning" @click="submitForm()">登录</el-button>
               </el-form-item>
             </el-form>
           </div>
         </el-col>
         <el-col :span="10">
           <div class="formright">
-           <h1>还没有注册账号？</h1>
-           <el-button type="warning" @click="toregister">立即注册</el-button>
+            <div class="rightcaption">没有账号？</div>
+            <div>
+               <el-button type="warning" @click="toregister">注册</el-button>
+            </div>
           </div>
         </el-col>
       </el-row>
@@ -41,8 +42,10 @@
 import { defineComponent, reactive, ref } from "vue";
 import zgaxios from "@/tools/zgaxios";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 export default defineComponent({
   setup() {
+    const { commit } = useStore();
     const router = useRouter();
     let Form = reactive({
       name: "",
@@ -64,16 +67,32 @@ export default defineComponent({
             `lgn/login/cellphone?phone=${Form.name}&password=${Form.password}`
           );
           if (data.code == 200) {
+            let userinfo = {
+              nickname: "",
+              avatar:''
+            };
+            let getuserinfo = async () => {
+              let { data } = await zgaxios("POST", "lgn/user/account");
+              userinfo.nickname = data.profile.nickname;
+              userinfo.avatar = data.profile.avatarUrl;
+              let doAdd = (userinfo) => {
+                commit("adduserinfo",userinfo);
+              };
+              doAdd(userinfo)
+            };
+            getuserinfo();
             router.push("/home");
+          } else {
+            alert("密码或账号错误");
           }
         };
         login();
       }
     }
-    function toregister(){
-       router.push('/register')
+    function toregister() {
+      router.push("/register");
     }
-    return { Form, rules, submitForm,toregister};
+    return { Form, rules, submitForm, toregister,commit };
   }
 });
 </script>
@@ -81,15 +100,19 @@ export default defineComponent({
 .form {
   width: 50%;
   height: 300px;
+  min-width: 1050px;
   background-color: #fff;
-  margin: 100px auto;
-  // display: flex;
+  margin: 50px auto;
+  text-align: center;
   .formleft {
     height: 500px;
-    h1 {
-      margin-left: 30%;
-      height: 50px;
-      line-height: 50px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    .leftcaption {
+      height: 100px;
+      line-height: 100px;
+      font-size: 20px;
     }
     .el-form {
       .el-input {
@@ -99,6 +122,20 @@ export default defineComponent({
   }
   .formright {
     height: 500px;
+    text-align: center;
+    flex-direction: column;
+    .rightcaption{
+      font-size: 20px;
+      line-height: 100px;
+      height: 100px;
+      width: 100%;
+    }
+   
+  }
+  .el-button {
+    background-color: #f80;
+    width: 50%;
+    border-radius: 20px;
   }
 }
 </style>
