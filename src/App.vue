@@ -151,10 +151,15 @@ export default defineComponent({
         lgn: false,
       }
       commit('adduserinfo', userinfo)
+      // console.log(route.path)
     }
 
     function tobookshelf(e) {
-      router.push('/bookshelf')
+      if (!states.lgn) {
+        router.push('/login')
+      } else {
+        router.push('/bookshelf')
+      }
     }
     return {
       ...toRefs(states),
