@@ -209,7 +209,7 @@ export default defineComponent({
     
     let all = window.screen.width
     let middle = all-(all*0.45+140)
-    let sum = middle/2 -60
+    let sum = middle/2 -100
     console.log(sum)
 
     let allheight = window.screen.availHeight
