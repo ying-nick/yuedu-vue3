@@ -235,6 +235,12 @@ export default defineComponent({
         display: flex;
         justify-content: space-around;
         align-items: center;
+        .demo-type {
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
         span {
           cursor: pointer;
           overflow: hidden;

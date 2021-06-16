@@ -247,7 +247,7 @@ export default defineComponent({
     setTimeout(() => {
       // getreads()
       // console.log(state.readMost)
-      states.weekread = booklist(state.readMost.list, num - 5, num - 1)
+        states.weekread = booklist(state.readMost.list, num - 5, num - 1)
       states.seelists = booklist(state.readMost.list, 0, num - 6)
       states.loading = false
     }, 10000)
