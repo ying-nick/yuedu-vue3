@@ -71,7 +71,7 @@ export default defineComponent({
     })
     const getcatalogue = async () => {
       
-      let {data}  = await axios('http://yuenov.com/app/open/api/chapter/getByBookId?bookId=35707',{
+      let {data}  = await axios(`http://yuenov.com/app/open/api/chapter/getByBookId?bookId=${text.bookId}`,{
          // `transformResponse` 在传递给 then/catch 前，允许修改响应数据
         transformResponse: [function (data) {
           // 对 data 进行任意转换处理
