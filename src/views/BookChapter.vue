@@ -59,7 +59,8 @@
             >
           </div>
         </div>
-        <div class="backtop">
+        <div class="backtop" 
+          :style="{ left: sum+'px',top:middheight+'px'}">
           <div class="top1" @click="gotoCont">
             <span class="el-icon-s-order ic"></span>
             <div>目录</div>
@@ -205,6 +206,15 @@ export default defineComponent({
     function handleChange(){
       textSize.size = textNumber.value+'px'
     }
+    
+    let all = window.screen.width
+    let middle = all-(all*0.45+140)
+    let sum = middle/2 -60
+    console.log(sum)
+
+    let allheight = window.screen.availHeight
+    let middheight = allheight/2-100
+  console.log(middheight)
     return {
       content,
       fullscreenLoading,
@@ -220,7 +230,9 @@ export default defineComponent({
       back,
       textNumber,
       handleChange,
-      textSize
+      textSize,
+      sum,
+      middheight
     };
   }
 });
@@ -246,8 +258,7 @@ export default defineComponent({
   }
   .backtop {
     position: fixed;
-    left: 20%;
-    top: 40%;
+    top: 300px;
     .top1 {
       width: 60px;
       height: 60px;
