@@ -9,7 +9,7 @@
             </div>
 
             <div class="btn">
-              <el-button type="primary" icon="el-icon-s-unfold" @click="ml">全部目录</el-button>
+              <el-button type="primary" icon="el-icon-s-unfold" @click="goToContent">全部目录</el-button>
               <el-button type="primary" icon="el-icon-s-management">立即阅读</el-button>
             </div>
           </div>
@@ -176,7 +176,7 @@ export default defineComponent({
       seelists: [],
       idx: 0,
     })
-    function ml() {}
+
     //筛选器函数
     function booklist(arr = [], begin, last, start = 0, end = 4) {
       let li = arr.filter((item, index) => {
@@ -309,6 +309,9 @@ export default defineComponent({
         })
       }
     }
+    function goToContent() {
+      router.push('/content')
+    }
     return {
       ...toRefs(states),
       staduce,
@@ -317,7 +320,7 @@ export default defineComponent({
       chg,
       godetail,
       booksave,
-      ml,
+      goToContent,
     }
   },
 })

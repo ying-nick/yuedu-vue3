@@ -3,12 +3,14 @@ import createPersistedState from "vuex-persistedstate";
 
 type IStore = {
   state: {
+    chapterId:any,
+    chapter: any,
     searchData: any;
     bookDetails: any;
     readMost: any;
-    details:any;
-    user:any;
-    tableData:any;
+    details: any;
+    user: any;
+    tableData: any;
   }
   mutations: {
     getSearchData(state: any, data: any),
@@ -16,19 +18,23 @@ type IStore = {
     getReadMost(state: any, data: any),
     adduserinfo(state:any,data:any),
     delete(state: any, data: any),
-    setBook(state:any, data:any)
+    setBook(state: any, data: any),
+    pushList(state: any, data: any),
+    pushChapterId(state:any,data:any)
   },
   actions: {},
   modules: {},
   getters: {},
   plugins: any[]
 }
-const store: IStore ={
+const store: IStore = {
   state: {
+    chapterId:'',
+    chapter: '',
     searchData: {},
     bookDetails: {},
-    readMost:[], 
-     details:[],
+    readMost: [],
+    details: [],
     //用户信息
     user:{
       nickname:'',
@@ -89,7 +95,13 @@ delete(state,content){
         throw new Error('书籍已存在')
       }
      
-}
+    },
+    pushList(state, data) {
+      state.chapter = [...data]
+    },
+    pushChapterId(state, data) {
+      state.chapterId = data
+    }
 },
 
   actions: {

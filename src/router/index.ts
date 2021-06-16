@@ -80,6 +80,22 @@ const routes: Array<RouteRecordRaw> = [
       // console.log(to.params.title)
     next()
   },
+  },
+  {
+    path: '/content',
+    name: 'content',
+    component: () => import( '../views/BookContent.vue'),
+    meta: {
+      title: "悦读-目录"
+    }
+  },
+  {
+    path: '/chapter',
+    name: 'chapter',
+    component: () => import( '../views/BookChapter.vue'),
+    meta: {
+      title: "悦读-内容"
+    }
   }
 ]
 
