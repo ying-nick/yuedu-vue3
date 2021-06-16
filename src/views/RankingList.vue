@@ -30,17 +30,10 @@
 
 <!-- 
 <div class="block">
-
-
-  <el-pagination
-  
-    layout="prev, pager, next"
-    :total="100">
+  <el-pagination background layout="prev, pager, next" :total="count" @current-change="handleCurrentChange">
   </el-pagination>
 </div> -->
-
-
-   
+  
       </el-tab-pane>
       <!-- --------------------------------------------------------------------- -->
       <el-tab-pane label="好评榜">
@@ -121,14 +114,18 @@ import {
 
 export default defineComponent({
   setup() {
+
+ 
+
     const state = reactive({
       endList: [],
       praiseList: [],
       hotsearchList: [],
       baiduList: [],
-
       tabPosition: "right",
     });
+    // const list = state.endList
+
     //获取完结榜API
     const getEndList = async () => {
       let { data } = await zgaxios("GET", `${EndListsUrl}`);
@@ -162,8 +159,21 @@ export default defineComponent({
     const todetail=(endList)=>{ 
        console.log("书的id是：",endList._id,"书的名字是：",endList.title)
     }
-    
-    return { ...toRefs(state) ,todetail };
+    //页码切换
+function booklist(arr, start = 0, end = 9) {
+      return arr.filter((item, index) => {
+        return start <= index && index <= end
+      })
+    }
+
+    function handleCurrentChange(val) {
+      // console.log(`当前页: ${val}`)
+      let start = (val - 1) * 10
+      let end = start + 9
+      state.endList = booklist(list, start, end)
+    }
+ 
+    return { ...toRefs(state) ,todetail};
 
   },
 
