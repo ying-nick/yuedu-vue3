@@ -16,7 +16,7 @@
           </div>
         </el-col>
         <el-col :span="3">
-          <div class="author">{{ cartoondata.comic.author.name }}</div>
+          <div class="author">{{ cartoondata.comic.author.name}}</div>
         </el-col>
         <el-col :span="12">
           <el-row>
@@ -83,7 +83,7 @@ export default defineComponent({
     //获取当前漫画
     let getcomic = () => {
       cartoondata.comic = state.comic;
-      
+      // console.log(cartoondata.comic)
     };
     getcomic();
     //获取当前章节id

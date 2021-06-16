@@ -2,29 +2,28 @@
   <div>
     <div class="cartooncontainer">
       <el-row>
-        <el-col :span="6" style="height:1000px;">
-          <div class="leftnav">
-            <ul>
-              <li v-for="item in cartoondata.menuItemList" :key="item">
-                {{ item }}
-              </li>
-            </ul>
-          </div>
-        </el-col>
-        <el-col :span="18" style="height:1700px;">
-          <div class="rightcontent">
+        <el-col :span="18" class="rightcontent">
+          <div >
             <div class="search">
               <el-input
                 placeholder="请输入漫画名，关键字"
                 v-model="cartoondata.input"
               >
                 <template #append>
-                  <el-button icon="el-icon-search"></el-button>
+                  <el-button
+                    icon="el-icon-search"
+                    @click="searchcartoon"
+                  ></el-button>
                 </template>
               </el-input>
             </div>
             <div class="cartoonlist">
-              <ul>
+              <ul
+                v-loading="cartoondata.loading"
+                element-loading-text="别急哦,我超快的！"
+                element-loading-spinner="el-icon-loading"
+              >
+               <el-button v-if="null" :plain="true" @click="warn"></el-button>
                 <li
                   v-for="item in cartoondata.cartoonlist.slice(
                     (cartoondata.currentPage - 1) * cartoondata.pageSize,
@@ -36,8 +35,6 @@
                     <img :src="item.cover" alt="" />
                     <div class="name">{{ item.name }}</div>
                   </div>
-
-                  <div class="type">{{ item.tags }}</div>
                 </li>
               </ul>
             </div>
@@ -49,7 +46,7 @@
             @current-change="handleCurrentChange"
             :current-page="cartoondata.currentPage"
             :page-size="cartoondata.pageSize"
-            :total="19150"
+            :total="cartoondata.total"
           >
           </el-pagination>
         </el-col>
@@ -60,74 +57,113 @@
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 import zgaxios from "@/tools/zgaxios";
+import { ElMessage } from 'element-plus'
 import { useRouter } from "vue-router";
 export default defineComponent({
   setup() {
-     const router = useRouter();
+    const router = useRouter();
     let cartoondata = reactive({
-      menuItemList: ['全部','搞笑','魔幻','生活','恋爱','动作','科幻','战争','体育','推理','惊奇','同人'],
       input: "",
       cartoonlist: [],
-      pageSize:30,
+      pageSize: 30,
       currentPage: 1,
-      page: 1
+      page: 1,
+      searlist: [],
+      loading: true,
+      total:19150
     });
-    
+    var list: any = [];
+    let  warn=()=>{
+          ElMessage.error('没找到哦！');
+    }
+    //获取全部漫画列表
     let getlist = async () => {
+      cartoondata.total=19150
       let { data } = await zgaxios(
         "GET",
         `/yyq/list/conditionScreenlists?v=5300100&page=${cartoondata.page}`
       );
       cartoondata.cartoonlist = data.data.returnData.comics;
-      console.log(data);
+      cartoondata.loading = false;
+      // console.log(data);
     };
     getlist();
+    //  搜索漫画
+    let searchcartoon = async () => {
+      cartoondata.loading = true;
+      if (!cartoondata.input) {
+        cartoondata.loading = false;
+        getlist();
+      }
+      cartoondata.cartoonlist = [];
+      list = [];
+      let { data } = await zgaxios(
+        "GET",
+        `/yyq/search/relative?inputText=${cartoondata.input}`
+      );
+      if (data.data.message != "未找到") {
+        data.data.returnData.map((item) => {
+          cartoondata.searlist = item.comic_id;
+          getcartoondetail(item.comic_id).then(() => {
+            setTimeout(() => {
+              cartoondata.cartoonlist = list;
+              cartoondata.total=list.length
+              cartoondata.loading = false;
+            }, 1000);
+          });
+        });
+      } else {
+        warn()
+      }
+    };
+    //获取搜索漫画详情
+    let getcartoondetail = async id => {
+      let { data } = await zgaxios(
+        "GET",
+        `/yyq/comic/detail_static_new?comicid=${id}`
+      );
+      list.push(data.data.returnData.comic);
+      //  cartoondata.cartoonlist=data.data.returnData.comic
+    };
+
     let handleCurrentChange = val => {
-      cartoondata.page=val,
+      cartoondata.page = val;
       getlist();
     };
-    let todetail=(id)=>{
-        router.push(`/cartoon/detail/${id}`)
-    }
-    return { getlist, reactive, cartoondata, handleCurrentChange,todetail };
+    let todetail = id => {
+      router.push(`/cartoon/detail/${id}`);
+    };
+    return {
+      warn,
+      list,
+      getcartoondetail,
+      searchcartoon,
+      getlist,
+      reactive,
+      cartoondata,
+      handleCurrentChange,
+      todetail
+    };
   }
 });
 </script>
 
 <style lang="less" scoped>
 .cartooncontainer {
-  width: 80%;
+  width:100%;
   height: 1700px;
   min-width: 1050px;
-  background-color: #fff;
+  // background-color: #fff;
   margin: 20px auto;
 }
-.leftnav {
-  width: 90%;
-  height: 100%;
-  max-width:296px ;
-  border: 1px solid #f80;
-  display: flex;
-  flex-wrap: wrap;
-  ul {
-    list-style: none;
-    display: block;
-    li {
-      float: left;
-      height: 32px;
-      line-height: 32px;
-      text-align: center;
-      cursor: pointer;
-      padding: 0 14px;
-      margin: 0 3px 3px 0;
-    }
-  }
-}
 .rightcontent {
-  width: 100%;
-  height: 100%;
-//   margin-right: 200px;
-  border: 1px solid #f80;
+  width: 95%;
+  height: auto;
+  background-color: #fff;
+   margin: 20px auto;
+   position: relative;
+  // border: 1px solid #f80;
+ 
 }
 .search {
   text-align: center;
@@ -155,12 +191,14 @@ export default defineComponent({
 }
 .cartoonlist {
   width: 100%;
-  height: 720px;
-//   margin-left: 10px;
+  height: 100%;
+  
+  //   margin-left: 10px;
   margin-right: 25px;
   ul {
     list-style: none;
     display: block;
+    
 
     li {
       float: left;
@@ -170,7 +208,7 @@ export default defineComponent({
       text-align: center;
       cursor: pointer;
       padding: 0 14px 100px 0;
-      position: relative;
+      
       .todetail {
         position: relative;
         img {
@@ -181,6 +219,7 @@ export default defineComponent({
         .name {
           position: absolute;
           bottom: 160px;
+          white-space: nowrap;
           height: 20px;
           font-size: 15px;
           font-weight: bolder;
@@ -197,7 +236,7 @@ export default defineComponent({
 }
 .page {
   position: absolute;
-  bottom: 50px;
+  bottom: 10px;
 }
 /deep/.el-tabs__item.is-active {
   color: #f80;
