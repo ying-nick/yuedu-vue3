@@ -47,9 +47,16 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import( '../views/cartoon.vue')
   },
   {
-    path: '/cartoon/detail',
+    path: '/cartoon/detail/:id',
     name: 'cartoondetail',
+    props:true,
     component: () => import( '../views/cartoondetail.vue')
+  },
+  {
+    path: '/cartoon/detail/:id/:chapterid/:title',
+    name: 'cartoondetailread',
+    props:true,
+    component: () => import( '../views/cartoonread.vue')
   },
   {
     path: '/detail',

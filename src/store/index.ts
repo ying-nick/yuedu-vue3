@@ -10,6 +10,8 @@ type IStore = {
     details:any;
     user:any;
     tableData:any;
+    chapterlist:any;
+    comic:any;
   }
   mutations: {
     getSearchData(state: any, data: any),
@@ -17,6 +19,8 @@ type IStore = {
     getReadMost(state: any, data: any),
     adduserinfo(state:any,data:any),
     delete(state:any,data:any),
+    addchapterlist(state:any,data:any),
+    addcomic(state:any,data:any),
   },
   actions: {},
   modules: {},
@@ -42,7 +46,11 @@ const store: IStore ={
         name: "斗破苍穹1",
         newpage: "一千一百章"
       }
-    ]
+    ],
+    //当前漫画
+    chapterlist:[],
+    comic:'',
+    
   },
   mutations: {
     getSearchData(state, data) {
@@ -73,6 +81,14 @@ delete(state,content){
      }
   })
 },
+
+addchapterlist(state,data){
+   state.chapterlist=data
+},
+addcomic(state,data){
+  state.comic=data
+  console.log(state.comic)
+}
 },
 
   actions: {

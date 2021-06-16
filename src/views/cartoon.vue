@@ -87,7 +87,7 @@ export default defineComponent({
       getlist();
     };
     let todetail=(id)=>{
-        router.push(`/cartoon/detail?${id}`)
+        router.push(`/cartoon/detail/${id}`)
     }
     return { getlist, reactive, cartoondata, handleCurrentChange,todetail };
   }
