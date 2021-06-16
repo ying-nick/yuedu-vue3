@@ -1,12 +1,16 @@
 <template>
   <div class="container">
-    <el-tabs :tab-position="tabPosition" class="el-tabs">
-      <el-tab-pane label="完结榜">
+    <el-tabs :tab-position="tabPosition" class="el-tabs" >
+      <el-tab-pane label="完结榜" >
         <!-- <div class="container-1"> -->
         <!-- <h1 class="Hwanjiebang">完结榜</h1> -->
         <!-- 分割线 -->
         <!-- <el-divider></el-divider> -->
-        <el-table :data="endList" style="width: 100%">
+
+
+
+
+     <el-table :data="endList"  @row-click="todetail" style="width: 100%" class="mouseChange">
           <el-table-column
             label="排名"
             width="80"
@@ -22,14 +26,28 @@
           </el-table-column>
           <el-table-column label="作者" prop="author"> </el-table-column>
         </el-table>
-        <!-- </div> -->
+
+
+<!-- 
+<div class="block">
+
+
+  <el-pagination
+  
+    layout="prev, pager, next"
+    :total="100">
+  </el-pagination>
+</div> -->
+
+
+   
       </el-tab-pane>
       <!-- --------------------------------------------------------------------- -->
       <el-tab-pane label="好评榜">
         <!-- <h1 class="Hwanjiebang">好评榜</h1> -->
         <!-- 分割线 -->
         <!-- <el-divider></el-divider> -->
-        <el-table :data="praiseList" style="width: 100%">
+        <el-table :data="praiseList" @row-click="todetail" style="width: 100%" class="mouseChange">
           <el-table-column
             label="排名"
             width="80"
@@ -51,7 +69,7 @@
         <!-- <h1 class="Hwanjiebang">热搜榜</h1> -->
         <!-- 分割线 -->
         <!-- <el-divider></el-divider> -->
-        <el-table :data="hotsearchList" style="width: 100%">
+        <el-table :data="hotsearchList" @row-click="todetail" style="width: 100%" class="mouseChange">
           <el-table-column
             label="排名"
             width="80"
@@ -67,9 +85,26 @@
           </el-table-column>
           <el-table-column label="作者" prop="author"> </el-table-column>
         </el-table>
-        <!-- --------------------------------------------------------------------- -->
       </el-tab-pane>
-      <el-tab-pane label="排行榜4">排行榜4</el-tab-pane>
+      <!-- --------------------------------------------------------------------- -->
+      <el-tab-pane label="百度榜">
+        <el-table :data="baiduList" @row-click="todetail" style="width: 100%" class="mouseChange">
+          <el-table-column
+            label="排名"
+            width="80"
+            type="index"
+            :index="indexMethod"
+          ></el-table-column>
+          <el-table-column
+            label="类别"
+            width="100"
+            prop="majorCate"
+          ></el-table-column>
+          <el-table-column label="书名" width="280" prop="title">
+          </el-table-column>
+          <el-table-column label="作者" prop="author"> </el-table-column>
+        </el-table>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -77,7 +112,12 @@
 <script>
 import { defineComponent, reactive, toRefs } from "vue";
 import zgaxios from "@/tools/zgaxios";
-import { EndListsUrl, PraiseListsUrl, HotsearchListsUrl } from "@/tools/api";
+import {
+  EndListsUrl,
+  PraiseListsUrl,
+  HotsearchListsUrl,
+  BaiduListsUrl,
+} from "@/tools/api";
 
 export default defineComponent({
   setup() {
@@ -85,6 +125,7 @@ export default defineComponent({
       endList: [],
       praiseList: [],
       hotsearchList: [],
+      baiduList: [],
 
       tabPosition: "right",
     });
@@ -110,8 +151,22 @@ export default defineComponent({
     };
     getHotsearchListsUrl();
 
-    return { ...toRefs(state) };
+    //获取百度热搜榜API
+    const getBaiduListsUrl = async () => {
+      let { data } = await zgaxios("GET", `${BaiduListsUrl}`);
+      state.baiduList = data.ranking.books;
+    };
+    getBaiduListsUrl();
+
+    //跳转书本详情
+    const todetail=(endList)=>{ 
+       console.log("书的id是：",endList._id,"书的名字是：",endList.title)
+    }
+    
+    return { ...toRefs(state) ,todetail };
+
   },
+
 });
 </script>
 
@@ -137,12 +192,13 @@ export default defineComponent({
   position: absolute;
   margin-top: 0.8rem;
 }
-// .Hwanjiebang {
-//   margin-left: 0.5rem;
-//   padding-top: 0.3rem;
-// }
+
 .el-tabs {
   width: 15rem;
   margin: 0 auto;
+ }
+
+.mouseChange{
+   cursor:pointer;
 }
 </style>
