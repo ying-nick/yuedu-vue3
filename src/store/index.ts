@@ -32,7 +32,9 @@ const store: IStore ={
     //用户信息
     user:{
       nickname:'',
-      avatar:''
+      lgn: false,
+      src: ''
+      
     },
     //书架信息
     tableData: [
@@ -61,9 +63,10 @@ const store: IStore ={
       // console.log(state.bookDetails)
     },
     //获取用户信息
-    adduserinfo(state,content){
-      state.user=content
-      console.log(state.user)
+    adduserinfo(state, content) {
+      state.user = content
+      location.reload();
+      // console.log(state.user)
 },
 //从书架删除
 delete(state,content){
