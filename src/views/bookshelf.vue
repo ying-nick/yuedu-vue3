@@ -38,9 +38,7 @@
               </el-table-column>
               <el-table-column prop="picture" label="" width="100">
                 <template #default="scope">
-                  <img
-                    :src="scope.row.picture"
-                  />
+                  <img :src="scope.row.picture" />
                 </template>
               </el-table-column>
               <el-table-column align="center" prop="name" label="书名" width="200">
@@ -75,13 +73,15 @@ export default defineComponent({
     function tohome() {
       if (!state.user.lgn) {
         router.push('/home')
+      } else {
+        return
       }
     }
     tohome()
     let data = reactive({
       nickname: state.user.nickname,
       avatar: state.user.src,
-      
+
       pageSize: 5,
       currentPage: 1,
       tableData: state.tableData,
