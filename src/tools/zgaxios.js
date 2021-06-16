@@ -37,7 +37,7 @@ function get(url, params) {
 function post(url, params) {
   return new Promise((resolve, reject) => {
     axios
-      .post(url, QS.stringify(params))
+      .post(url, JSON.stringify(params))
       .then(res => {
         resolve(res);
       })
@@ -61,7 +61,7 @@ axios.interceptors.request.use(
 //响应的拦截器
 axios.interceptors.response.use(
   response => {
-    //console.log("响应处理之前",response);
+    // console.log("响应处理之前",response);
     return response;
   },
   error => {

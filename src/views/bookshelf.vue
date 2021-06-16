@@ -48,9 +48,9 @@
                 </template>
               </el-table-column>
               <el-table-column prop="picture" label="" width="100">
-                <template #default="">
+                <template #default="scope">
                   <img
-                    src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"
+                    :src="scope.row.picture"
                   />
                 </template>
               </el-table-column>
@@ -105,15 +105,17 @@ import { defineComponent, reactive, ref } from "vue";
 import { useStore } from "vuex";
 export default defineComponent({
   setup() {
+   
     const { state, commit } = useStore();
     let data = reactive({
       nickname: state.user.nickname,
-      avatar: state.user.avatar,
-
+      avatar: state.user.src,
+      
       pageSize: 5,
       currentPage: 1,
       tableData: state.tableData
     });
+     console.log(state.tableData)
     //进入阅读
     function handleEdit(index, row) {
       console.log(index, row);
