@@ -180,7 +180,7 @@ export default defineComponent({
     }
     let all = window.screen.width
     let middle = all - (all * 0.45 + 140)
-    let sum = middle / 2 - 60
+    let sum = middle / 2 - 100
 
     let allheight = window.screen.availHeight
     let middheight = allheight / 2 - 100

@@ -90,7 +90,7 @@ delete(state,content){
      })
       if (idx == -1) {
         state.tableData.push(data)
-        console.log(state.tableData)
+        // console.log(state.tableData)
       } else {
         throw new Error('书籍已存在')
       }
