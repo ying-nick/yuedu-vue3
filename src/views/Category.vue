@@ -14,23 +14,24 @@
         </li>
         <li class="ca_class">
           <span class="tit">作品分类：</span>
-          <!-- <span class="so_girl on" v-for="(item,index) in bookCategories" :key="index">
+          <!-- <span class="on" v-for="(item,index) in MaleBookCategories" :key="index">
             {{item}}
           </span>-->
-          <el-tabs v-model="activeName" @tab-click="handleClickForMale" v-if="seen">
-            <el-tab-pane label="玄幻小说" name="first"></el-tab-pane>
-            <el-tab-pane label="修真小说" name="second"></el-tab-pane>
-            <el-tab-pane label="都市小说" name="third"></el-tab-pane>
-            <el-tab-pane label="科幻灵异" name="fourth"></el-tab-pane>
-            <el-tab-pane label="历史小说" name="fifth"></el-tab-pane>
-            <el-tab-pane label="其他小说" name="sixth"></el-tab-pane>
+          <el-tabs v-model="activeName" v-show="seen" @tab-click="getMaleCategoryList">
+            <el-tab-pane
+              :label="item.categoryName"
+              :name="index==0?'first':''"
+              v-for="(item,index) in MaleBookCategories"
+              :key="item"
+            ></el-tab-pane>
           </el-tabs>
-          <el-tabs v-model="activeName" @tab-click="handleClickForFemale" v-if="!seen">
-            <el-tab-pane label="都市小说" name="first"></el-tab-pane>
-            <el-tab-pane label="科幻灵异" name="second"></el-tab-pane>
-            <el-tab-pane label="言情小说" name="third"></el-tab-pane>
-            <el-tab-pane label="女生小说" name="fourth"></el-tab-pane>
-            <el-tab-pane label="其他小说" name="fifth"></el-tab-pane>
+          <el-tabs v-model="activeName" v-show="!seen" @tab-click="getFemaleCategoryList">
+            <el-tab-pane
+              :label="item.categoryName"
+              :name="index==0?'first':''"
+              v-for="(item,index) in FemaleBookCategories"
+              :key="item"
+            ></el-tab-pane>
           </el-tabs>
         </li>
       </ul>
@@ -44,7 +45,7 @@
         style="width: 100%"
         @row-click="handleCurrentChange"
       >
-        <el-table-column type="index" :index="indexMethod" label="序号" width="80"></el-table-column>
+        <el-table-column type="index" label="序号" width="80"></el-table-column>
         <el-table-column prop="categoryName" label="类别" width="150"></el-table-column>
         <el-table-column prop="title" label="书名" width="180"></el-table-column>
         <el-table-column prop="desc" label="描述"></el-table-column>
@@ -54,7 +55,7 @@
       <el-pagination
         background
         layout="prev, pager, next"
-        :total="100"
+        :total="total"
         @current-change="toChangePage"
         :current-page.sync="currentPage"
         :page-size="pageSize"
@@ -65,6 +66,9 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
 import zgaxios from "@/tools/zgaxios";
+import { ElMessage } from "element-plus";
+import router from '../router';
+
 export default defineComponent({
   name: "category",
   components: {},
@@ -75,33 +79,52 @@ export default defineComponent({
       loading: true,
       activeName: "first",
       seen: true,
-      channelId: 1,
-      categoryId: 1,
       pageSize: 10,
-      currentPage: 1
+      currentPage: 1,
+      bookCategoryM: 1,
+      bookCategoryF: 3,
+      total:10,
+      MaleBookCategories: [
+        { categoryId: 1, categoryName: "玄幻小说" },
+        { categoryId: 2, categoryName: "修真小说" },
+        { categoryId: 3, categoryName: "都市小说" },
+        { categoryId: 5, categoryName: "网游小说" },
+        { categoryId: 6, categoryName: "科幻灵异" },
+        { categoryId: 7, categoryName: "历史小说" },
+        { categoryId: 9, categoryName: "其他小说" }
+      ],
+      FemaleBookCategories: [
+        { categoryId: 3, categoryName: "都市小说" },
+        { categoryId: 6, categoryName: "科幻灵异" },
+        { categoryId: 8, categoryName: "言情小说" },
+        { categoryId: 9, categoryName: "其他小说" },
+        { categoryId: 10, categoryName: "女生小说" }
+      ]
     });
     // 获取男频小说分类列表
-    // const getDefaultTable = async () => {
+    // const getMaleDefaultTable = async () => {
     //   let { data } = await zgaxios(
     //     "GET",
     //     "http://yuenov.com:15555/app/open/api/category/getCategoryChannel"
     //   );
-    //   // console.log(data,"11111111111111")
+    //   console.log(data, "11111111111111");
     //   if (data.result.code == 0) {
-    //     let bookCategoriesArr = data.data.channels[0].categories;
-    //     //  console.log("222222222222",bookCategoriesArr)
-    //     let bookCategoriesTitle = bookCategoriesArr.map(item => {
-    //       if (item.categoryName) {
-    //         return item.categoryName;
-    //       }
-    //     });
-    //     state.bookCategories = bookCategoriesTitle;
+    //     state.MaleBookCategories = data.data.channels[0].categories;
+    //     state.FemaleBookCategories = data.data.channels[1].categories;
+    //     console.log("222222222222",state.FemaleBookCategories)
+    //     //     let bookCategoriesTitle = bookCategoriesArr.map(item => {
+    //     //       if (item.categoryName) {
+    //     //         return item.categoryName;
+    //     //       }
+    //     //     });
+    //     //     state.bookCategories = bookCategoriesTitle;
     //   }
     // };
-    // getDefaultTable();
+    // getMaleDefaultTable();
 
     // 封装获取第一页小说列表的函数
     const getBookList = async url => {
+      state.bookListTable = [];
       let { data } = await zgaxios("GET", url);
       // console.log(data,"22222222222222222222")
       // let bookListTable :any= [];
@@ -109,6 +132,10 @@ export default defineComponent({
         // bookListTable = [...state.bookListTable,...data.data.list]
         state.bookListTable = data.data.list;
         state.loading = false;
+        state.total = data.data.total
+      } else if (data.result.code == 1009) {
+        state.loading = false;
+        ElMessage.error("操作太频繁，请10s后再试");
       }
     };
     // 调用函数获取默认列表
@@ -132,84 +159,60 @@ export default defineComponent({
       }
     };
 
-    // 小说分类的点击事件(男频)
-    const handleClickForMale = (tab, e) => {
-      // console.log(e, "555555555");
-      if (e.target.innerText == "修真小说") {
-        getBookList(
-          "http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=2&channelId=1"
-        );
-      } else if (e.target.innerText == "都市小说") {
-        getBookList(
-          "http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=3&channelId=1"
-        );
-      } else if (e.target.innerText == "网游小说") {
-        getBookList(
-          "http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=5&channelId=1"
-        );
-      } else if (e.target.innerText == "科幻灵异") {
-        getBookList(
-          "http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=6&channelId=1"
-        );
-      } else if (e.target.innerText == "历史小说") {
-        getBookList(
-          "http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=7&channelId=1"
-        );
-      } else if (e.target.innerText == "其他小说") {
-        getBookList(
-          "http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=9&channelId=1"
-        );
-      } else {
-        getBookList(
-          "http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=1&channelId=1"
-        );
-      }
-    };
-    // 女频
-    const handleClickForFemale = (tab, e) => {
-      if (e.target.innerText == "科幻灵异") {
-        getBookList(
-          "http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=6&channelId=2"
-        );
-      } else if (e.target.innerText == "言情小说") {
-        getBookList(
-          "http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=8&channelId=2"
-        );
-      } else if (e.target.innerText == "其他小说") {
-        getBookList(
-          "http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=9&channelId=2"
-        );
-      } else if (e.target.innerText == "女生小说") {
-        getBookList(
-          "http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=10&channelId=2"
-        );
-      } else {
-        getBookList(
-          "http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=3&channelId=2"
-        );
-      }
+    // 男频小说分类列表的点击事件
+    function getMaleCategoryList(event) {
+      // console.log(event.index)
+      let bookCategoryM = state.MaleBookCategories.filter(item => {
+        return state.MaleBookCategories.indexOf(item) == event.index;
+      });
+      // console.log(bookCategoryM);
+      state.bookCategoryM = bookCategoryM[0].categoryId;
+      getBookList(
+        `http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=${state.bookCategoryM}&channelId=1`
+      );
+    }
+    // 女频小说的分类列表
+    const getFemaleCategoryList = e => {
+      let bookCategoryF = state.FemaleBookCategories.filter(item => {
+        return state.FemaleBookCategories.indexOf(item) == e.index;
+      });
+      // console.log(bookCategoryF);
+      state.bookCategoryF = bookCategoryF[0].categoryId;
+      getBookList(
+        `http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=${state.bookCategoryF}&channelId=2`
+      );
     };
 
     // 分页
     const toChangePage = e => {
       console.log(`当前页: ${e}`);
-      // getBookList(
-      //   `http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=${e}&pageSize=10&categoryId=1&channelId=1`
-      // );
+      if (state.seen) {
+        setTimeout(() => {
+          getBookList(
+            `http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=${e}&pageSize=10&categoryId=${state.bookCategoryM}&channelId=1`
+          );
+        }, 10000);
+      } else {
+        setTimeout(() => {
+          getBookList(
+            `http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=${e}&pageSize=10&categoryId=${state.bookCategoryF}&channelId=2`
+          );
+        }, 10000);
+      }
     };
 
     // 点击跳转阅读页
-    const handleCurrentChange = (row, column)=>{
-      console.log(row,"--------",column, "xxxxxxxxxxxxx")
-      
-    }
+    const handleCurrentChange = (row, column) => {
+      // console.log(row.bookId, row.title);
+      // router.push(`/bookdetails/${row.title}`)
+    };
 
     return {
       ...toRefs(state),
-      handleClickForMale,
+      getMaleCategoryList,
       toChoose,
       toChangePage,
-      handleClickForFemale,
+      getFemaleCategoryList,
       handleCurrentChange
     };
   }
