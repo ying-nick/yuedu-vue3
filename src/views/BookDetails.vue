@@ -10,7 +10,7 @@
 
             <div class="btn">
               <el-button type="primary" icon="el-icon-s-unfold" @click="goToContent">全部目录</el-button>
-              <el-button type="primary" icon="el-icon-s-management">立即阅读</el-button>
+              <el-button type="primary" icon="el-icon-s-management" @click="goread">立即阅读</el-button>
             </div>
           </div>
           <div class="right">
@@ -156,6 +156,8 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElLoading } from 'element-plus'
 import { useStore } from 'vuex'
 import zgaxios from '@/tools/zgaxios'
+import axios from 'axios'
+var JSONbigString = require('json-bigint')({ storeAsString: true })
 import { searchUrl, searchUrlYnv, mostUrlYnv, detailUrlYnv } from '@/tools/api'
 import { timeHandler } from '@/tools/util'
 let idx = 0
@@ -312,6 +314,40 @@ export default defineComponent({
     function goToContent() {
       router.push('/content')
     }
+    //立即阅读
+    async function goread() {
+      let { data } = await axios(
+        `http://yuenov.com/app/open/api/chapter/getByBookId?bookId=${state.bookDetails.bookId}`,
+        {
+          // `transformResponse` 在传递给 then/catch 前，允许修改响应数据
+          transformResponse: [
+            function (data) {
+              // 对 data 进行任意转换处理
+              return JSONbigString.parse(data)
+            },
+          ],
+        }
+      )
+      // console.log(data,"999999999999999999");
+      if (data.result.code == 0) {
+        const loading = ElLoading.service({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)',
+        })
+        commit('pushList', data.data.chapters)
+        commit('pushChapterId', data.data.chapters[0].id)
+        setTimeout(() => {
+          loading.close()
+          router.push('/chapter')
+        }, 10000)
+      } else if (data.result.code == 1009) {
+        ElMessage.error('请稍候重新加载页面')
+      } else {
+        ElMessage.error('查询不到数据')
+      }
+    }
     return {
       ...toRefs(states),
       staduce,
@@ -321,6 +357,7 @@ export default defineComponent({
       godetail,
       booksave,
       goToContent,
+      goread,
     }
   },
 })
