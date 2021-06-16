@@ -11,6 +11,14 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/ranking',
+    name: 'Ranking',
+    component: () => import('../views/RankingList.vue'),
+    meta: {
+      title: "悦读-排行榜"
+    }
+  },
+  {
     path: '/searchList/:title',
     name: 'searchList',
     component: () => import('../views/SearchList.vue'),
@@ -45,6 +53,14 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/category',
+    name: 'category',
+    component: () => import( '../views/Category.vue'),
+    meta: {
+      title: "悦读-分类"
+    }
+  },
+  {
     path: '/cartoon',
     name: 'cartoon',
     component: () => import( '../views/cartoon.vue'),
@@ -53,17 +69,27 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/cartoon/detail',
+    path: '/cartoon/detail/:id',
     name: 'cartoondetail',
+    props:true,
     component: () => import( '../views/cartoondetail.vue'),
     meta: {
       title: "悦读-漫画详情"
     }
   },
   {
-    path: '/category',
-    name: 'category',
-    component: () => import( '../views/Category.vue'),
+    path: '/cartoon/detail/:id/:chapterid/:title',
+    name: 'cartoondetailread',
+    props:true,
+    component: () => import( '../views/cartoonread.vue'),
+    meta: {
+      title: "悦读-漫画内容"
+    }
+  },
+  {
+    path: '/detail',
+    name: 'detail',
+    component: () => import('../views/Detail.vue'),
     meta: {
       title: "悦读-分类"
     }
@@ -77,6 +103,22 @@ const routes: Array<RouteRecordRaw> = [
       // console.log(to.params.title)
     next()
   },
+  },
+  {
+    path: '/content',
+    name: 'content',
+    component: () => import( '../views/BookContent.vue'),
+    meta: {
+      title: "悦读-目录"
+    }
+  },
+  {
+    path: '/chapter',
+    name: 'chapter',
+    component: () => import( '../views/BookChapter.vue'),
+    meta: {
+      title: "悦读-内容"
+    }
   }
 ]
 

@@ -4,35 +4,23 @@
       <el-row>
         <el-col :span="18">
           <div class="head">
-            <div class="title">镇魂街</div>
+            <div class="title">{{ cartoondata.comic.name }}</div>
           </div>
           <div class="introduce">
             <el-row>
               <el-col :span="6" class="bookpicture">
-                <img
-                  src="https://cover-oss.u17i.com/2010/11/2786_1290484999_44z22704KDLT.sbig.jpg"
-                  alt=""
-                />
+                <img :src="cartoondata.comic.cover" />
               </el-col>
               <el-col :span="18" class="bookintroduce">
                 <div class="tag">
-                  <el-button type="success" round plain size="small"
-                    >少年</el-button
-                  >
-                  <el-button type="success" round plain size="small"
-                    >三国</el-button
-                  >
-                  <el-button type="success" round plain size="small"
-                    >热血</el-button
-                  >
-                  <el-button type="success" round plain size="small"
-                    >杀必死</el-button
-                  >
-                  <el-button type="success" round plain size="small"
-                    >古风</el-button
-                  >
-                  <el-button type="success" round plain size="small"
-                    >格斗</el-button
+                  <el-button
+                    type="success"
+                    round
+                    plain
+                    size="small"
+                    v-for="item in cartoondata.comic.classifyTags"
+                    :key="item"
+                    >{{ item.name }}</el-button
                   >
                 </div>
                 <div class="status">
@@ -44,12 +32,12 @@
                   </el-row>
                 </div>
                 <div class="introducecontent">
-                  镇魂街乃吸纳亡灵镇压恶灵之地。这是一个人灵共存的世界，但不是每个人都能进入镇魂街，只有拥有守护灵的寄灵人才可进入。夏铃原本是一名普通的大学实习生，但一次偶然导致她的人生从此...
+                  {{ cartoondata.comic.description }}
                 </div>
                 <div class="button">
                   <el-row>
                     <el-col :span="8"
-                      ><div class="startread">开始阅读</div></el-col
+                      ><div class="startread" @click="toread(cartoondata.chapterlist[0].chapter_id,cartoondata.chapterlist[0].name)">开始阅读</div></el-col
                     >
                     <el-col :span="8"
                       ><div class="addtobookshelf">加入书架</div></el-col
@@ -66,14 +54,11 @@
             <div class="info">
               <el-row>
                 <el-col :span="8" class="avatar">
-                  <img
-                    src="http://avatar.u17i.com/2010/0816/2786_882d854b637b5a15158a443afe73cebb_1281889937.big.jpg"
-                    alt=""
-                  />
+                  <img :src="cartoondata.author.avatar" alt="" />
                 </el-col>
                 <el-col :span="16">
                   <div class="name">
-                    许辰
+                    {{ cartoondata.author.name }}
                   </div>
                   <div class="count">
                     作品：5部
@@ -89,15 +74,142 @@
       </el-row>
       <div class="middle">
         <el-row>
-          <el-col :span="5">
-            <div class="leftsheet"></div>
+          <el-col :span="24">
+            <div class="rightcontent">
+              <ul>
+                <li
+                  v-for="item in cartoondata.chapterlist.slice(0, 16)"
+                  :key="item"
+                  @click="tochapter(item.chapter_id,item.name)"
+                >
+                  {{ item.name }}
+                </li>
+
+                <div class="more">
+                  <el-collapse
+                    v-model="cartoondata.activeNames"
+                    @change="handleChange"
+                  >
+                    <el-collapse-item
+                      title="展开全部章节"
+                      name="1"
+                      class="text"
+                    >
+                      <ul>
+                        <li
+                          @click="tochapter(item.chapter_id,item.name)"
+                          v-for="item in cartoondata.chapterlist.slice(
+                            16,
+                            cartoondata.chapterlist.length - 19
+                          )"
+                          :key="item"
+                        >
+                          {{ item.name }}
+                        </li>
+                      </ul>
+                    </el-collapse-item>
+                  </el-collapse>
+                </div>
+
+                <li
+                  v-for="item in cartoondata.chapterlist.slice(
+                    324,
+                    cartoondata.chapterlist.length
+                  )"
+                  :key="item"
+                  @click="tochapter(item.chapter_id,item.name)"
+                >
+                  {{ item.name }}
+                </li>
+              </ul>
+            </div>
           </el-col>
-          <el-col :span="19"><div class="rightcontent"></div> </el-col>
         </el-row>
+         <div class="bottomsheet">
+              <img
+                src="https://image.mylife.u17t.com/2017/03/22/1490160740_xJ66l9X56n65.gif"
+              />
+            </div>
+            <div class="comment">
+              <div class="commenthead">
+                所有评论
+              </div>
+              <div class="commentcontent">
+                  <div class="commentlist" v-for="item in cartoondata.commentList" :key="item"  >
+                        <el-row>
+                            <el-col :span="4">
+                                <div  class="avatar" >
+                                      <img
+                                :src="item.face"
+                                alt=""
+                                />
+                                </div>
+                               
+                            </el-col>
+                            <el-col :span="20">
+                                <div class="name">
+                                    {{item.nickname}}
+                                    <span>10-03-17 15:19</span>
+                                </div>
+                                <div class="commentitem" v-html="item.content">
+                                </div>
+                            </el-col>
+                        </el-row>
+                  </div>
+              </div>
+            </div>
       </div>
     </div>
   </div>
 </template>
+<script lang="ts">
+import { defineComponent, reactive } from "vue";
+import zgaxios from "@/tools/zgaxios";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+export default defineComponent({
+  props: ["id"],
+  setup(props) {
+    const { commit } = useStore();
+    const router = useRouter();
+    let cartoondata = reactive({
+      activeNames: ["0"],
+      comic: "",
+      author: "",
+      chapterlist: [],
+      commentList:[]
+    });
+    let handleChange = () => {};
+    let getcotagory = async () => {
+      let { data } = await zgaxios(
+        "GET",
+        `/yyq/comic/detail_static_new?comicid=${props.id}`
+      );
+      console.log(data.data.returnData);
+      cartoondata.comic = data.data.returnData.comic;
+      cartoondata.chapterlist = data.data.returnData.chapter_list;
+      cartoondata.author = data.data.returnData.comic.author;
+      cartoondata.commentList = data.data.returnData.commentList;
+    };
+    getcotagory();
+    //开始阅读
+    let toread=(id,name)=>{
+       commit('addchapterlist',cartoondata.chapterlist)
+       commit('addcomic',cartoondata.comic)
+       router.push(`/cartoon/detail/${props.id}/${id}/${name}`)
+    }
+    //进入指定章节
+    let tochapter=(id,name)=>{
+      console.log(id)
+      
+      router.push(`/cartoon/detail/${props.id}/${id}/${name}`)
+      
+    }
+    return {tochapter,cartoondata, reactive, handleChange, getcotagory,toread };
+  }
+});
+</script>
+
 <style lang="less" scoped>
 .container {
   width: 100%;
@@ -106,8 +218,8 @@
     no-repeat;
 }
 .content {
-  width: 60%;
-  height: 3000px;
+  width: 70%;
+  height: 1000px;
   min-width: 1050px;
   background-color: #fff;
   margin: 0 auto;
@@ -212,22 +324,94 @@
     margin-top: 40px;
     padding-top: 30px;
     padding-left: 10px;
+    width: 200px;
     height: 100px;
     border: 1px dashed #999;
   }
 }
 .middle {
- 
-  .leftsheet{
-      height: 1000px;
-      border: 1px solid #e3e3e3 ;
+  .leftsheet {
+    height: 100%;
+    border: 1px solid #e3e3e3;
   }
-  .rightcontent{
-       width: 95%;
-       margin-left: 25px;
-       height: 1000px;
-       border: 10px solid #e3e3e3;
-       
+  .rightcontent {
+    background-color: #fff;
+    border-radius: 10px;
+    width: 99%;
+    height: 100%;
+    border: 5px solid #e3e3e3;
+    ul {
+      list-style: none;
+      display: block;
+      li {
+        float: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #09d;
+        font: 14px/46px "宋体";
+        border-bottom: 1px dashed #999;
+        width: 22%;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        cursor: pointer;
+        padding: 5px 14px 10px 0;
+      }
+    }
+    .more {
+      clear: both;
+      /deep/.el-collapse-item__header {
+        color: #09d;
+        margin-left: 45%;
+      }
+    }
   }
+}
+.bottomsheet {
+  height:100%;
+  width: 100%;
+  margin-top: 20px;
+  img {
+    width: 100%;
+  }
+}
+.comment{
+    clear: both;
+    width: 100%;
+    background-color: white;
+    .commenthead{
+       border: 1px solid #cecece;
+        border-bottom: 2px solid #534942;
+        height: 35px;
+        line-height: 35px;
+        background: #eee;
+        padding-left: 20px;
+    }
+    .commentlist{
+        margin-top: 20px;
+        border-top: 1px solid grey;
+        .avatar{
+            margin-top: 20px;
+            margin-left: 20px;
+            
+            img{
+               border-radius: 50%;
+               border: 1px solid #999;
+            }
+           
+        }
+        .name{
+             margin-top: 20px;
+             color: #379be9;
+             span{
+                 color: black;
+             }
+        }
+        .commentitem{
+            margin-top: 20px;
+            margin-right: 40px;
+        }
+    }
 }
 </style>

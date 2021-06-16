@@ -31,7 +31,7 @@
                 <el-button type="danger" style="width:90%" @click="bookdetail(item.bookId)">书籍详情</el-button>
               </el-col>
               <el-col :span="12">
-                <el-button type="success" style="width:90%">加入书架</el-button>
+                <el-button type="success" style="width:90%" @click="addbook(item.bookId)">加入书架</el-button>
               </el-col>
 
             </el-row>
@@ -58,7 +58,7 @@ import { detailUrlYnv } from '@/tools/api'
 export default defineComponent({
   setup() {
     const { state, getters, dispatch, commit } = useStore()
-      const router = useRouter()
+    const router = useRouter()
     const route = useRoute()
     let list = state.searchData.list
     let lists = reactive({
@@ -121,12 +121,12 @@ export default defineComponent({
           loading.close()
           ElMessage.error('操作太频繁，请10s后再试')
           return
-        }else if (result.code == 0) {
+        } else if (result.code == 0) {
           loading.close()
           commit('getBookDetails', data.data)
-         let url = `/bookdetails/${data.data.title}`
+          let url = `/bookdetails/${data.data.title}`
           router.push(url)
-        }else{
+        } else {
           throw new Error('无数据')
         }
       } catch (error) {
@@ -135,7 +135,56 @@ export default defineComponent({
         ElMessage.error('错误，该书不存在已被移除')
       }
     }
-    return { ...toRefs(lists), staduce, words, handleCurrentChange, bookdetail }
+    //加入书架
+    async function addbook(id) {
+      try {
+        let { data } = await zgaxios('GET', detailUrlYnv, {
+          params: {
+            bookId: id,
+          },
+        })
+        // console.log(data)
+        let { result } = data
+        // console.log(data)
+        if (result.code == 1009) {
+          ElMessage.error('操作太频繁，请10s后再试')
+          return
+        } else if (result.code == 0) {
+          let list = data.data
+          let book = {
+            type: list.categoryName,
+            picture: 'http://pt.yuenov.com:18888' + list.coverImg,
+            name: list.title,
+            newpage: list.update.chapterName,
+            bookId: list.bookId,
+          }
+          // console.log(list)
+          // console.log(book)
+          await dispatch('asysetbook', book)
+          ElMessage({
+            showClose: true,
+            message: '添加成功',
+            type: 'success',
+          })
+        } else {
+          throw new Error('书籍已存在')
+        }
+      } catch (error) {
+        ElMessage({
+          showClose: true,
+          message: '已在书架中,请勿重复添加',
+          type: 'warning',
+        })
+      }
+    }
+    return {
+      ...toRefs(lists),
+      staduce,
+      words,
+      handleCurrentChange,
+      bookdetail,
+      addbook,
+    }
   },
 })
 </script>

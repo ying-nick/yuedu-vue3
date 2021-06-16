@@ -19,8 +19,14 @@
         <el-col :span="6" class="col">
           <div class="dv">
             <span @click="tobookshelf">我的书架</span>
-            <span @click="tologin">登录</span>
-            <span>注册</span>
+            <div class="demo-type">
+              <el-avatar :size="40" :src="src" @error="errorHandler">
+                <img src="http://dl.weshineapp.com/gif/20191111/909446bd7c485cd274300e84625035d7.gif?id=909446bd7c485cd274300e84625035d7"
+                  style="width:100%;height:100%" />
+              </el-avatar>
+            </div>
+            <span v-if="!lgn" @click="tologin">登录</span>
+            <span v-if="lgn" @click="nologin">退出</span>
           </div>
 
         </el-col>
@@ -55,16 +61,19 @@ export default defineComponent({
     const route = useRoute()
     let states = reactive({
       input2: '',
+      lgn: state.user.lgn,
+      src: state.user.src,
     })
     const key = computed(() => {
       return route.fullPath
     })
+
     function bookSeach() {
       if (!states.input2) return
       // console.log(state.input2)
       search()
     }
-
+    const errorHandler = () => true
     const search = async () => {
       /*   try {
         let {
@@ -130,21 +139,37 @@ export default defineComponent({
         ElMessage.error('错误，该书不存在已被移除')
       }
     }
+
     function tologin() {
       router.push('/login')
+      // console.log(state.user.src)
     }
-    function tohome() {}
+    function nologin() {
+      let userinfo = {
+        nickname: '',
+        src: '',
+        lgn: false,
+      }
+      commit('adduserinfo', userinfo)
+      // console.log(route.path)
+    }
+
     function tobookshelf(e) {
-      router.push('/bookshelf')
+      if (!states.lgn) {
+        router.push('/login')
+      } else {
+        router.push('/bookshelf')
+      }
     }
     return {
       ...toRefs(states),
       bookSeach,
       tologin,
-      tohome,
       tobookshelf,
       key,
       route,
+      nologin,
+      errorHandler,
     }
   },
 })
@@ -169,7 +194,8 @@ export default defineComponent({
         justify-content: center;
         align-items: center;
         img {
-          height: 80%;
+          height: 57px;
+          width: 57px;
         }
         span {
           width: 110px;
@@ -209,11 +235,17 @@ export default defineComponent({
         }
       }
       .dv {
-        width: 50%;
+        width: 60%;
         height: 100%;
         display: flex;
         justify-content: space-around;
         align-items: center;
+        .demo-type {
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
         span {
           cursor: pointer;
           overflow: hidden;
