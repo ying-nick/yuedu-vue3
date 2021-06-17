@@ -28,7 +28,7 @@
                     <el-col :span="6"><div>状态：连载中</div></el-col>
                     <el-col :span="6"><div>总点击：50.94亿</div></el-col>
                     <el-col :span="6"><div>总月票：2758114</div></el-col>
-                    <el-col :span="6"><div>最后更新： 一周内</div></el-col>
+                    <el-col :span="6"><div>最后更新:{{cartoondata.updatetime}}</div></el-col>
                   </el-row>
                 </div>
                 <div class="introducecontent">
@@ -37,10 +37,22 @@
                 <div class="button">
                   <el-row>
                     <el-col :span="8"
-                      ><div class="startread" @click="toread(cartoondata.chapterlist[0].chapter_id,cartoondata.chapterlist[0].name)">开始阅读</div></el-col
+                      ><div
+                        class="startread"
+                        @click="
+                          toread(
+                            cartoondata.chapterlist[0].chapter_id,
+                            cartoondata.chapterlist[0].name
+                          )
+                        "
+                      >
+                        开始阅读
+                      </div></el-col
                     >
                     <el-col :span="8"
-                      ><div class="addtobookshelf">加入书架</div></el-col
+                      ><div class="addtobookshelf" @click="addtobookshelf">
+                        加入书架
+                      </div></el-col
                     >
                     <el-col :span="8"><div class="vote">投月票</div></el-col>
                   </el-row>
@@ -80,12 +92,15 @@
                 <li
                   v-for="item in cartoondata.chapterlist.slice(0, 16)"
                   :key="item"
-                  @click="tochapter(item.chapter_id,item.name)"
+                  @click="tochapter(item.chapter_id, item.name,item.type)"
                 >
+                   <span class="vip">{{item.type==0?'':'vip'}}</span>
                   {{ item.name }}
+                  <span class="totalpicture">({{item.image_total}}p)</span>
+                 
                 </li>
 
-                <div class="more">
+                <div class="more" v-if="cartoondata.chapterlist.length>50">
                   <el-collapse
                     v-model="cartoondata.activeNames"
                     @change="handleChange"
@@ -97,14 +112,16 @@
                     >
                       <ul>
                         <li
-                          @click="tochapter(item.chapter_id,item.name)"
+                          @click="tochapter(item.chapter_id, item.name,item.type)"
                           v-for="item in cartoondata.chapterlist.slice(
                             16,
-                            cartoondata.chapterlist.length - 19
+                            cartoondata.chapterlist.length-16
                           )"
                           :key="item"
                         >
+                          <span class="vip">{{item.type==0?'':'vip'}}</span>
                           {{ item.name }}
+                          <span class="totalpicture">({{item.image_total}}p)</span>
                         </li>
                       </ul>
                     </el-collapse-item>
@@ -113,51 +130,53 @@
 
                 <li
                   v-for="item in cartoondata.chapterlist.slice(
-                    324,
+                    cartoondata.chapterlist.length-16,
                     cartoondata.chapterlist.length
                   )"
                   :key="item"
-                  @click="tochapter(item.chapter_id,item.name)"
-                >
+                  @click="tochapter(item.chapter_id, item.name,item.type)"
+                > 
+                  <span class="vip">{{item.type==0?'':'vip'}}</span>
                   {{ item.name }}
+                  <span class="totalpicture">({{item.image_total}}p)</span>
+                 
                 </li>
               </ul>
             </div>
           </el-col>
         </el-row>
-         <div class="bottomsheet">
-              <img
-                src="https://image.mylife.u17t.com/2017/03/22/1490160740_xJ66l9X56n65.gif"
-              />
-            </div>
-            <div class="comment">
-              <div class="commenthead">
-                所有评论
-              </div>
-              <div class="commentcontent">
-                  <div class="commentlist" v-for="item in cartoondata.commentList" :key="item"  >
-                        <el-row>
-                            <el-col :span="4">
-                                <div  class="avatar" >
-                                      <img
-                                :src="item.face"
-                                alt=""
-                                />
-                                </div>
-                               
-                            </el-col>
-                            <el-col :span="20">
-                                <div class="name">
-                                    {{item.nickname}}
-                                    <span>10-03-17 15:19</span>
-                                </div>
-                                <div class="commentitem" v-html="item.content">
-                                </div>
-                            </el-col>
-                        </el-row>
+        <div class="bottomsheet">
+          <img
+            src="https://image.mylife.u17t.com/2017/03/22/1490160740_xJ66l9X56n65.gif"
+          />
+        </div>
+        <div class="comment">
+          <div class="commenthead">
+            所有评论
+          </div>
+          <div class="commentcontent">
+            <div
+              class="commentlist"
+              v-for="item in cartoondata.commentList"
+              :key="item"
+            >
+              <el-row>
+                <el-col :span="4">
+                  <div class="avatar">
+                    <img :src="item.face" alt="" />
                   </div>
-              </div>
+                </el-col>
+                <el-col :span="20">
+                  <div class="name">
+                    {{ item.nickname }}
+                    <span>10-03-17 15:19</span>
+                  </div>
+                  <div class="commentitem" v-html="item.content"></div>
+                </el-col>
+              </el-row>
             </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -166,46 +185,112 @@
 import { defineComponent, reactive } from "vue";
 import zgaxios from "@/tools/zgaxios";
 import { useRouter } from "vue-router";
+import { ElMessage} from "element-plus";
 import { useStore } from "vuex";
 export default defineComponent({
   props: ["id"],
   setup(props) {
-    const { commit } = useStore();
+    const { commit, state, dispatch } = useStore();
     const router = useRouter();
     let cartoondata = reactive({
       activeNames: ["0"],
       comic: "",
       author: "",
       chapterlist: [],
-      commentList:[]
+      commentList: [],
+      updatetime:''
     });
+    //获取最后更新时间戳
+    function gettime(timestr){
+       let now=new Date().getTime()
+       let time=now-timestr
+       let dat=new Date(time)
+       let  year=dat.getFullYear()
+       let month=dat.getMonth()+1
+       let date=dat.getDate()
+       cartoondata.updatetime=year+'年'+month+'月'+date+'日'
+       console.log(year+'年'+month+'月'+date+'日')
+    }
+    // gettime(1623364321)
+
+    //展开更多
     let handleChange = () => {};
+    //获取详情信息
     let getcotagory = async () => {
       let { data } = await zgaxios(
         "GET",
         `/yyq/comic/detail_static_new?comicid=${props.id}`
       );
+       gettime(data.data.returnData.comic.last_update_time)
       console.log(data.data.returnData);
       cartoondata.comic = data.data.returnData.comic;
       cartoondata.chapterlist = data.data.returnData.chapter_list;
       cartoondata.author = data.data.returnData.comic.author;
       cartoondata.commentList = data.data.returnData.commentList;
+      commit("addchapterlist", data.data.returnData.chapter_list);
+      commit("addcomic", cartoondata.comic);
     };
     getcotagory();
     //开始阅读
-    let toread=(id,name)=>{
-       commit('addchapterlist',cartoondata.chapterlist)
-       commit('addcomic',cartoondata.comic)
-       router.push(`/cartoon/detail/${props.id}/${id}/${name}`)
-    }
+    let toread = (id, name) => {
+      
+      commit("addcomic", cartoondata.comic);
+      router.push(`/cartoon/detail/${props.id}/${id}/${name}`);
+    };
     //进入指定章节
-    let tochapter=(id,name)=>{
-      console.log(id)
-      
-      router.push(`/cartoon/detail/${props.id}/${id}/${name}`)
-      
-    }
-    return {tochapter,cartoondata, reactive, handleChange, getcotagory,toread };
+    let tochapter = (id, name,type) => {
+      if(type==3){
+         ElMessage({
+          showClose: true,
+          message: '您访问的是vip章节哦',
+          type: 'warning',
+        })
+        return
+      }
+      commit("addcomic", cartoondata.comic);
+      router.push(`/cartoon/detail/${props.id}/${id}/${name}`);
+    };
+    //添加到书架
+    let addtobookshelf = async() => {
+       let { data } = await zgaxios(
+        "GET",
+        `/yyq/comic/detail_static_new?comicid=${props.id}`
+      );
+      console.log(data.data.returnData);
+      let bookobj = {
+        type: state.comic.classifyTags[0].name,
+        picture: state.comic.cover,
+        name: state.comic.name,
+        title:data.data.returnData.chapter_list[0].name,
+        chapterid:data.data.returnData.chapter_list[0].chapter_id,
+        newpage: "第" + cartoondata.chapterlist.length + "章",
+        cartoonId: props.id
+      };
+      try{
+          dispatch("asysetCartoon", bookobj)
+          ElMessage({
+            showClose: true,
+            message: "添加成功",
+            type: "success"
+          });
+      } catch (error) {
+        ElMessage({
+          showClose: true,
+          message: '已在书架中,请勿重复添加',
+          type: 'warning',
+        })
+      }
+    };
+    return {
+      gettime,
+      tochapter,
+      cartoondata,
+      reactive,
+      handleChange,
+      getcotagory,
+      toread,
+      addtobookshelf
+    };
   }
 });
 </script>
@@ -244,14 +329,12 @@ export default defineComponent({
       height: 210px;
     }
   }
-  .bookintroduce {
-  }
 }
 .status {
   margin-top: 10px;
 }
 .introducecontent {
-  margin-top: 20px;
+  margin-top: 10px;
   color: #999;
 }
 .button {
@@ -368,50 +451,69 @@ export default defineComponent({
     }
   }
 }
+.vip{
+  color: purple;
+  font-weight: bolder;
+   text-shadow: 0 0 10px azure, 0 0 20px purple;
+      filter: saturate(60%);
+      animation: flicker 1s linear infinite;
+}
+.totalpicture{
+  color: red;
+}
 .bottomsheet {
-  height:100%;
+  height: 100%;
   width: 100%;
   margin-top: 20px;
   img {
     width: 100%;
   }
 }
-.comment{
-    clear: both;
-    width: 100%;
-    background-color: white;
-    .commenthead{
-       border: 1px solid #cecece;
-        border-bottom: 2px solid #534942;
-        height: 35px;
-        line-height: 35px;
-        background: #eee;
-        padding-left: 20px;
+.comment {
+  clear: both;
+  width: 100%;
+  background-color: white;
+  .commenthead {
+    border: 1px solid #cecece;
+    border-bottom: 2px solid #534942;
+    height: 35px;
+    line-height: 35px;
+    background: #eee;
+    padding-left: 20px;
+  }
+  .commentlist {
+    margin-top: 20px;
+    border-top: 1px solid grey;
+    .avatar {
+      margin-top: 20px;
+      margin-left: 20px;
+
+      img {
+        border-radius: 50%;
+        border: 1px solid #999;
+      }
     }
-    .commentlist{
-        margin-top: 20px;
-        border-top: 1px solid grey;
-        .avatar{
-            margin-top: 20px;
-            margin-left: 20px;
-            
-            img{
-               border-radius: 50%;
-               border: 1px solid #999;
-            }
-           
-        }
-        .name{
-             margin-top: 20px;
-             color: #379be9;
-             span{
-                 color: black;
-             }
-        }
-        .commentitem{
-            margin-top: 20px;
-            margin-right: 40px;
-        }
+    .name {
+      margin-top: 20px;
+      color: #379be9;
+      span {
+        color: black;
+      }
     }
+    .commentitem {
+      margin-top: 20px;
+      margin-right: 40px;
+    }
+  }
 }
+@keyframes flicker {
+    0% {
+      color: red;
+      filter: saturate(100%) hue-rotate(0deg);
+    }
+    50% {
+      color: white;
+      filter: saturate(200%) hue-rotate(20deg);
+    }
+  }
 </style>

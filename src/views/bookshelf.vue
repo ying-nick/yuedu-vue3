@@ -47,7 +47,7 @@
               </el-table-column>
               <el-table-column align="center" label="操作" width="300">
                 <template #default="scope">
-                  <el-button size="mini" type="success" @click="handleEdit(scope.$index, scope.row)">继续阅读</el-button>
+                  <el-button size="mini" type="success" @click="handleEdit(scope.$index, scope.row)">阅读</el-button>
                   <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">从书架移除</el-button>
                 </template>
               </el-table-column>
@@ -88,7 +88,16 @@ export default defineComponent({
     })
     //进入阅读
     function handleEdit(index, row) {
-      console.log(index, row)
+       if(data.tableData[index].cartoonId){
+            router.push(`/cartoon/detail/${data.tableData[index].cartoonId}/${data.tableData[index].chapterid}/${data.tableData[index].title}`);
+       }
+       else{
+         router.push('/content')
+         
+       }
+      
+
+      console.log(state.tableData)
     }
     //分页
     function handleCurrentChange(val) {
