@@ -87,7 +87,6 @@ export default defineComponent({
       );
       cartoondata.cartoonlist = data.data.returnData.comics;
       cartoondata.loading = false;
-      // console.log(data);
     };
     getlist();
     //  搜索漫画
@@ -125,7 +124,6 @@ export default defineComponent({
         `/yyq/comic/detail_static_new?comicid=${id}`
       );
       list.push(data.data.returnData.comic);
-      //  cartoondata.cartoonlist=data.data.returnData.comic
     };
 
     let handleCurrentChange = val => {
@@ -133,11 +131,8 @@ export default defineComponent({
       getlist();
     };
     let todetail = async id => {
-      let { data } = await zgaxios(
-        "GET",
-        `/yyq/comic/detail_static_new?comicid=${id}`
-      );
-      commit("addchapterlist", data.data.returnData.chapter_list);
+     
+     
       router.push(`/cartoon/detail/${id}`);
     };
     return {
@@ -160,7 +155,6 @@ export default defineComponent({
   width:100%;
   height: 1700px;
   min-width: 1050px;
-  // background-color: #fff;
   margin: 20px auto;
 }
 .rightcontent {
@@ -169,7 +163,6 @@ export default defineComponent({
   background-color: #fff;
    margin: 20px auto;
    position: relative;
-  // border: 1px solid #f80;
  
 }
 .search {
@@ -199,8 +192,6 @@ export default defineComponent({
 .cartoonlist {
   width: 100%;
   height: 100%;
-  
-  //   margin-left: 10px;
   margin-right: 25px;
   ul {
     list-style: none;

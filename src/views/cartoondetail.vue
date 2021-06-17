@@ -191,17 +191,20 @@ export default defineComponent({
       chapterlist: [],
       commentList: []
     });
+    //展开更多
     let handleChange = () => {};
+    //获取详情信息
     let getcotagory = async () => {
       let { data } = await zgaxios(
         "GET",
         `/yyq/comic/detail_static_new?comicid=${props.id}`
       );
-      console.log(data.data.returnData);
+      // console.log(data.data.returnData);
       cartoondata.comic = data.data.returnData.comic;
       cartoondata.chapterlist = data.data.returnData.chapter_list;
       cartoondata.author = data.data.returnData.comic.author;
       cartoondata.commentList = data.data.returnData.commentList;
+      commit("addchapterlist", data.data.returnData.chapter_list);
       commit("addcomic", cartoondata.comic);
     };
     getcotagory();
@@ -213,18 +216,22 @@ export default defineComponent({
     };
     //进入指定章节
     let tochapter = (id, name) => {
-      // console.log(id)
-     
       commit("addcomic", cartoondata.comic);
       router.push(`/cartoon/detail/${props.id}/${id}/${name}`);
     };
     //添加到书架
-    let addtobookshelf = () => {
+    let addtobookshelf = async() => {
+       let { data } = await zgaxios(
+        "GET",
+        `/yyq/comic/detail_static_new?comicid=${props.id}`
+      );
+      console.log(data.data.returnData);
       let bookobj = {
         type: state.comic.classifyTags[0].name,
         picture: state.comic.cover,
         name: state.comic.name,
-        chapterid:state.chapterlist.chapter_id,
+        title:data.data.returnData.chapter_list[0].name,
+        chapterid:data.data.returnData.chapter_list[0].chapter_id,
         newpage: "第" + cartoondata.chapterlist.length + "章",
         bookId: props.id
       };
@@ -242,16 +249,6 @@ export default defineComponent({
           type: 'warning',
         })
       }
-     
-       
-        
-        // .catch(err => {
-        //   ElMessage({
-        //     showClose: true,
-        //     message: "已在书架中,请勿重复添加",
-        //     type: "warning"
-        //   });
-        // });
     };
     return {
       tochapter,

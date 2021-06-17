@@ -2,22 +2,22 @@
   <div class="container">
     <div class="headsheet">
       <el-row>
-        <el-col :span="3">
+        <el-col :span="4">
           <div class="name">{{ cartoondata.comic.name }}</div>
         </el-col>
-        <el-col :span="3">
+        <el-col :span="4">
           <div class="current">
             本章一共{{cartoondata.imagelist.length}}页
           </div>
         </el-col>
-        <el-col :span="3">
+        <el-col :span="4">
           <div class="chapter">
             {{$route.params.title}}
           </div>
         </el-col>
-        <el-col :span="3">
+        <!-- <el-col :span="3">
           <div class="author">{{ cartoondata.comic.author.name}}</div>
-        </el-col>
+        </el-col> -->
         <el-col :span="12">
           <el-row>
             <el-col :span="10">
@@ -66,7 +66,7 @@ import { defineComponent, reactive, ref } from "vue";
 import zgaxios from "@/tools/zgaxios";
 import { useStore } from "vuex";
 export default defineComponent({
-  props: ["chapterid",'title'],
+  props: ["id","chapterid",'title'],
   setup(props) {
     const { state } = useStore();
     let cartoondata = reactive({
@@ -81,17 +81,19 @@ export default defineComponent({
     });
 
     //获取当前漫画
-    let getcomic = () => {
-      cartoondata.comic = state.comic;
-      // console.log(cartoondata.comic)
+    let getcomic = async() => {
+        let { data } = await zgaxios(
+        "GET",
+        `/yyq/comic/detail_static_new?comicid=${props.id}`
+      );
+      console.log(data.data.returnData.comic)
+      cartoondata.comic = data.data.returnData.comic;
     };
     getcomic();
     //获取当前章节id
     let getchapterid = () => {
       cartoondata.chapterlist = state.chapterlist;
-      // console.log(cartoondata.chapterlist);
       cartoondata.chapterid = props.chapterid
-      // console.log(cartoondata.chapterlist);
     };
     getchapterid();
     //获取漫画
@@ -101,7 +103,6 @@ export default defineComponent({
         `/yyq/comic/chapterNew?chapter_id=${cartoondata.chapterid}`
       );
       cartoondata.imagelist = data.data.returnData.image_list;
-        // console.log(data.data.returnData.image_list)
     };
 
     //上一页
@@ -148,6 +149,9 @@ export default defineComponent({
     font-size: 30px;
     min-width: 100px;
     margin-left: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .chapter {
     font-size: 15px;

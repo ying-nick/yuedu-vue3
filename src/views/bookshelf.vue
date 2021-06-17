@@ -88,8 +88,9 @@ export default defineComponent({
     })
     //进入阅读
     function handleEdit(index, row) {
-       router.push(`/cartoon/detail/${row.bookId}/${state.chapterlist[0].chapter_id}/${row.name}`);
-      console.log(index, row)
+       router.push(`/cartoon/detail/${row.bookId}/${data.tableData[index].chapterid}/${data.tableData[index].title}`);
+
+      // console.log(state.tableData)
     }
     //分页
     function handleCurrentChange(val) {
