@@ -113,7 +113,10 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
 import zgaxios from "@/tools/zgaxios";
+import { ElMessage, ElLoading } from "element-plus";
 import { useRouter } from "vue-router";
+import { searchUrl, searchUrlYnv, detailUrlYnv } from "@/tools/api";
+import { useStore } from "vuex";
 import {
   HotListsUrl,
   EndListsUrl,
@@ -125,8 +128,9 @@ export default defineComponent({
   name: "Home",
   components: {},
   setup() {
+    const { state, getters, dispatch, commit } = useStore();
     const router = useRouter();
-    const state = reactive({
+    const state1 = reactive({
       hotList: [],
       endList: [],
       popularityList: [],
@@ -136,56 +140,50 @@ export default defineComponent({
     //获取点击榜API
     const getHotList = async () => {
       let { data } = await zgaxios("GET", `${HotListsUrl}`);
-      state.hotList = data.ranking.books;
+      state1.hotList = data.ranking.books;
       const sixHotList = [];
       for (var i = 0; i < 6; i++) {
-        sixHotList.push(state.hotList[i]);
+        sixHotList.push(state1.hotList[i]);
       }
-      state.hotList = sixHotList;
+      state1.hotList = sixHotList;
     };
     getHotList();
 
     //获取完结榜API
     const getEndList = async () => {
       let { data } = await zgaxios("GET", `${EndListsUrl}`);
-      state.endList = data.ranking.books;
+      state1.endList = data.ranking.books;
       const tenEndList = [];
       for (var i = 0; i < 10; i++) {
-        tenEndList.push(state.endList[i]);
+        tenEndList.push(state1.endList[i]);
       }
-      state.endList = tenEndList;
+      state1.endList = tenEndList;
 
-      console.log(state.endList, "xxxxxxxxxxxxxxx");
+      //console.log(state1.endList, "xxxxxxxxxxxxxxx");
     };
     getEndList();
 
     //获取人气榜API
     const getPopularityListsUrlList = async () => {
       let { data } = await zgaxios("GET", `${PopularityListsUrl}`);
-      state.popularityList = data.ranking.books;
+      state1.popularityList = data.ranking.books;
       const sixPopularityList = [];
       for (var i = 0; i < 6; i++) {
-        sixPopularityList.push(state.popularityList[i]);
+        sixPopularityList.push(state1.popularityList[i]);
       }
-      state.popularityList = sixPopularityList;
+      state1.popularityList = sixPopularityList;
     };
     getPopularityListsUrlList();
 
     //获取好评榜API
     const getPraiseListsUrlList = async () => {
       let { data } = await zgaxios("GET", `${PraiseListsUrl}`);
-      state.praiseList = data.ranking.books;
+      state1.praiseList = data.ranking.books;
       const tenPraiseList = [];
       for (var i = 0; i < 10; i++) {
-        tenPraiseList.push(state.praiseList[i]);
+        tenPraiseList.push(state1.praiseList[i]);
       }
-      state.praiseList = tenPraiseList;
-      //为了获取第一张图片
-      //   const firstPraisePic = [];
-      //   for (var i = 0; i < 1; i++) {
-      //     firstPraisePic.push(state.praiseList[i]);
-      //     state.firstPraisePic = firstPraisePic;
-      //   }
+      state1.praiseList = tenPraiseList;
     };
     getPraiseListsUrlList();
 
@@ -196,10 +194,87 @@ export default defineComponent({
 
     //点击书名跳转书详情
     const toDetail = (item) => {
-      console.log(item.title);
+      // console.log(item.title);
+
+      search(item);
+    };
+    const errorHandler = () => true;
+    const search = async (item) => {
+      const loading = ElLoading.service({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      try {
+        let { data } = await zgaxios("GET", searchUrlYnv, {
+          params: {
+            keyWord: item.title,
+            pageNum: 1,
+            pageSize: 100,
+          },
+        });
+        let { result } = data;
+        // console.log(result)
+        if (result.code == 1009) {
+          loading.close();
+          ElMessage.error("操作太频繁，请10s后再试");
+          return;
+        } else if (result.code == 102) {
+          loading.close();
+          ElMessage.error("错误，该书不存在或已被移除");
+          return;
+        } else if (result.code == 0) {
+          // loading.close()
+          let book = data.data;
+          let ynv = {
+            title: item.title,
+            list: book.list,
+            size: book.pageSize,
+            count: book.total,
+            from: book.pageNum,
+          };
+          // console.log(ynv)
+          const id = ynv.list[0].bookId;
+
+          console.log(id, "点击名字所返回的书的bookId");
+          commit("getSearchData", ynv);
+          console.log(id, 44444444444444);
+          setTimeout(async () => {
+            let { data } = await zgaxios("GET", detailUrlYnv, {
+              params: {
+                bookId: id,
+              },
+            });
+            let { result } = data;
+            if (result.code == 0) {
+              loading.close();
+              commit("getBookDetails", data.data);
+              let url = `/bookdetails/${data.data.title}`;
+              router.push(url);
+            } else {
+              loading.close();
+              throw new Error("无数据");
+            }
+          }, 10000);
+        } else {
+          loading.close();
+          throw new Error("无数据");
+        }
+      } catch (error) {
+        loading.close();
+        // console.log(error)
+        ElMessage.error("错误，该书不存在已被移除");
+      }
     };
 
-    return { ...toRefs(state), toRanking, toDetail };
+    return {
+      ...toRefs(state1),
+      toRanking,
+      toDetail,
+      errorHandler,
+      search,
+    };
   },
 });
 </script>
@@ -224,7 +299,7 @@ export default defineComponent({
 .everyHotList {
   width: 5rem;
   height: 3rem;
-  display: inline-block;
+  // display: inline-block;
   float: left;
   margin: 0 0.4rem;
   position: relative;
@@ -258,6 +333,7 @@ export default defineComponent({
   width: 2rem;
   left: 2.2rem;
   top: 1rem;
+  color: #858585;
 }
 
 .hotListPics {
