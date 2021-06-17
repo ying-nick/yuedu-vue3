@@ -3,7 +3,7 @@
     <div class="cartooncontainer">
       <el-row>
         <el-col :span="18" class="rightcontent">
-          <div >
+          <div>
             <div class="search">
               <el-input
                 placeholder="请输入漫画名，关键字"
@@ -23,7 +23,7 @@
                 element-loading-text="别急哦,我超快的！"
                 element-loading-spinner="el-icon-loading"
               >
-               <el-button v-if="null" :plain="true" @click="warn"></el-button>
+                <el-button v-if="null" :plain="true" @click="warn"></el-button>
                 <li
                   v-for="item in cartoondata.cartoonlist.slice(
                     (cartoondata.currentPage - 1) * cartoondata.pageSize,
@@ -58,7 +58,7 @@
 import { defineComponent, reactive } from "vue";
 import zgaxios from "@/tools/zgaxios";
 import { useStore } from "vuex";
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElLoading } from "element-plus";
 import { useRouter } from "vue-router";
 export default defineComponent({
   setup() {
@@ -71,29 +71,39 @@ export default defineComponent({
       currentPage: 1,
       page: 1,
       searlist: [],
-      loading: true,
-      total:19150
+      total: 19150
     });
     var list: any = [];
-    let  warn=()=>{
-          ElMessage.error('没找到哦！');
-    }
+
+    let warn = () => {
+      ElMessage.error("没找到哦！");
+    };
     //获取全部漫画列表
     let getlist = async () => {
-      cartoondata.total=19150
+      let loading = ElLoading.service({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)"
+      });
+      cartoondata.total = 19150;
       let { data } = await zgaxios(
         "GET",
         `/yyq/list/conditionScreenlists?v=5300100&page=${cartoondata.page}`
       );
       cartoondata.cartoonlist = data.data.returnData.comics;
-      cartoondata.loading = false;
+      loading.close();
     };
     getlist();
     //  搜索漫画
     let searchcartoon = async () => {
-      cartoondata.loading = true;
+      let loading = ElLoading.service({
+                lock: true,
+                text: "Loading",
+                spinner: "el-icon-loading",
+                background: "rgba(0, 0, 0, 0.7)"
+              });
       if (!cartoondata.input) {
-        cartoondata.loading = false;
         getlist();
       }
       cartoondata.cartoonlist = [];
@@ -103,18 +113,18 @@ export default defineComponent({
         `/yyq/search/relative?inputText=${cartoondata.input}`
       );
       if (data.data.message != "未找到") {
-        data.data.returnData.map((item) => {
+        data.data.returnData.map(item => {
           cartoondata.searlist = item.comic_id;
           getcartoondetail(item.comic_id).then(() => {
             setTimeout(() => {
               cartoondata.cartoonlist = list;
-              cartoondata.total=list.length
-              cartoondata.loading = false;
+              cartoondata.total = list.length;
+              loading.close();
             }, 1000);
           });
         });
       } else {
-        warn()
+        warn();
       }
     };
     //获取搜索漫画详情
@@ -131,8 +141,6 @@ export default defineComponent({
       getlist();
     };
     let todetail = async id => {
-     
-     
       router.push(`/cartoon/detail/${id}`);
     };
     return {
@@ -152,7 +160,7 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .cartooncontainer {
-  width:100%;
+  width: 100%;
   height: 1700px;
   min-width: 1050px;
   margin: 20px auto;
@@ -161,9 +169,8 @@ export default defineComponent({
   width: 95%;
   height: auto;
   background-color: #fff;
-   margin: 20px auto;
-   position: relative;
- 
+  margin: 20px auto;
+  position: relative;
 }
 .search {
   text-align: center;
@@ -196,7 +203,6 @@ export default defineComponent({
   ul {
     list-style: none;
     display: block;
-    
 
     li {
       float: left;
@@ -206,7 +212,7 @@ export default defineComponent({
       text-align: center;
       cursor: pointer;
       padding: 0 14px 100px 0;
-      
+
       .todetail {
         position: relative;
         img {
