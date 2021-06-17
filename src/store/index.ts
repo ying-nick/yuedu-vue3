@@ -12,7 +12,8 @@ type IStore = {
     user:any;
     tableData:any;
     chapterlist:any;
-    comic:any;
+    comic: any;
+    color:any;
   }
   mutations: {
     getSearchData(state: any, data: any),
@@ -24,7 +25,8 @@ type IStore = {
     addcomic(state:any,data:any),
     setBook(state: any, data: any),
     pushList(state: any, data: any),
-    pushChapterId(state:any,data:any)
+    pushChapterId(state: any, data: any),
+    pushColor(state:any,data:any)
   },
   actions: {},
   modules: {},
@@ -51,7 +53,8 @@ const store: IStore = {
     ],
     //当前漫画
     chapterlist:[],
-    comic:'',
+    comic: '',
+    color:{},
     
   },
   mutations: {
@@ -110,6 +113,9 @@ addcomic(state,data){
     },
     pushChapterId(state, data) {
       state.chapterId = data
+    },
+    pushColor(state,data){
+      state.color = data
     }
 },
 
