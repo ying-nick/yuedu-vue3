@@ -6,7 +6,6 @@
         <!-- <h1 class="Hwanjiebang">完结榜</h1> -->
         <!-- 分割线 -->
         <!-- <el-divider></el-divider> -->
-
         <el-table
           :data="endList"
           @row-click="todetail"
@@ -40,7 +39,7 @@
           style="width: 100%"
           class="mouseChange"
         >
-          <el-table-column
+          <el-table-column 
             label="排名"
             width="80"
             type="index"
@@ -277,6 +276,45 @@ export default defineComponent({
   width: 15rem;
   margin: 0 auto;
 }
+/deep/.el-table_1_column_1 .cell div {
+  width: 20px;
+  height: 20px;
+  background-color: rgb(173, 173, 173);
+  color: #fff;
+  border-radius: 4px;
+  line-height: 20px;
+  text-align: center;
+}
+
+
+/deep/.el-table_2_column_5 .cell div {
+  width: 20px;
+  height: 20px;
+  background-color: rgb(173, 173, 173);
+  color: #fff;
+  border-radius: 4px;
+  line-height: 20px;
+  text-align: center;
+}
+/deep/.el-table_3_column_9 .cell div {
+  width: 20px;
+  height: 20px;
+  background-color: rgb(173, 173, 173);
+  color: #fff;
+  border-radius: 4px;
+  line-height: 20px;
+  text-align: center;
+}
+/deep/.el-table_4_column_13 .cell div {
+  width: 20px;
+  height: 20px;
+  background-color: rgb(173, 173, 173);
+  color: #fff;
+  border-radius: 4px;
+  line-height: 20px;
+  text-align: center;
+}
+
 
 .mouseChange {
   cursor: pointer;
