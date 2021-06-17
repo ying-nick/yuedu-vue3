@@ -36,7 +36,7 @@
                   }}</el-button>
                 </template>
               </el-table-column>
-              <el-table-column prop="picture" label="" width="100">
+              <el-table-column prop="picture" label="" width="100" class="picture">
                 <template #default="scope">
                   <img :src="scope.row.picture" />
                 </template>
@@ -165,8 +165,8 @@ export default defineComponent({
 }
 .bookshelf {
   img {
-    width: 100px;
-    height: 50px;
+    width: 100%;
+    height: auto;
   }
 }
 /deep/.el-tabs__item.is-active {
