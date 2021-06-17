@@ -82,9 +82,9 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/detail',
-    name: 'detail',
-    component: () => import('../views/Detail.vue'),
+    path: '/category',
+    name: 'category',
+    component: () => import('../views/Category.vue'),
     meta: {
       title: "悦读-分类"
     }
@@ -123,3 +123,4 @@ const router = createRouter({
 })
 
 export default router
+

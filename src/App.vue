@@ -36,7 +36,7 @@
       <el-menu :default-active="route.path" router class="el-menu-demo menu" mode="horizontal">
         <el-menu-item index="/home">首页</el-menu-item>
         <el-menu-item index="/ranking">排行榜</el-menu-item>
-        <el-menu-item index="/detail">分类</el-menu-item>
+        <el-menu-item index="/category">分类</el-menu-item>
         <el-menu-item index="/cartoon">漫画</el-menu-item>
       </el-menu>
     </div>
