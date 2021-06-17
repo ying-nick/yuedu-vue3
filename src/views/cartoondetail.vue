@@ -133,6 +133,9 @@
             所有评论
           </div>
           <div class="commentcontent">
+            <div class="commentinput">
+
+            </div>
             <div class="commentlist" v-for="item in cartoondata.commentList" :key="item">
               <el-row>
                 <el-col :span="4">

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="snowback">
     <div class="cartooncontainer">
       <el-row>
         <el-col :span="18" class="rightcontent">
@@ -18,11 +18,7 @@
               </el-input>
             </div>
             <div class="cartoonlist">
-              <ul
-                v-loading="cartoondata.loading"
-                element-loading-text="别急哦,我超快的！"
-                element-loading-spinner="el-icon-loading"
-              >
+              <ul>
                 <el-button v-if="null" :plain="true" @click="warn"></el-button>
                 <li
                   v-for="item in cartoondata.cartoonlist.slice(
@@ -82,7 +78,7 @@ export default defineComponent({
     let getlist = async () => {
       let loading = ElLoading.service({
         lock: true,
-        text: "Loading",
+        text: "加载中。。。",
         spinner: "el-icon-loading",
         background: "rgba(0, 0, 0, 0.7)"
       });
@@ -98,11 +94,11 @@ export default defineComponent({
     //  搜索漫画
     let searchcartoon = async () => {
       let loading = ElLoading.service({
-                lock: true,
-                text: "Loading",
-                spinner: "el-icon-loading",
-                background: "rgba(0, 0, 0, 0.7)"
-              });
+        lock: true,
+        text: "加载中。。。",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)"
+      });
       if (!cartoondata.input) {
         getlist();
       }
@@ -161,6 +157,11 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+.snowback {
+  height: auto;
+  margin-left: 43px;
+  width: 95%;
+}
 .cartooncontainer {
   width: 100%;
   height: 1700px;
