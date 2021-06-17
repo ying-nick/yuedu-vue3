@@ -197,25 +197,24 @@ export default defineComponent({
         "GET",
         `/yyq/comic/detail_static_new?comicid=${props.id}`
       );
-      // console.log(data.data.returnData);
+      console.log(data.data.returnData);
       cartoondata.comic = data.data.returnData.comic;
       cartoondata.chapterlist = data.data.returnData.chapter_list;
       cartoondata.author = data.data.returnData.comic.author;
       cartoondata.commentList = data.data.returnData.commentList;
-      commit("addchapterlist", cartoondata.chapterlist);
       commit("addcomic", cartoondata.comic);
     };
     getcotagory();
     //开始阅读
     let toread = (id, name) => {
-      commit("addchapterlist", cartoondata.chapterlist);
+      
       commit("addcomic", cartoondata.comic);
       router.push(`/cartoon/detail/${props.id}/${id}/${name}`);
     };
     //进入指定章节
     let tochapter = (id, name) => {
       // console.log(id)
-      commit("addchapterlist", cartoondata.chapterlist);
+     
       commit("addcomic", cartoondata.comic);
       router.push(`/cartoon/detail/${props.id}/${id}/${name}`);
     };
@@ -225,6 +224,7 @@ export default defineComponent({
         type: state.comic.classifyTags[0].name,
         picture: state.comic.cover,
         name: state.comic.name,
+        chapterid:state.chapterlist.chapter_id,
         newpage: "第" + cartoondata.chapterlist.length + "章",
         bookId: props.id
       };

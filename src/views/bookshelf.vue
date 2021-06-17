@@ -49,7 +49,7 @@
               </el-table-column>
               <el-table-column align="center" label="操作" width="300">
                 <template #default="scope">
-                  <el-button size="mini" type="success" @click="handleEdit(scope.$index, scope.row)">继续阅读</el-button>
+                  <el-button size="mini" type="success" @click="handleEdit(scope.$index, scope.row)">阅读</el-button>
                   <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">从书架移除</el-button>
                 </template>
               </el-table-column>
@@ -88,6 +88,7 @@ export default defineComponent({
     })
     //进入阅读
     function handleEdit(index, row) {
+       router.push(`/cartoon/detail/${row.bookId}/${state.chapterlist[0].chapter_id}/${row.name}`);
       console.log(index, row)
     }
     //分页

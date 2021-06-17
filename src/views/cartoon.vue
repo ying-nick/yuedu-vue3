@@ -57,11 +57,13 @@
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 import zgaxios from "@/tools/zgaxios";
+import { useStore } from "vuex";
 import { ElMessage } from 'element-plus'
 import { useRouter } from "vue-router";
 export default defineComponent({
   setup() {
     const router = useRouter();
+    const { commit, state, dispatch } = useStore();
     let cartoondata = reactive({
       input: "",
       cartoonlist: [],
@@ -130,7 +132,12 @@ export default defineComponent({
       cartoondata.page = val;
       getlist();
     };
-    let todetail = id => {
+    let todetail = async id => {
+      let { data } = await zgaxios(
+        "GET",
+        `/yyq/comic/detail_static_new?comicid=${id}`
+      );
+      commit("addchapterlist", data.data.returnData.chapter_list);
       router.push(`/cartoon/detail/${id}`);
     };
     return {
