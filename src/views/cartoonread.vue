@@ -65,6 +65,7 @@
 import { defineComponent, reactive, ref } from "vue";
 import zgaxios from "@/tools/zgaxios";
 import { useStore } from "vuex";
+import { ElMessage} from "element-plus";
 export default defineComponent({
   props: ["id","chapterid",'title'],
   setup(props) {
@@ -108,12 +109,26 @@ export default defineComponent({
     //上一页
     getcartoon();
     let pre = () => {
-      if (cartoondata.start <= 0) return;
+      if (cartoondata.start <= 0){
+        ElMessage({
+          showClose: true,
+          message: '顶到头了-_-|||',
+          type: 'warning',
+        })
+         return;
+      }
       cartoondata.start--;
     };
     //下一页
     let next = () => {
-      if (cartoondata.start >= cartoondata.imagelist.length - 1) return;
+      if (cartoondata.start >= cartoondata.imagelist.length - 1){
+        ElMessage({
+          showClose: true,
+          message: '最后一页了哦',
+          type: 'warning',
+        })
+        return;
+      } 
       cartoondata.start++;
     };
 

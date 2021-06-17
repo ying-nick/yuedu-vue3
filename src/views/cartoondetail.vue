@@ -92,12 +92,14 @@
                 <li
                   v-for="item in cartoondata.chapterlist.slice(0, 16)"
                   :key="item"
-                  @click="tochapter(item.chapter_id, item.name)"
+                  @click="tochapter(item.chapter_id, item.name,item.type)"
                 >
+                   <span class="vip">{{item.type==0?'':'vip'}}</span>
                   {{ item.name }}
+                 
                 </li>
 
-                <div class="more">
+                <div class="more" v-if="cartoondata.chapterlist.length>50">
                   <el-collapse
                     v-model="cartoondata.activeNames"
                     @change="handleChange"
@@ -109,13 +111,14 @@
                     >
                       <ul>
                         <li
-                          @click="tochapter(item.chapter_id, item.name)"
+                          @click="tochapter(item.chapter_id, item.name,item.type)"
                           v-for="item in cartoondata.chapterlist.slice(
                             16,
-                            cartoondata.chapterlist.length - 19
+                            cartoondata.chapterlist.length-16
                           )"
                           :key="item"
                         >
+                          <span class="vip">{{item.type==0?'':'vip'}}</span>
                           {{ item.name }}
                         </li>
                       </ul>
@@ -125,13 +128,15 @@
 
                 <li
                   v-for="item in cartoondata.chapterlist.slice(
-                    324,
+                    cartoondata.chapterlist.length-16,
                     cartoondata.chapterlist.length
                   )"
                   :key="item"
-                  @click="tochapter(item.chapter_id, item.name)"
-                >
+                  @click="tochapter(item.chapter_id, item.name,item.type)"
+                > 
+                  <span class="vip">{{item.type==0?'':'vip'}}</span>
                   {{ item.name }}
+                 
                 </li>
               </ul>
             </div>
@@ -199,7 +204,7 @@ export default defineComponent({
         "GET",
         `/yyq/comic/detail_static_new?comicid=${props.id}`
       );
-      // console.log(data.data.returnData);
+      console.log(data.data.returnData);
       cartoondata.comic = data.data.returnData.comic;
       cartoondata.chapterlist = data.data.returnData.chapter_list;
       cartoondata.author = data.data.returnData.comic.author;
@@ -215,7 +220,15 @@ export default defineComponent({
       router.push(`/cartoon/detail/${props.id}/${id}/${name}`);
     };
     //进入指定章节
-    let tochapter = (id, name) => {
+    let tochapter = (id, name,type) => {
+      if(type==3){
+         ElMessage({
+          showClose: true,
+          message: '您访问的是vip章节哦',
+          type: 'warning',
+        })
+        return
+      }
       commit("addcomic", cartoondata.comic);
       router.push(`/cartoon/detail/${props.id}/${id}/${name}`);
     };
@@ -419,6 +432,13 @@ export default defineComponent({
     }
   }
 }
+.vip{
+  color: purple;
+  font-weight: bolder;
+   text-shadow: 0 0 10px azure, 0 0 20px purple;
+      filter: saturate(60%);
+      animation: flicker 1s linear infinite;
+}
 .bottomsheet {
   height: 100%;
   width: 100%;
@@ -464,4 +484,14 @@ export default defineComponent({
     }
   }
 }
+@keyframes flicker {
+    0% {
+      color: red;
+      filter: saturate(100%) hue-rotate(0deg);
+    }
+    50% {
+      color: white;
+      filter: saturate(200%) hue-rotate(20deg);
+    }
+  }
 </style>
