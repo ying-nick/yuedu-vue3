@@ -23,6 +23,7 @@ type IStore = {
     addchapterlist(state:any,data:any),
     addcomic(state:any,data:any),
     setBook(state: any, data: any),
+    setCartoon(state:any,data:any),
     pushList(state: any, data: any),
     pushChapterId(state:any,data:any)
   },
@@ -91,7 +92,7 @@ addcomic(state,data){
   state.comic=data
   // console.log(state.comic)
 },
-//加入书架
+//加入书架(小说)
     setBook(state, data) {
      let idx=state.tableData.findIndex((item) => {
         return item.bookId==data.bookId
@@ -104,6 +105,19 @@ addcomic(state,data){
       }
      
     },
+    //加入书架(漫画)
+    setCartoon(state, data) {
+    let idx=state.tableData.findIndex((item) => {
+       return item.cartoonId==data.cartoonId
+    })
+     if (idx == -1) {
+       state.tableData.push(data)
+       
+     } else {
+       throw new Error('书籍已存在')
+     }
+    
+   },
     pushList(state, data) {
       state.chapter = [...data]
     },
@@ -115,8 +129,17 @@ addcomic(state,data){
   actions: {
     asysetbook(ctx,data) {
       ctx.commit('setBook',data)
-    }
+    },
+    asysetCartoon(ctx,data) {
+     ctx.commit('setCartoon',data)
+   }
   },
+
+
+
+
+
+
   getters: {},
   modules: {
   },

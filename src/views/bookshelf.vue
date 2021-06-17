@@ -88,9 +88,16 @@ export default defineComponent({
     })
     //进入阅读
     function handleEdit(index, row) {
-       router.push(`/cartoon/detail/${row.bookId}/${data.tableData[index].chapterid}/${data.tableData[index].title}`);
+       if(data.tableData[index].cartoonId){
+            router.push(`/cartoon/detail/${data.tableData[index].cartoonId}/${data.tableData[index].chapterid}/${data.tableData[index].title}`);
+       }
+       else{
+         router.push('/content')
+         
+       }
+      
 
-      // console.log(state.tableData)
+      console.log(state.tableData)
     }
     //分页
     function handleCurrentChange(val) {

@@ -28,7 +28,7 @@
                     <el-col :span="6"><div>状态：连载中</div></el-col>
                     <el-col :span="6"><div>总点击：50.94亿</div></el-col>
                     <el-col :span="6"><div>总月票：2758114</div></el-col>
-                    <el-col :span="6"><div>最后更新： 一周内</div></el-col>
+                    <el-col :span="6"><div>最后更新:{{cartoondata.updatetime}}</div></el-col>
                   </el-row>
                 </div>
                 <div class="introducecontent">
@@ -96,6 +96,7 @@
                 >
                    <span class="vip">{{item.type==0?'':'vip'}}</span>
                   {{ item.name }}
+                  <span class="totalpicture">({{item.image_total}}p)</span>
                  
                 </li>
 
@@ -120,6 +121,7 @@
                         >
                           <span class="vip">{{item.type==0?'':'vip'}}</span>
                           {{ item.name }}
+                          <span class="totalpicture">({{item.image_total}}p)</span>
                         </li>
                       </ul>
                     </el-collapse-item>
@@ -136,6 +138,7 @@
                 > 
                   <span class="vip">{{item.type==0?'':'vip'}}</span>
                   {{ item.name }}
+                  <span class="totalpicture">({{item.image_total}}p)</span>
                  
                 </li>
               </ul>
@@ -194,8 +197,22 @@ export default defineComponent({
       comic: "",
       author: "",
       chapterlist: [],
-      commentList: []
+      commentList: [],
+      updatetime:''
     });
+    //获取最后更新时间戳
+    function gettime(timestr){
+       let now=new Date().getTime()
+       let time=now-timestr
+       let dat=new Date(time)
+       let  year=dat.getFullYear()
+       let month=dat.getMonth()+1
+       let date=dat.getDate()
+       cartoondata.updatetime=year+'年'+month+'月'+date+'日'
+       console.log(year+'年'+month+'月'+date+'日')
+    }
+    // gettime(1623364321)
+
     //展开更多
     let handleChange = () => {};
     //获取详情信息
@@ -204,6 +221,7 @@ export default defineComponent({
         "GET",
         `/yyq/comic/detail_static_new?comicid=${props.id}`
       );
+       gettime(data.data.returnData.comic.last_update_time)
       console.log(data.data.returnData);
       cartoondata.comic = data.data.returnData.comic;
       cartoondata.chapterlist = data.data.returnData.chapter_list;
@@ -246,10 +264,10 @@ export default defineComponent({
         title:data.data.returnData.chapter_list[0].name,
         chapterid:data.data.returnData.chapter_list[0].chapter_id,
         newpage: "第" + cartoondata.chapterlist.length + "章",
-        bookId: props.id
+        cartoonId: props.id
       };
       try{
-          dispatch("asysetbook", bookobj)
+          dispatch("asysetCartoon", bookobj)
           ElMessage({
             showClose: true,
             message: "添加成功",
@@ -264,6 +282,7 @@ export default defineComponent({
       }
     };
     return {
+      gettime,
       tochapter,
       cartoondata,
       reactive,
@@ -315,7 +334,7 @@ export default defineComponent({
   margin-top: 10px;
 }
 .introducecontent {
-  margin-top: 20px;
+  margin-top: 10px;
   color: #999;
 }
 .button {
@@ -438,6 +457,9 @@ export default defineComponent({
    text-shadow: 0 0 10px azure, 0 0 20px purple;
       filter: saturate(60%);
       animation: flicker 1s linear infinite;
+}
+.totalpicture{
+  color: red;
 }
 .bottomsheet {
   height: 100%;
