@@ -92,7 +92,6 @@ export default defineComponent({
     const store = useStore();
     const { state, commit } = useStore();
     let fullscreenLoading = ref(true);
-    // console.log(state.chapterId)
     let text = reactive({
       bookId: state.bookDetails.bookId,
       chapterIdList: [state.chapterId]
@@ -119,7 +118,7 @@ export default defineComponent({
       chapterList.value.findIndex(item => {
         if (item.id == state.chapterId) {
           let lenght = chapterList.value.indexOf(item);
-          if (lenght == 0 || lenght == chapterList.value.length) {
+          if (lenght < 0 || lenght == chapterList.value.length) {
             ElMessage.error("没有更多内容了");
             return item;
           } else {
@@ -137,8 +136,7 @@ export default defineComponent({
       chapterList.value.findIndex(item => {
         if (item.id == state.chapterId) {
           let lenght = chapterList.value.indexOf(item);
-          // console.log(lenght);
-          if (lenght == 0 || lenght == chapterList.value.length - 1) {
+          if (lenght < 0 || lenght == chapterList.value.length - 1) {
             ElMessage.error("没有更多内容了");
             return item;
           } else {

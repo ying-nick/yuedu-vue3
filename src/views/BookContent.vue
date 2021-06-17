@@ -55,7 +55,6 @@ export default defineComponent({
   setup(props, context) {
     const store = useStore()
     const { state,  commit } = useStore()
-    // console.log(state.searchData)
     let fullscreenLoading = ref(true);
     const router = useRouter()
     const text: any = reactive({
@@ -78,7 +77,6 @@ export default defineComponent({
           return JSONbigString.parse(data);
         }],
       });
-      // console.log(data,"999999999999999999");
       if (data.result.code == 0) {
         text.list = data.data
         text.totalList = data.data.chapters;
@@ -95,7 +93,6 @@ export default defineComponent({
       store.commit('pushList',text.totalList )
     }
     const sizechange = function(page) {
-      // console.log(page);
       let first = (page-1)*100
       let last = page*100
       text.count = text.totalList.slice(first,last)

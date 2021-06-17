@@ -116,7 +116,6 @@ export default defineComponent({
           },
         })
         let { result } = data
-        // console.log(data)
         if (result.code == 1009) {
           loading.close()
           ElMessage.error('操作太频繁，请10s后再试')
@@ -131,7 +130,6 @@ export default defineComponent({
         }
       } catch (error) {
         loading.close()
-        // console.log(error)
         ElMessage.error('错误，该书不存在已被移除')
       }
     }
@@ -147,11 +145,9 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   .searchlists {
-    // padding: 10px;
     width: 90%;
     .bookdtl {
       height: 170px;
-      // background-color: red;
       width: 100%;
       border-bottom: 1px solid #cccc;
       display: flex;
