@@ -1,9 +1,12 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Home from '@/views/Home.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/',
+    path:"/", name:"base",redirect:{name:'Home'}
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: Home,
     meta: {
@@ -53,14 +56,6 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/category',
-    name: 'category',
-    component: () => import( '../views/Category.vue'),
-    meta: {
-      title: "悦读-分类"
-    }
-  },
-  {
     path: '/cartoon',
     name: 'cartoon',
     component: () => import( '../views/cartoon.vue'),
@@ -87,9 +82,9 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/detail',
-    name: 'detail',
-    component: () => import('../views/Detail.vue'),
+    path: '/category',
+    name: 'category',
+    component: () => import('../views/Category.vue'),
     meta: {
       title: "悦读-分类"
     }
@@ -123,8 +118,9 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes
 })
 
 export default router
+
