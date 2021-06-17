@@ -1,19 +1,40 @@
 <template>
-  <el-container :style="{ background: back.contoiner }" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="目录加载中"
-    element-loading-background="rgba(0, 0, 0, 0.85)">
+  <el-container
+    :style="{ background: back.contoiner }"
+    v-loading.fullscreen.lock="fullscreenLoading"
+    element-loading-text="目录加载中"
+    element-loading-background="rgba(0, 0, 0, 0.85)"
+  >
     <el-main>
-      <el-dialog title="设置" v-model="dialogVisible" width="25%" top="30vh">
-        <div style="margin-bottom: 10px;">
+      <el-dialog
+        title="设置"
+        v-model="dialogVisible"
+        width="25%"
+        top="30vh"
+      >
+       <div style="margin-bottom: 10px;">
           <el-row>
-            <span style="    text-align: center;
-    line-height: 40px; margin-right:20px;">背景色：</span>
-            <el-button icon="el-icon-check" :style="{ background: item.color }" circle v-for="(item, index) in number" :key="item" @click="getColor(index)">
-            </el-button>
-          </el-row>
-        </div>
+          <span
+            style="    text-align: center;
+    line-height: 40px; margin-right:20px;"
+            >背景色：</span
+          >
+          <el-button
+            icon="el-icon-check"
+            :style="{ background: item.color }"
+            circle
+            v-for="(item, index) in number"
+            :key="item"
+            @click="getColor(index)"
+          ></el-button>
+        </el-row>
+       </div>
         <el-row class="row">
-          <span style="    text-align: center;
-    line-height: 40px; margin-right:20px;">文字大小：</span>
+          <span
+            style="    text-align: center;
+    line-height: 40px; margin-right:20px;"
+            >文字大小：</span
+          >
           <el-input-number v-model="textNumber" @change="handleChange" :min="10" :max="20" label="描述文字"></el-input-number>
         </el-row>
         <template #footer> </template>
@@ -21,18 +42,25 @@
       <div class="content" :style="{ background: back.content }">
         <div class="chapterHead">{{ chapterHead }}</div>
         <div class="main">
-          <p v-for="item in content" :key="item" class="text" :style="{ fontSize: textSize.size }">
+          <p v-for="item in content" :key="item" class="text" :style="{ fontSize: textSize.size }" >
             &nbsp; &nbsp; &nbsp; &nbsp;{{ item }}
           </p>
         </div>
         <div class="footer">
           <div class="btnDIv">
-            <el-button class="btn" @click="upper" native-type="button" :style="{ background: back.content }">上一章</el-button>
-            <el-button class="btn" @click="gotoContent" native-type="button" :style="{ background: back.content }">目录</el-button>
-            <el-button class="btn" @click="lower" native-type="button" :style="{ background: back.content }">下一章</el-button>
+            <el-button class="btn" @click="upper" native-type="button" :style="{ background: back.content }"
+              >上一章</el-button
+            >
+            <el-button class="btn" @click="gotoContent" native-type="button" :style="{ background: back.content }"
+              >目录</el-button
+            >
+            <el-button class="btn" @click="lower" native-type="button" :style="{ background: back.content }"
+              >下一章</el-button
+            >
           </div>
         </div>
-        <div class="backtop" :style="{ left: sum+'px',top:middheight+'px'}">
+        <div class="backtop" 
+          :style="{ left: sum+'px',top:middheight+'px'}">
           <div class="top1" @click="gotoCont">
             <span class="el-icon-s-order ic"></span>
             <div>目录</div>
@@ -52,138 +80,139 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, watch } from 'vue'
-import zgaxios from '../tools/zgaxios'
-import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
-import { getList } from '../tools/api'
-import { ElMessage, ElLoading } from 'element-plus'
+import { defineComponent, reactive, ref, watch } from "vue";
+import zgaxios from "../tools/zgaxios";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { getList } from "../tools/api";
+import { ElMessage, ElLoading } from "element-plus";
 export default defineComponent({
   setup() {
-    const router = useRouter()
-    const store = useStore()
-    const { state, commit } = useStore()
-    let fullscreenLoading = ref(true)
-    // console.log(state.chapterId)
+    const router = useRouter();
+    const store = useStore();
+    const { state, commit } = useStore();
+    let fullscreenLoading = ref(true);
     let text = reactive({
       bookId: state.bookDetails.bookId,
-      chapterIdList: [state.chapterId],
-    })
-    let chapterList = ref(state.chapter)
-    let content = ref('')
-    let chapterHead = ref('暂无内容')
+      chapterIdList: [state.chapterId]
+    });
+    let chapterList = ref(state.chapter);
+    let content = ref("");
+    let chapterHead = ref("暂无内容");
     const getText = async () => {
-      let result = await zgaxios('POST', getList, text)
-      console.log(result)
+      let result = await zgaxios("POST", getList, text);
+      console.log(result);
 
       if (result.data.result.code == 0) {
-        content.value = result.data.data.list[0].content.split('\n')
-        chapterHead.value = result.data.data.list[0].name
-        fullscreenLoading.value = false
+        content.value = result.data.data.list[0].content.split("\n");
+        chapterHead.value = result.data.data.list[0].name;
+        fullscreenLoading.value = false;
       } else {
-        fullscreenLoading.value = false
-        ElMessage.error('服务器出错，请稍候刷新网页')
+        fullscreenLoading.value = false;
+        ElMessage.error("服务器出错，请稍候刷新网页");
       }
-    }
-    getText()
-    let chapterItem = ref('')
+    };
+    getText();
+    let chapterItem = ref("");
     function upper() {
-      chapterList.value.findIndex((item) => {
+      chapterList.value.findIndex(item => {
         if (item.id == state.chapterId) {
-          let lenght = chapterList.value.indexOf(item)
-          if (lenght == 0 || lenght == chapterList.value.length) {
-            ElMessage.error('没有更多内容了')
-            return item
+          let lenght = chapterList.value.indexOf(item);
+          if (lenght < 0 || lenght == chapterList.value.length) {
+            ElMessage.error("没有更多内容了");
+            return item;
           } else {
-            store.commit('pushChapterId', chapterList.value[lenght - 1].id)
-            location.reload()
-            return item
+            store.commit("pushChapterId", chapterList.value[lenght - 1].id);
+            location.reload();
+            return item;
           }
         }
-      })
+      });
     }
     function gotoContent() {
-      router.push('/content')
+      router.push("/content");
     }
     function lower() {
-      chapterList.value.findIndex((item) => {
+      chapterList.value.findIndex(item => {
         if (item.id == state.chapterId) {
-          let lenght = chapterList.value.indexOf(item)
-          // console.log(lenght);
-          if (lenght == 0 || lenght == chapterList.value.length - 1) {
-            ElMessage.error('没有更多内容了')
-            return item
+          let lenght = chapterList.value.indexOf(item);
+          if (lenght < 0 || lenght == chapterList.value.length - 1) {
+            ElMessage.error("没有更多内容了");
+            return item;
           } else {
-            store.commit('pushChapterId', chapterList.value[lenght + 1].id)
-            location.reload()
-            return item
+            store.commit("pushChapterId", chapterList.value[lenght + 1].id);
+            location.reload();
+            return item;
           }
         }
-      })
+      });
     }
     function gotoCont() {
-      router.push('/content')
+      router.push("/content");
     }
     let number = reactive([
       {
-        color: '#F9F6ED',
-        contoiner: '#EAE5D8',
-        content: '#F4F1EA',
+        color: "#F9F6ED",
+        contoiner: "#EAE5D8",
+        content: "#F4F1EA"
       },
       {
-        color: '#E3EFE2',
-        contoiner: '#CDDEC9',
-        content: '#E1EBDF',
+        color: "#E3EFE2",
+        contoiner: "#CDDEC9",
+        content: "#E1EBDF"
       },
       {
-        color: '#F9D9D9',
-        contoiner: '#EAD4D4',
-        content: '#F2E5E5',
+        color: "#F9D9D9",
+        contoiner: "#EAD4D4",
+        content: "#F2E5E5"
       },
       {
-        color: '#EFDEBD',
-        contoiner: '#DECEA3',
-        content: '#EBE2C8',
+        color: "#EFDEBD",
+        contoiner: "#DECEA3",
+        content: "#EBE2C8"
       },
       {
-        color: '#EEEEEE',
-        contoiner: '#D3D3D3',
-        content: '#E5E5E5',
-      },
-    ])
+        color: "#EEEEEE",
+        contoiner: "#D3D3D3",
+        content: "#E5E5E5"
+      }
+    ]);
     let back = reactive({
-      color: '',
-      contoiner: '',
-      content: '',
-    })
+      color: "",
+      contoiner: "",
+      content: ""
+    });
     let classObj = reactive({
       red: false,
       green: false,
-      black: false,
-    })
-    let num = ref(1)
-    let dialogVisible = ref(false)
+      black: false
+    });
+    let num = ref(1);
+    let dialogVisible = ref(false);
     function getColor(length) {
-      let obj = number.filter((item) => {
-        return number.indexOf(item) == length
-      })
-      back.color = obj[0].color
-      back.contoiner = obj[0].contoiner
-      back.content = obj[0].content
+      let obj = number.filter(item => {
+        return number.indexOf(item) == length;
+      });
+      back.color = obj[0].color;
+      back.contoiner = obj[0].contoiner;
+      back.content = obj[0].content;
     }
     let textNumber = ref(16)
     let textSize = reactive({
-      size: '',
+      size:''
     })
-    function handleChange() {
-      textSize.size = textNumber.value + 'px'
+    function handleChange(){
+      textSize.size = textNumber.value+'px'
     }
+    
     let all = window.screen.width
-    let middle = all - (all * 0.45 + 140)
-    let sum = middle / 2 - 100
+    let middle = all-(all*0.45+140)
+    let sum = middle/2 -100
+    console.log(sum)
 
     let allheight = window.screen.availHeight
-    let middheight = allheight / 2 - 100
+    let middheight = allheight/2-100
+  console.log(middheight)
     return {
       content,
       fullscreenLoading,
@@ -201,12 +230,13 @@ export default defineComponent({
       handleChange,
       textSize,
       sum,
-      middheight,
-    }
-  },
-})
+      middheight
+    };
+  }
+});
 </script>
 <style scoped lang="less">
+
 .content {
   width: 45%;
   margin: auto;
@@ -226,7 +256,7 @@ export default defineComponent({
   }
   .backtop {
     position: fixed;
-
+    top: 300px;
     .top1 {
       width: 60px;
       height: 60px;
