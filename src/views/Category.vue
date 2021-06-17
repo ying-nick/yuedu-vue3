@@ -203,7 +203,7 @@ export default defineComponent({
 
     // 分页
     const toChangePage = e => {
-      console.log(`当前页: ${e}`);
+      // console.log(`当前页: ${e}`);
       if (state.seen) {
         setTimeout(() => {
           getBookList(
@@ -305,15 +305,16 @@ export default defineComponent({
       background: #fff;
       border-radius: 6px;
       padding: 20px;
-      /deep/.el-table__body .el-table_1_column_1 .cell div{
+      /deep/.el-table__body .el-table_1_column_1 .cell div {
         width: 20px;
         height: 20px;
-        border: solid 1px #f80;
+        background-color: rgb(151, 150, 150);
+        color: #fff;
         border-radius: 4px;
         line-height: 20px;
         text-align: center;
       }
-      /deep/.el-table__body .cell:hover{
+      /deep/.el-table__body .cell:hover {
         color: #f80;
         cursor: pointer;
       }
