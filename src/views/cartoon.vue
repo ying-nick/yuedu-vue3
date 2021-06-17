@@ -125,6 +125,8 @@ export default defineComponent({
         });
       } else {
         warn();
+        loading.close();
+        getlist();
       }
     };
     //获取搜索漫画详情
