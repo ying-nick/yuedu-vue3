@@ -4,7 +4,7 @@
       <el-row :gutter="4">
         <el-col :span="16">
           <div class="grid-content bg-purple">
-            <h2 class="h2bang">最热榜</h2>
+            <h2 class="h2bang">最热书籍</h2>
             <!-- 分割线 ---------------------------- -->
             <el-divider></el-divider>
             <div v-for="item in hotList" :key="item._id">
@@ -55,7 +55,7 @@
       <el-row :gutter="4">
         <el-col :span="16">
           <div class="grid-content bg-purple">
-            <h2 class="h2bang">人气榜</h2>
+            <h2 class="h2bang">人气书籍</h2>
             <!-- 分割线 -->
             <el-divider></el-divider>
             <div v-for="item in popularityList" :key="item._id">
