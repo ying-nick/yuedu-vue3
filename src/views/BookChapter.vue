@@ -6,61 +6,81 @@
     element-loading-background="rgba(0, 0, 0, 0.85)"
   >
     <el-main>
-      <el-dialog
-        title="设置"
-        v-model="dialogVisible"
-        width="25%"
-        top="30vh"
-      >
-       <div style="margin-bottom: 10px;">
+      <el-dialog title="设置" v-model="dialogVisible" width="25%" top="30vh">
+        <div style="margin-bottom: 10px;">
           <el-row>
-          <span
-            style="    text-align: center;
+            <span
+              style="    text-align: center;
     line-height: 40px; margin-right:20px;"
-            >背景色：</span
-          >
-          <el-button
-            icon="el-icon-check"
-            :style="{ background: item.color }"
-            circle
-            v-for="(item, index) in number"
-            :key="item"
-            @click="getColor(index)"
-          ></el-button>
-        </el-row>
-       </div>
+              >背景色：</span
+            >
+            <el-button
+              icon="el-icon-check"
+              :style="{ background: item.color }"
+              circle
+              v-for="(item, index) in number"
+              :key="item"
+              @click="getColor(index)"
+            ></el-button>
+          </el-row>
+        </div>
         <el-row class="row">
           <span
             style="    text-align: center;
     line-height: 40px; margin-right:20px;"
             >文字大小：</span
           >
-          <el-input-number v-model="textNumber" @change="handleChange" :min="10" :max="20" label="描述文字"></el-input-number>
+          <el-input-number
+            v-model="textNumber"
+            @change="handleChange"
+            :min="10"
+            :max="20"
+            label="描述文字"
+          ></el-input-number>
         </el-row>
         <template #footer> </template>
       </el-dialog>
       <div class="content" :style="{ background: back.content }">
         <div class="chapterHead">{{ chapterHead }}</div>
         <div class="main">
-          <p v-for="item in content" :key="item" class="text" :style="{ fontSize: textSize.size }" >
+          <p
+            v-for="item in content"
+            :key="item"
+            class="text"
+            :style="{ fontSize: textSize.size }"
+          >
             &nbsp; &nbsp; &nbsp; &nbsp;{{ item }}
           </p>
         </div>
         <div class="footer">
           <div class="btnDIv">
-            <el-button class="btn" @click="upper" native-type="button" :style="{ background: back.content }"
+            <el-button
+              class="btn"
+              @click="upper"
+              native-type="button"
+              :style="{ background: back.content }"
               >上一章</el-button
             >
-            <el-button class="btn" @click="gotoContent" native-type="button" :style="{ background: back.content }"
+            <el-button
+              class="btn"
+              @click="gotoContent"
+              native-type="button"
+              :style="{ background: back.content }"
               >目录</el-button
             >
-            <el-button class="btn" @click="lower" native-type="button" :style="{ background: back.content }"
+            <el-button
+              class="btn"
+              @click="lower"
+              native-type="button"
+              :style="{ background: back.content }"
               >下一章</el-button
             >
           </div>
         </div>
-        <div class="backtop" 
-          :style="{ left: sum+'px',top:middheight+'px'}">
+        <div
+          class="backtop"
+          :style="{ left: sum + 'px', top: middheight + 'px' }"
+        >
           <div class="top1" @click="gotoCont">
             <span class="el-icon-s-order ic"></span>
             <div>目录</div>
@@ -193,26 +213,33 @@ export default defineComponent({
       let obj = number.filter(item => {
         return number.indexOf(item) == length;
       });
+      store.commit("pushColor", obj[0]);
       back.color = obj[0].color;
       back.contoiner = obj[0].contoiner;
       back.content = obj[0].content;
     }
-    let textNumber = ref(16)
+    const Color = () => {
+      back.color = state.color.color;
+      back.contoiner = state.color.contoiner;
+      back.content = state.color.content;
+    };
+    Color();
+    let textNumber = ref(16);
     let textSize = reactive({
-      size:''
-    })
-    function handleChange(){
-      textSize.size = textNumber.value+'px'
+      size: ""
+    });
+    function handleChange() {
+      textSize.size = textNumber.value + "px";
     }
-    
-    let all = window.screen.width
-    let middle = all-(all*0.45+140)
-    let sum = middle/2 -100
-    console.log(sum)
 
-    let allheight = window.screen.availHeight
-    let middheight = allheight/2-100
-  console.log(middheight)
+    let all = window.screen.width;
+    let middle = all - (all * 0.45 + 140);
+    let sum = middle / 2 - 100;
+    console.log(sum);
+
+    let allheight = window.screen.availHeight;
+    let middheight = allheight / 2 - 100;
+    console.log(middheight);
     return {
       content,
       fullscreenLoading,
@@ -236,7 +263,6 @@ export default defineComponent({
 });
 </script>
 <style scoped lang="less">
-
 .content {
   width: 45%;
   margin: auto;
