@@ -11,6 +11,7 @@ type IStore = {
     details: any;
     user: any;
     tableData: any;
+    color:any;
   }
   mutations: {
     getSearchData(state: any, data: any),
@@ -19,7 +20,8 @@ type IStore = {
     adduserinfo(state: any, data: any),
     delete(state: any, data: any),
     pushList(state: any, data: any),
-    pushChapterId(state:any,data:any)
+    pushChapterId(state:any,data:any),
+    pushColor(state:any,data:any)
   },
   actions: {},
   modules: {},
@@ -34,6 +36,7 @@ const store: IStore = {
     bookDetails: {},
     readMost: [],
     details: [],
+    color:{},
     //用户信息
     user: {
       nickname: '',
@@ -83,6 +86,9 @@ const store: IStore = {
     },
     pushChapterId(state, data) {
       state.chapterId = data
+    },
+    pushColor(state,data){
+      state.color = data
     }
   },
 
