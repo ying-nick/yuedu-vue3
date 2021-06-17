@@ -1,4 +1,5 @@
 <template>
+<div class="fl">
   <div class="ca-container">
     <!-- 导航部分 -->
     <div class="ca-up">
@@ -62,17 +63,21 @@
       ></el-pagination>
     </div>
   </div>
+</div>
+  
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
 import zgaxios from "@/tools/zgaxios";
 import { ElMessage } from "element-plus";
 import router from '../router';
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: "category",
   components: {},
   setup(context) {
+    const { getters, dispatch, commit } = useStore()
     const state = reactive({
       bookListTable: [],
       defaultName: "male",
@@ -140,7 +145,7 @@ export default defineComponent({
     };
     // 调用函数获取默认列表
     getBookList(
-      "http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=1&channelId=1"
+      "/ynv/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=1&channelId=1"
     );
 
     // 男女频道切换的点击事件
@@ -148,13 +153,13 @@ export default defineComponent({
       if (e.target.innerText == "男频") {
         state.seen = true;
         getBookList(
-          "http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=1&channelId=1"
+          "/ynv/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=1&channelId=1"
         );
         // console.log(state.bookListTable, 222222222222);
       } else if (e.target.innerText == "女频") {
         state.seen = false;
         getBookList(
-          "http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=3&channelId=2"
+          "/ynv/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=3&channelId=2"
         );
       }
     };
@@ -168,10 +173,10 @@ export default defineComponent({
       // console.log(bookCategoryM);
       state.bookCategoryM = bookCategoryM[0].categoryId;
       getBookList(
-        `http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=${state.bookCategoryM}&channelId=1`
+        `/ynv/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=${state.bookCategoryM}&channelId=1`
       );
     }
-    // 女频小说的分类列表
+    // 女频小说的分类列表的点击事件
     const getFemaleCategoryList = e => {
       let bookCategoryF = state.FemaleBookCategories.filter(item => {
         return state.FemaleBookCategories.indexOf(item) == e.index;
@@ -179,7 +184,7 @@ export default defineComponent({
       // console.log(bookCategoryF);
       state.bookCategoryF = bookCategoryF[0].categoryId;
       getBookList(
-        `http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=${state.bookCategoryF}&channelId=2`
+        `/ynv/app/open/api/book/getCategoryId?pageNum=1&pageSize=10&categoryId=${state.bookCategoryF}&channelId=2`
       );
     };
 
@@ -189,22 +194,30 @@ export default defineComponent({
       if (state.seen) {
         setTimeout(() => {
           getBookList(
-            `http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=${e}&pageSize=10&categoryId=${state.bookCategoryM}&channelId=1`
+            `/ynv/app/open/api/book/getCategoryId?pageNum=${e}&pageSize=10&categoryId=${state.bookCategoryM}&channelId=1`
           );
         }, 10000);
       } else {
         setTimeout(() => {
           getBookList(
-            `http://yuenov.com:15555/app/open/api/book/getCategoryId?pageNum=${e}&pageSize=10&categoryId=${state.bookCategoryF}&channelId=2`
+            `/ynv/app/open/api/book/getCategoryId?pageNum=${e}&pageSize=10&categoryId=${state.bookCategoryF}&channelId=2`
           );
         }, 10000);
       }
     };
 
-    // 点击跳转阅读页
-    const handleCurrentChange = (row, column) => {
+    // 点击跳转详情页
+    const handleCurrentChange = async (row, column) => {
       // console.log(row.bookId, row.title);
-      // router.push(`/bookdetails/${row.title}`)
+      let {data} = await zgaxios("GET", `/ynv/app/open/api/book/getDetail?bookId=${row.bookId}`)
+      console.log(data.data,2222222)
+      if (data.result.code == 1009) {
+        state.loading = false;
+        ElMessage.error("操作太频繁，请10s后再试");
+        return
+      }
+      data.result.code == 0 && data.data !== undefined && commit('getBookDetails',data.data)
+      router.push(`/bookdetails/${row.title}`)
     };
 
     return {
@@ -219,10 +232,16 @@ export default defineComponent({
 });
 </script>
 <style lang="less" scoped>
+.fl{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 .ca-container {
-  width: 1500px;
-  margin: 0 200px;
+  width: 90%;
   color: #333;
+  display: flex;
+  flex-direction: column;
   .ca-up {
     margin-top: 20px;
     font-size: 14px;
@@ -290,4 +309,6 @@ export default defineComponent({
     color: #f80;
   }
 }
+}
+
 </style>
