@@ -135,6 +135,10 @@ export default defineComponent({
     }
     //加入书架
     async function addbook(id) {
+      if (!state.user.lgn) {
+        ElMessage.error('请先登录')
+        return
+      }
       try {
         let { data } = await zgaxios('GET', detailUrlYnv, {
           params: {

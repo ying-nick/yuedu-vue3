@@ -65,6 +65,9 @@
 import { defineComponent, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
+import { ElMessage, ElLoading } from 'element-plus'
+import zgaxios from '@/tools/zgaxios'
+import { detailUrlYnv } from '@/tools/api'
 export default defineComponent({
   setup() {
     const { state, commit } = useStore()
@@ -87,15 +90,43 @@ export default defineComponent({
       tableData: state.tableData,
     })
     //进入阅读
-    function handleEdit(index, row) {
-       if(data.tableData[index].cartoonId){
-            router.push(`/cartoon/detail/${data.tableData[index].cartoonId}/${data.tableData[index].chapterid}/${data.tableData[index].title}`);
-       }
-       else{
-         router.push('/content')
-         
-       }
-      
+    async function handleEdit(index, row) {
+      if (data.tableData[index].cartoonId) {
+        router.push(
+          `/cartoon/detail/${data.tableData[index].cartoonId}/${data.tableData[index].chapterid}/${data.tableData[index].title}`
+        )
+      } else {
+        let id = data.tableData[index].bookId
+        const loading = ElLoading.service({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)',
+        })
+        try {
+          let { data } = await zgaxios('GET', detailUrlYnv, {
+            params: {
+              bookId: id,
+            },
+          })
+          let { result } = data
+          if (result.code == 1009) {
+            loading.close()
+            ElMessage.error('操作太频繁，请10s后再试')
+            return
+          } else if (result.code == 0) {
+            loading.close()
+            commit('getBookDetails', data.data)
+            router.push('/content')
+          } else {
+            throw new Error('无数据')
+          }
+        } catch (error) {
+          loading.close()
+          ElMessage.error('错误，该书不存在已被移除')
+        }
+        router.push('/content')
+      }
 
       console.log(state.tableData)
     }

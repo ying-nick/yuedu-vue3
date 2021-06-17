@@ -13,22 +13,22 @@
               </el-col>
               <el-col :span="18" class="bookintroduce">
                 <div class="tag">
-                  <el-button
-                    type="success"
-                    round
-                    plain
-                    size="small"
-                    v-for="item in cartoondata.comic.classifyTags"
-                    :key="item"
-                    >{{ item.name }}</el-button
-                  >
+                  <el-button type="success" round plain size="small" v-for="item in cartoondata.comic.classifyTags" :key="item">{{ item.name }}</el-button>
                 </div>
                 <div class="status">
                   <el-row>
-                    <el-col :span="6"><div>状态：连载中</div></el-col>
-                    <el-col :span="6"><div>总点击：50.94亿</div></el-col>
-                    <el-col :span="6"><div>总月票：2758114</div></el-col>
-                    <el-col :span="6"><div>最后更新:{{cartoondata.updatetime}}</div></el-col>
+                    <el-col :span="6">
+                      <div>状态：连载中</div>
+                    </el-col>
+                    <el-col :span="6">
+                      <div>总点击：50.94亿</div>
+                    </el-col>
+                    <el-col :span="6">
+                      <div>总月票：2758114</div>
+                    </el-col>
+                    <el-col :span="6">
+                      <div>最后更新:{{cartoondata.updatetime}}</div>
+                    </el-col>
                   </el-row>
                 </div>
                 <div class="introducecontent">
@@ -36,25 +36,24 @@
                 </div>
                 <div class="button">
                   <el-row>
-                    <el-col :span="8"
-                      ><div
-                        class="startread"
-                        @click="
+                    <el-col :span="8">
+                      <div class="startread" @click="
                           toread(
                             cartoondata.chapterlist[0].chapter_id,
                             cartoondata.chapterlist[0].name
                           )
-                        "
-                      >
+                        ">
                         开始阅读
-                      </div></el-col
-                    >
-                    <el-col :span="8"
-                      ><div class="addtobookshelf" @click="addtobookshelf">
+                      </div>
+                    </el-col>
+                    <el-col :span="8">
+                      <div class="addtobookshelf" @click="addtobookshelf">
                         加入书架
-                      </div></el-col
-                    >
-                    <el-col :span="8"><div class="vote">投月票</div></el-col>
+                      </div>
+                    </el-col>
+                    <el-col :span="8">
+                      <div class="vote">投月票</div>
+                    </el-col>
                   </el-row>
                 </div>
               </el-col>
@@ -89,36 +88,21 @@
           <el-col :span="24">
             <div class="rightcontent">
               <ul>
-                <li
-                  v-for="item in cartoondata.chapterlist.slice(0, 16)"
-                  :key="item"
-                  @click="tochapter(item.chapter_id, item.name,item.type)"
-                >
-                   <span class="vip">{{item.type==0?'':'vip'}}</span>
+                <li v-for="item in cartoondata.chapterlist.slice(0, 16)" :key="item" @click="tochapter(item.chapter_id, item.name,item.type)">
+                  <span class="vip">{{item.type==0?'':'vip'}}</span>
                   {{ item.name }}
                   <span class="totalpicture">({{item.image_total}}p)</span>
-                 
+
                 </li>
 
                 <div class="more" v-if="cartoondata.chapterlist.length>50">
-                  <el-collapse
-                    v-model="cartoondata.activeNames"
-                    @change="handleChange"
-                  >
-                    <el-collapse-item
-                      title="展开全部章节"
-                      name="1"
-                      class="text"
-                    >
+                  <el-collapse v-model="cartoondata.activeNames" @change="handleChange">
+                    <el-collapse-item title="展开全部章节" name="1" class="text">
                       <ul>
-                        <li
-                          @click="tochapter(item.chapter_id, item.name,item.type)"
-                          v-for="item in cartoondata.chapterlist.slice(
+                        <li @click="tochapter(item.chapter_id, item.name,item.type)" v-for="item in cartoondata.chapterlist.slice(
                             16,
                             cartoondata.chapterlist.length-16
-                          )"
-                          :key="item"
-                        >
+                          )" :key="item">
                           <span class="vip">{{item.type==0?'':'vip'}}</span>
                           {{ item.name }}
                           <span class="totalpicture">({{item.image_total}}p)</span>
@@ -128,38 +112,28 @@
                   </el-collapse>
                 </div>
 
-                <li
-                  v-for="item in cartoondata.chapterlist.slice(
+                <li v-for="item in cartoondata.chapterlist.slice(
                     cartoondata.chapterlist.length-16,
                     cartoondata.chapterlist.length
-                  )"
-                  :key="item"
-                  @click="tochapter(item.chapter_id, item.name,item.type)"
-                > 
+                  )" :key="item" @click="tochapter(item.chapter_id, item.name,item.type)">
                   <span class="vip">{{item.type==0?'':'vip'}}</span>
                   {{ item.name }}
                   <span class="totalpicture">({{item.image_total}}p)</span>
-                 
+
                 </li>
               </ul>
             </div>
           </el-col>
         </el-row>
         <div class="bottomsheet">
-          <img
-            src="https://image.mylife.u17t.com/2017/03/22/1490160740_xJ66l9X56n65.gif"
-          />
+          <img src="https://image.mylife.u17t.com/2017/03/22/1490160740_xJ66l9X56n65.gif" />
         </div>
         <div class="comment">
           <div class="commenthead">
             所有评论
           </div>
           <div class="commentcontent">
-            <div
-              class="commentlist"
-              v-for="item in cartoondata.commentList"
-              :key="item"
-            >
+            <div class="commentlist" v-for="item in cartoondata.commentList" :key="item">
               <el-row>
                 <el-col :span="4">
                   <div class="avatar">
@@ -182,97 +156,100 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
-import zgaxios from "@/tools/zgaxios";
-import { useRouter } from "vue-router";
-import { ElMessage} from "element-plus";
-import { useStore } from "vuex";
+import { defineComponent, reactive } from 'vue'
+import zgaxios from '@/tools/zgaxios'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import { useStore } from 'vuex'
 export default defineComponent({
-  props: ["id"],
+  props: ['id'],
   setup(props) {
-    const { commit, state, dispatch } = useStore();
-    const router = useRouter();
+    const { commit, state, dispatch } = useStore()
+    const router = useRouter()
     let cartoondata = reactive({
-      activeNames: ["0"],
-      comic: "",
-      author: "",
+      activeNames: ['0'],
+      comic: '',
+      author: '',
       chapterlist: [],
       commentList: [],
-      updatetime:''
-    });
+      updatetime: '',
+    })
     //获取最后更新时间戳
-    function gettime(timestr){
-       let now=new Date().getTime()
-       let time=now-timestr
-       let dat=new Date(time)
-       let  year=dat.getFullYear()
-       let month=dat.getMonth()+1
-       let date=dat.getDate()
-       cartoondata.updatetime=year+'年'+month+'月'+date+'日'
-       console.log(year+'年'+month+'月'+date+'日')
+    function gettime(timestr) {
+      let now = new Date().getTime()
+      let time = now - timestr
+      let dat = new Date(time)
+      let year = dat.getFullYear()
+      let month = dat.getMonth() + 1
+      let date = dat.getDate()
+      cartoondata.updatetime = year + '年' + month + '月' + date + '日'
+      console.log(year + '年' + month + '月' + date + '日')
     }
     // gettime(1623364321)
 
     //展开更多
-    let handleChange = () => {};
+    let handleChange = () => {}
     //获取详情信息
     let getcotagory = async () => {
       let { data } = await zgaxios(
-        "GET",
+        'GET',
         `/yyq/comic/detail_static_new?comicid=${props.id}`
-      );
-       gettime(data.data.returnData.comic.last_update_time)
-      console.log(data.data.returnData);
-      cartoondata.comic = data.data.returnData.comic;
-      cartoondata.chapterlist = data.data.returnData.chapter_list;
-      cartoondata.author = data.data.returnData.comic.author;
-      cartoondata.commentList = data.data.returnData.commentList;
-      commit("addchapterlist", data.data.returnData.chapter_list);
-      commit("addcomic", cartoondata.comic);
-    };
-    getcotagory();
+      )
+      gettime(data.data.returnData.comic.last_update_time)
+      console.log(data.data.returnData)
+      cartoondata.comic = data.data.returnData.comic
+      cartoondata.chapterlist = data.data.returnData.chapter_list
+      cartoondata.author = data.data.returnData.comic.author
+      cartoondata.commentList = data.data.returnData.commentList
+      commit('addchapterlist', data.data.returnData.chapter_list)
+      commit('addcomic', cartoondata.comic)
+    }
+    getcotagory()
     //开始阅读
     let toread = (id, name) => {
-      
-      commit("addcomic", cartoondata.comic);
-      router.push(`/cartoon/detail/${props.id}/${id}/${name}`);
-    };
+      commit('addcomic', cartoondata.comic)
+      router.push(`/cartoon/detail/${props.id}/${id}/${name}`)
+    }
     //进入指定章节
-    let tochapter = (id, name,type) => {
-      if(type==3){
-         ElMessage({
+    let tochapter = (id, name, type) => {
+      if (type == 3) {
+        ElMessage({
           showClose: true,
           message: '您访问的是vip章节哦',
           type: 'warning',
         })
         return
       }
-      commit("addcomic", cartoondata.comic);
-      router.push(`/cartoon/detail/${props.id}/${id}/${name}`);
-    };
+      commit('addcomic', cartoondata.comic)
+      router.push(`/cartoon/detail/${props.id}/${id}/${name}`)
+    }
     //添加到书架
-    let addtobookshelf = async() => {
-       let { data } = await zgaxios(
-        "GET",
+    let addtobookshelf = async () => {
+      if (!state.user.lgn) {
+        ElMessage.error('请先登录')
+        return
+      }
+      let { data } = await zgaxios(
+        'GET',
         `/yyq/comic/detail_static_new?comicid=${props.id}`
-      );
-      console.log(data.data.returnData);
+      )
+      console.log(data.data.returnData)
       let bookobj = {
         type: state.comic.classifyTags[0].name,
         picture: state.comic.cover,
         name: state.comic.name,
-        title:data.data.returnData.chapter_list[0].name,
-        chapterid:data.data.returnData.chapter_list[0].chapter_id,
-        newpage: "第" + cartoondata.chapterlist.length + "章",
-        cartoonId: props.id
-      };
-      try{
-          dispatch("asysetCartoon", bookobj)
-          ElMessage({
-            showClose: true,
-            message: "添加成功",
-            type: "success"
-          });
+        title: data.data.returnData.chapter_list[0].name,
+        chapterid: data.data.returnData.chapter_list[0].chapter_id,
+        newpage: '第' + cartoondata.chapterlist.length + '章',
+        cartoonId: props.id,
+      }
+      try {
+        dispatch('asysetCartoon', bookobj)
+        ElMessage({
+          showClose: true,
+          message: '添加成功',
+          type: 'success',
+        })
       } catch (error) {
         ElMessage({
           showClose: true,
@@ -280,7 +257,7 @@ export default defineComponent({
           type: 'warning',
         })
       }
-    };
+    }
     return {
       gettime,
       tochapter,
@@ -289,17 +266,17 @@ export default defineComponent({
       handleChange,
       getcotagory,
       toread,
-      addtobookshelf
-    };
-  }
-});
+      addtobookshelf,
+    }
+  },
+})
 </script>
 
 <style lang="less" scoped>
 .container {
   width: 100%;
   height: auto;
-  background: url("https://static.u17i.com/v4/www/images/comicinfo/zhenhunjie_bg_donghua.jpg")
+  background: url('https://static.u17i.com/v4/www/images/comicinfo/zhenhunjie_bg_donghua.jpg')
     no-repeat;
 }
 .content {
@@ -432,7 +409,7 @@ export default defineComponent({
         text-overflow: ellipsis;
         white-space: nowrap;
         color: #09d;
-        font: 14px/46px "宋体";
+        font: 14px/46px '宋体';
         border-bottom: 1px dashed #999;
         width: 22%;
         height: 30px;
@@ -451,14 +428,14 @@ export default defineComponent({
     }
   }
 }
-.vip{
+.vip {
   color: purple;
   font-weight: bolder;
-   text-shadow: 0 0 10px azure, 0 0 20px purple;
-      filter: saturate(60%);
-      animation: flicker 1s linear infinite;
+  text-shadow: 0 0 10px azure, 0 0 20px purple;
+  filter: saturate(60%);
+  animation: flicker 1s linear infinite;
 }
-.totalpicture{
+.totalpicture {
   color: red;
 }
 .bottomsheet {
@@ -507,13 +484,13 @@ export default defineComponent({
   }
 }
 @keyframes flicker {
-    0% {
-      color: red;
-      filter: saturate(100%) hue-rotate(0deg);
-    }
-    50% {
-      color: white;
-      filter: saturate(200%) hue-rotate(20deg);
-    }
+  0% {
+    color: red;
+    filter: saturate(100%) hue-rotate(0deg);
   }
+  50% {
+    color: white;
+    filter: saturate(200%) hue-rotate(20deg);
+  }
+}
 </style>

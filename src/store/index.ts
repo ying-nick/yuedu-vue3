@@ -131,7 +131,6 @@ addcomic(state,data){
       state.color = data
     }
 },
-
   actions: {
     asysetbook(ctx,data) {
       ctx.commit('setBook',data)
@@ -140,12 +139,6 @@ addcomic(state,data){
      ctx.commit('setCartoon',data)
    }
   },
-
-
-
-
-
-
   getters: {},
   modules: {
   },

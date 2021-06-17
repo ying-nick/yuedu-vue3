@@ -250,7 +250,7 @@ export default defineComponent({
       /*  states.weekread = booklist(state.readMost.list, num - 5, num - 1)
       states.seelists = booklist(state.readMost.list, 0, num - 6)
       states.loading = false */
-    }, 10000)
+    }, 15000)
     //跳转到详情
     async function godetail(id) {
       const loading = ElLoading.service({
@@ -287,6 +287,10 @@ export default defineComponent({
     }
     //加入书架
     async function booksave() {
+      if (!state.user.lgn) {
+        ElMessage.error('请先登录')
+        return
+      }
       let { list } = states
       let book = {
         type: list.categoryName,
