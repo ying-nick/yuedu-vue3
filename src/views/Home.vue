@@ -117,7 +117,7 @@
       <i class="iconfont icon-redu"></i>{{item.title}}
     </template>
           <div >
-            <img :src="'https://statics.zhuishushenqi.com' + item.cover" />
+            <img class="imge" :src="'https://statics.zhuishushenqi.com' + item.cover" />
             <span class="zuozhe">作者：{{ item.author }}</span>
             <span class="minorCate">类型：{{ item.minorCate }}</span>
             <span class="latelyFollower">近期阅读量：{{ item.latelyFollower }}</span>
@@ -452,14 +452,19 @@ export default defineComponent({
   position: relative;
  
 }
+.imge{
+
+  margin-left: 0.4rem;
+
+}
 .zuozhe {
   position: absolute;
-  left: 3.6rem;
+  left: 4rem;
   font-size: 0.35rem;
 }
 .minorCate {
   position: absolute;
-  left: 3.6rem;
+  left: 4rem;
   top: 2rem;
   font-size: 0.28rem;
   color: rgb(172, 172, 172);
@@ -467,22 +472,22 @@ export default defineComponent({
 .latelyFollower {
   position: absolute;
   top: 2.5rem;
-  left: 3.6rem;
+  left: 4rem;
   font-size: 0.28rem;
   color: rgb(172, 172, 172);
 }
 .shortIntro {
   position: absolute;
   top: 3.2rem;
-  left: 3.6rem;
+  left: 4rem;
   font-size: 0.25rem;
   text-indent: 2em;
   color: rgb(172, 172, 172);
 }
 .clickYuedu{
   position: absolute;
-  left: 3.6rem;
-  top: 4.8rem;
+  left: 4rem;
+  top: 4.56rem;
 }
 
 </style>
