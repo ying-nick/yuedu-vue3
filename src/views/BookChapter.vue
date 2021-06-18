@@ -43,7 +43,8 @@
       <div class="content" :style="{ background: back.content }">
         <div class="chapterHead">{{ chapterHead }}</div>
         <div class="main">
-          <p
+          
+            <p
             v-for="item in content"
             :key="item"
             class="text"
@@ -117,14 +118,17 @@ export default defineComponent({
       chapterIdList: [state.chapterId]
     });
     let chapterList = ref(state.chapter);
-    let content = ref("");
-    let chapterHead = ref("暂无内容");
+    let content = ref([]);
+    let chapterHead = ref("暂无内容");   
+    let textList = ref([])
     const getText = async () => {
       let result = await zgaxios("POST", getList, text);
-      console.log(result);
+     
 
       if (result.data.result.code == 0) {
+        // result.data.data.list[0].content.replace(/\n/g,"")
         content.value = result.data.data.list[0].content.split("\n");
+      //  content.value= result.data.data.list[0].content.replace(/\n/g,"<br/>")
         chapterHead.value = result.data.data.list[0].name;
         fullscreenLoading.value = false;
       } else {
