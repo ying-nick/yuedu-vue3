@@ -52,7 +52,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'bookshelf',
     component: () => import( '../views/bookshelf.vue'),
     meta: {
-      title: "悦读-书架"
+      title: "我的书架"
     }
   },
   {
@@ -78,7 +78,7 @@ const routes: Array<RouteRecordRaw> = [
     props:true,
     component: () => import( '../views/cartoonread.vue'),
     meta: {
-      title: "悦读-漫画内容"
+      title: "漫画章节"
     }
   },
   {
@@ -112,7 +112,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'chapter',
     component: () => import( '../views/BookChapter.vue'),
     meta: {
-      title: "悦读-内容"
+      title: "书籍章节"
     }
   }
 ]
