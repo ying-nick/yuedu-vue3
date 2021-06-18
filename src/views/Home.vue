@@ -29,7 +29,7 @@
           </div>
         </el-col>
         <!-- 完结榜部分 -->
-        <el-col  :span="8">
+        <el-col :span="8">
           <div class="grid-content bg-purple">
             <h2 class="wanjiebang h2bang">完结榜</h2>
             <!-- 分割线 -->
@@ -43,10 +43,10 @@
               </div>
             </div>
           </div>
-                <!-- 加载更多按钮 -->
-            <el-button plain class="moreBtn" @click="toRanking"
-              >加载更多</el-button
-            >
+          <!-- 加载更多按钮 -->
+          <el-button plain class="moreBtn" @click="toRanking"
+            >加载更多</el-button
+          >
         </el-col>
       </el-row>
     </div>
@@ -94,10 +94,9 @@
                 {{ item.title }}
               </div>
             </div>
-
           </div>
-                      <!-- 加载更多按钮 -->
-            <el-button plain class="moreBtn">加载更多</el-button>
+          <!-- 加载更多按钮 -->
+          <el-button plain class="moreBtn">加载更多</el-button>
         </el-col>
       </el-row>
     </div>
@@ -108,21 +107,28 @@
       <el-collapse v-model="activeNames" @change="handleChange" accordion>
         <el-collapse-item
           class="chouti"
-          v-for="(item,index) in ticketList"
+          v-for="(item, index) in ticketList"
           :key="item._id"
           :title="item.title"
           :name="index"
         >
-         <template #title>
-      <i class="iconfont icon-redu"></i>{{item.title}}
-    </template>
-          <div >
-            <img class="imge" :src="'https://statics.zhuishushenqi.com' + item.cover" />
+          <template #title>
+            <i class="iconfont icon-redu"></i>{{ item.title }}
+          </template>
+          <div>
+            <img
+              class="imge"
+              :src="'https://statics.zhuishushenqi.com' + item.cover"
+            />
             <span class="zuozhe">作者：{{ item.author }}</span>
             <span class="minorCate">类型：{{ item.minorCate }}</span>
-            <span class="latelyFollower">近期阅读量：{{ item.latelyFollower }}</span>
+            <span class="latelyFollower"
+              >近期阅读量：{{ item.latelyFollower }}</span
+            >
             <div class="shortIntro">{{ item.shortIntro }}</div>
-             <el-button class="clickYuedu" @click="toDetail(item)">点击阅读</el-button>
+            <el-button class="clickYuedu" @click="toDetail(item)"
+              >点击阅读</el-button
+            >
           </div>
         </el-collapse-item>
       </el-collapse>
@@ -156,7 +162,7 @@ export default defineComponent({
       popularityList: [],
       praiseList: [],
       ticketList: [],
-      activeNames:0
+      activeNames: 0,
       // firstPraisePic: [],
     });
     //获取点击榜API
@@ -414,14 +420,13 @@ export default defineComponent({
   cursor: pointer;
 }
 
-
 .grid-content {
   position: relative;
 }
- .moreBtn {
-  width:5rem;
+.moreBtn {
+  width: 5rem;
   top: 800px;
- }
+}
 .secondCo {
   background-color: white;
   width: 18rem;
@@ -450,12 +455,9 @@ export default defineComponent({
 
 .chouti {
   position: relative;
- 
 }
-.imge{
-
+.imge {
   margin-left: 0.4rem;
-
 }
 .zuozhe {
   position: absolute;
@@ -482,7 +484,7 @@ export default defineComponent({
   left: 4rem;
   font-size: 0.25rem;
   text-indent: 2em;
-    overflow: hidden;
+  overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -492,12 +494,11 @@ export default defineComponent({
 
   color: rgb(172, 172, 172);
 }
-.clickYuedu{
+.clickYuedu {
   position: absolute;
   left: 4rem;
   top: 4.56rem;
 }
-
 </style>
 
 
