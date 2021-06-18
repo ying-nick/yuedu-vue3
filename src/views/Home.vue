@@ -482,6 +482,14 @@ export default defineComponent({
   left: 4rem;
   font-size: 0.25rem;
   text-indent: 2em;
+    overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  /*! autoprefixer: off */
+  -webkit-box-orient: vertical;
+
   color: rgb(172, 172, 172);
 }
 .clickYuedu{
