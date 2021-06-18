@@ -21,10 +21,10 @@
                       <div>状态：连载中</div>
                     </el-col>
                     <el-col :span="6">
-                      <div>总点击：50.94亿</div>
+                      <div>总点击：{{cartoondata.count}}万次</div>
                     </el-col>
                     <el-col :span="6">
-                      <div>总月票：2758114</div>
+                      <div>总月票：{{cartoondata.monthticket}}</div>
                     </el-col>
                     <el-col :span="6">
                       <div>最后更新:{{cartoondata.updatetime}}</div>
@@ -52,7 +52,7 @@
                       </div>
                     </el-col>
                     <el-col :span="8">
-                      <div class="vote">投月票</div>
+                      <div class="vote" @click="voteticket">投月票</div>
                     </el-col>
                   </el-row>
                 </div>
@@ -173,20 +173,38 @@ export default defineComponent({
       chapterlist: [],
       commentList: [],
       updatetime: '',
+      count:'',
+      monthticket:''
     })
     //获取最后更新时间戳
     function gettime(timestr) {
       let now = new Date().getTime()
       let time = now - timestr
       let dat = new Date(time)
+      console.log(time)
       let year = dat.getFullYear()
       let month = dat.getMonth() + 1
       let date = dat.getDate()
       cartoondata.updatetime = year + '年' + month + '月' + date + '日'
       console.log(year + '年' + month + '月' + date + '日')
     }
-    // gettime(1623364321)
-
+    //点击人数
+    function getclick(){
+        let count=Math.floor(Math.random()*100+Math.random()*10) 
+        cartoondata.count=count.toString()
+    }
+    getclick()
+    //月票
+    function getmonthticket(){
+        let count=Math.floor(Math.random()*100000+Math.random()*1000) 
+        cartoondata.monthticket=count.toString()
+    }
+    getmonthticket()
+    //投月票
+    function voteticket(){
+      let count=1
+      cartoondata.monthticket=(parseInt(cartoondata.monthticket)+count).toString()
+    }
     //展开更多
     let handleChange = () => {}
     //获取详情信息
@@ -196,7 +214,7 @@ export default defineComponent({
         `/yyq/comic/detail_static_new?comicid=${props.id}`
       )
       gettime(data.data.returnData.comic.last_update_time)
-      console.log(data.data.returnData)
+      // console.log(data.data.returnData)
       cartoondata.comic = data.data.returnData.comic
       cartoondata.chapterlist = data.data.returnData.chapter_list
       cartoondata.author = data.data.returnData.comic.author
@@ -259,6 +277,9 @@ export default defineComponent({
       }
     }
     return {
+      voteticket,
+      getmonthticket,
+      getclick,
       gettime,
       tochapter,
       cartoondata,

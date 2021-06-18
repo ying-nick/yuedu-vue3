@@ -100,14 +100,18 @@
         </el-col>
       </el-row>
     </div>
-
-    <!-- <div v-for="item in firstPraisePic" :key="item._id">
-      <img
-        class="hotListPics"
-        :src="'https://statics.zhuishushenqi.com' + item.cover"
-        alt=""
-      />
-    </div> -->
+    <!-- 第三段********************************************************************* -->
+    <div class="thirdCo">
+      <h2 class="h2ticket h2bang">大家都在看</h2>
+      
+      <el-collapse v-model="activeNames" @change="handleChange" >
+        <el-collapse-item  v-for="item in ticketList" :key="item._id" :title="item.title" :name="item._id">
+          <div>
+         <img :src="'https://statics.zhuishushenqi.com' + item.cover"   />
+          </div>
+        </el-collapse-item>
+      </el-collapse>
+    </div>
   </div>
 </template>
 <script lang="ts">
@@ -122,6 +126,7 @@ import {
   EndListsUrl,
   PopularityListsUrl,
   PraiseListsUrl,
+  TicketListUrl
 } from "@/tools/api";
 
 export default defineComponent({
@@ -135,6 +140,7 @@ export default defineComponent({
       endList: [],
       popularityList: [],
       praiseList: [],
+      ticketList:[]
       // firstPraisePic: [],
     });
     //获取点击榜API
@@ -186,6 +192,18 @@ export default defineComponent({
       state1.praiseList = tenPraiseList;
     };
     getPraiseListsUrlList();
+
+        //获取点击榜API
+    const getTicketListsUrlList = async () => {
+      let { data } = await zgaxios("GET", `${TicketListUrl}`);
+      state1.ticketList = data.ranking.books;
+      const fiveTicketList = [];
+      for (var i = 0; i < 5; i++) {
+        fiveTicketList.push(state1.ticketList[i]);
+      }
+      state1.ticketList = fiveTicketList;
+    };
+    getTicketListsUrlList();
 
     let toRanking = () => {
       //加载更多按钮路由跳转
@@ -365,6 +383,24 @@ export default defineComponent({
   height: 11rem;
   margin: 0 Auto;
   margin-top: 1rem;
+}
+.thirdCo {
+  background-color: white;
+  width: 18rem;
+  margin: 1rem Auto;
+}
+.h2ticket{
+  padding-top: 0.3rem;
+}
+/deep/.el-collapse-item__header{
+
+  color: #333;
+  font-size: 0.3rem;
+  margin-left: 0.3rem;
+}
+/deep/.el-collapse-item__header:hover {
+  color: orange;
+  cursor: pointer;
 }
 </style>
 
