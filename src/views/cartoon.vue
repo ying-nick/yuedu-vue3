@@ -34,17 +34,6 @@
   </div>
 </template>
 <script lang="ts">
-<<<<<<< HEAD
-import { defineComponent, reactive } from "vue";
-import zgaxios from "@/tools/zgaxios";
-// import { useStore } from "vuex";
-import { ElMessage, ElLoading } from "element-plus";
-import { useRouter } from "vue-router";
-export default defineComponent({
-  setup() {
-    const router = useRouter();
-    // const { commit, state, dispatch } = useStore();
-=======
 import { defineComponent, reactive, toRefs } from 'vue'
 import zgaxios from '@/tools/zgaxios'
 import { useStore } from 'vuex'
@@ -54,7 +43,6 @@ export default defineComponent({
   setup() {
     const router = useRouter()
     const { commit, state, dispatch } = useStore()
->>>>>>> 795168aaa097098dfff9e97c1b3c7fefc7f479f3
     let cartoondata = reactive({
       input: '',
       cartoonlist: [],
