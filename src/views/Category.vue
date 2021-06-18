@@ -314,6 +314,16 @@ export default defineComponent({
         line-height: 20px;
         text-align: center;
       }
+      /deep/.el-table_1_column_4 .cell {
+        width: 550px;
+        text-overflow: -o-ellipsis-lastline;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
       /deep/.el-table__body .cell:hover {
         color: #f80;
         cursor: pointer;
