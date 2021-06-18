@@ -1,82 +1,107 @@
 <template>
-  <div class="container">
-    <div class="snow"></div>
-    <div class="snow"></div>
-    <div class="snow"></div>
-    <div class="snow"></div>
-    <div class="snow"></div>
-    <div class="snow"></div>
-    <div class="snow"></div>
-    <div class="snow"></div>
-    <div class="snow"></div>
-    <div class="snow"></div>
-
-    <div class="headsheet">
-      <el-row>
-        <el-col :span="4">
-          <div class="name">{{ cartoondata.comic.name }}</div>
-        </el-col>
-        <el-col :span="4">
-          <div class="current">
-            本章一共{{ cartoondata.imagelist.length }}页
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="chapter">
-            {{ $route.params.title }}
-          </div>
-        </el-col>
-        <el-col :span="12">
-          <el-row>
-            <el-col :span="10">
-              <div class="line">阅读顺序：从左至右</div>
-            </el-col>
-            <el-col :span="5">
-              <div class="up" @click="pre">上一页</div>
-            </el-col>
-            <el-col :span="4">
-              <div class="chapter">当前第{{ cartoondata.start + 1 }}页</div>
-            </el-col>
-            <el-col :span="5">
-              <div class="down" @click="next">下一页</div>
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
-    </div>
-    <div
-      class="backpicture"
-      v-for="item in cartoondata.imagelist.slice(
-        cartoondata.start,
-        cartoondata.start + 1
-      )"
-      :key="item"
-    >
-      <img :src="item.img50" alt="" />
-      <div class="foot">
+  <div class="body">
+  
+    
+    <div class="container">
+   
+   
+      <div class="snow"></div>
+      <div class="snow"></div>
+      <div class="snow"></div>
+      <div class="snow"></div>
+      <div class="snow"></div>
+      <div class="snow"></div>
+      <div class="snow"></div>
+      <div class="snow"></div>
+      <div class="snow"></div>
+      <div class="snow"></div>
+      <div class="headsheet">
         <el-row>
-          <el-col :span="8">
-            <div class="up" @click="pre">上一页</div>
+          <el-col :span="4">
+            <div class="name">{{ cartoondata.comic.name }}</div>
           </el-col>
-          <el-col :span="8">
-            <div class="chapter">当前第{{ cartoondata.start + 1 }}页</div>
+          <el-col :span="4">
+            <div class="current">
+              本章一共{{ cartoondata.imagelist.length }}页
+            </div>
           </el-col>
-          <el-col :span="8">
-            <div class="down" @click="next">下一页</div>
+          <el-col :span="4">
+            <div class="chapter">
+              {{ $route.params.title }}
+            </div>
+          </el-col>
+          <el-col :span="12">
+            <el-row>
+              <el-col :span="10">
+                <div class="line">阅读顺序：从左至右</div>
+              </el-col>
+              <el-col :span="5">
+                <div class="up" @click="pre">上一页</div>
+              </el-col>
+              <el-col :span="4">
+                <div class="chapter">当前第{{ cartoondata.start + 1 }}页</div>
+              </el-col>
+              <el-col :span="5">
+                <div class="down" @click="next">下一页</div>
+              </el-col>
+            </el-row>
           </el-col>
         </el-row>
       </div>
+      <div
+        class="backpicture"
+        v-for="item in cartoondata.imagelist.slice(
+          cartoondata.start,
+          cartoondata.start + 1
+        )"
+        :key="item"
+      >
+      
+        <img :src="item.img50" alt="" />
+        <div class="foot">
+          <el-row>
+            <el-col :span="8">
+              <div class="up" @click="pre">上一页</div>
+            </el-col>
+            <el-col :span="8">
+              <div class="chapter">当前第{{ cartoondata.start + 1 }}页</div>
+            </el-col>
+            <el-col :span="8">
+              <div class="down" @click="next">下一页</div>
+            </el-col>
+          </el-row>
+        </div>
+      </div>
+      
     </div>
+         <el-affix position="bottom" target=".body" :offset="800">
+    <el-button type="primary">
+       <div class="catagory topnav_box" ref="box" @click="getposition">
+      <div class="title">
+        全部章节
+      </div>
+      <ul>
+        <li  v-for="item in cartoondata.chapterlist" :key="item.chapter_id" @click="tochapter(item.chapter_id, item.name,item.type)">
+           <span class="vip">{{item.type==0?'':'V'}}</span>
+            {{ item.name }}
+        </li>
+      </ul>
+      
+    </div>
+    </el-button>
+  </el-affix>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, ref } from "vue";
+import { defineComponent, reactive, ref, watch } from "vue";
 import zgaxios from "@/tools/zgaxios";
 import { useStore } from "vuex";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElLoading } from "element-plus";
+import { useRouter } from 'vue-router'
 export default defineComponent({
   props: ["id", "chapterid", "title"],
   setup(props) {
+     const router = useRouter()
     const { state } = useStore();
     let cartoondata = reactive({
       chapterid: "",
@@ -88,20 +113,52 @@ export default defineComponent({
       pageSize: 1,
       currentPage: 1
     });
+    let box = ref();
 
+    
+   
+  
+    //获取当前目录
+    let getcotagory = async () => {
+      let { data } = await zgaxios(
+        "GET",
+        `/yyq/comic/detail_static_new?comicid=${props.id}`
+      );
+      cartoondata.chapterlist = data.data.returnData.chapter_list;
+      console.log(cartoondata.chapterlist);
+    };
+    getcotagory();
+    //进入指定章节
+     let tochapter = (id,name,type) => {
+        if (type == 3) {
+        ElMessage({
+          showClose: true,
+          message: '您访问的是vip章节哦',
+          type: 'warning',
+        })
+        return
+      }
+       let loading = ElLoading.service({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)"
+      });
+      router.push(`/cartoon/detail/${props.id}/${id}/${name}`)
+      loading.close()
+    };
     //获取当前漫画
     let getcomic = async () => {
       let { data } = await zgaxios(
         "GET",
         `/yyq/comic/detail_static_new?comicid=${props.id}`
       );
-      console.log(data.data.returnData.comic);
+      // console.log(data.data.returnData.comic);
       cartoondata.comic = data.data.returnData.comic;
     };
     getcomic();
     //获取当前章节id
     let getchapterid = () => {
-      cartoondata.chapterlist = state.chapterlist;
       cartoondata.chapterid = props.chapterid;
     };
     getchapterid();
@@ -126,6 +183,7 @@ export default defineComponent({
         return;
       }
       cartoondata.start--;
+      
     };
     //下一页
     let next = () => {
@@ -137,10 +195,16 @@ export default defineComponent({
         });
         return;
       }
+       
       cartoondata.start++;
+      
+
     };
 
     return {
+      box,
+      tochapter,
+      getcotagory,
       getcartoon,
       reactive,
       cartoondata,
@@ -154,6 +218,26 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+.el-button--primary{
+  background-color: transparent;
+  border: transparent;
+}
+.topnav_box::-webkit-scrollbar    //滚动条整体部分
+
+ {
+  width: 0px;
+	height: 0px;
+	background-color: transparent;
+}
+
+
+
+.leftnav {
+  width: 300px;
+  height: 1000px;
+  background: red;
+  z-index: 99;
+}
 .container {
   height: auto;
   background: black;
@@ -318,6 +402,53 @@ export default defineComponent({
     }
   }
 }
+.catagory {
+  width: 300px;
+  border-radius: 20px;
+  height:400px;
+  margin-top: 10%;
+  // background: rgb(36, 31, 31);
+  position: absolute;
+  top: 35%;
+  left: 5%;
+  z-index: 100;
+  text-align: center;
+  overflow: scroll;
+  .title {
+    height: 50px;
+    line-height: 50px;
+    color: rgb(211, 223, 228);
+     font: 25px "楷体";
+    
+  }
+  ul {
+    list-style: none;
+    display: block;
+    li {
+      float: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: rgb(248, 242, 242);
+      font: 10px "宋体";
+      border-bottom: 1px dotted #999;
+      width: 25%;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+      cursor: pointer;
+      padding: 5px 14px 10px 0;
+      text-shadow: 0 0 10px azure, 0 0 20px purple;
+      filter: saturate(60%);
+      animation: flicker 4s linear infinite;
+}
+    }
+    .vip{
+       color: red;
+       font-size: 10px;
+    }
+  
+}
 .headsheet {
   width: 100%;
   margin: 0 auto;
@@ -367,7 +498,6 @@ export default defineComponent({
 }
 .backpicture {
   width: 800px;
-  height: 1422px;
   margin: 0 auto;
 
   img {
@@ -377,6 +507,7 @@ export default defineComponent({
 }
 .foot {
   width: 100%;
+  height: 100px;
   margin-top: 20px;
   .up {
     color: white;
@@ -400,6 +531,28 @@ export default defineComponent({
     font-size: 15px;
     cursor: pointer;
     margin-left: 30%;
+  }
+}
+@keyframes flicker {
+  0% {
+    color: white;
+    filter: saturate(100%) hue-rotate(0deg);
+  }
+  25% {
+    color: blue;
+    filter: saturate(100%) hue-rotate(0deg);
+  }
+  50% {
+    color: rgb(23, 226, 84);
+    filter: saturate(200%) hue-rotate(20deg);
+  }
+  75% {
+    color: rgb(200, 219, 23);
+    filter: saturate(200%) hue-rotate(20deg);
+  }
+  100% {
+    color: rgb(227, 233, 233);
+    filter: saturate(200%) hue-rotate(20deg);
   }
 }
 </style>
