@@ -29,7 +29,7 @@
           </div>
         </el-col>
         <!-- 完结榜部分 -->
-        <el-col :span="8">
+        <el-col  :span="8">
           <div class="grid-content bg-purple">
             <h2 class="wanjiebang h2bang">完结榜</h2>
             <!-- 分割线 -->
@@ -42,11 +42,11 @@
                 {{ item.title }}
               </div>
             </div>
-            <!-- 加载更多按钮 -->
+          </div>
+                <!-- 加载更多按钮 -->
             <el-button plain class="moreBtn" @click="toRanking"
               >加载更多</el-button
             >
-          </div>
         </el-col>
       </el-row>
     </div>
@@ -94,20 +94,35 @@
                 {{ item.title }}
               </div>
             </div>
-            <!-- 加载更多按钮 -->
-            <el-button plain class="moreBtn">加载更多</el-button>
+
           </div>
+                      <!-- 加载更多按钮 -->
+            <el-button plain class="moreBtn">加载更多</el-button>
         </el-col>
       </el-row>
     </div>
     <!-- 第三段********************************************************************* -->
     <div class="thirdCo">
       <h2 class="h2ticket h2bang">大家都在看</h2>
-      
-      <el-collapse v-model="activeNames" @change="handleChange" >
-        <el-collapse-item  v-for="item in ticketList" :key="item._id" :title="item.title" :name="item._id">
-          <div>
-         <img :src="'https://statics.zhuishushenqi.com' + item.cover"   />
+
+      <el-collapse v-model="activeNames" @change="handleChange" accordion>
+        <el-collapse-item
+          class="chouti"
+          v-for="(item,index) in ticketList"
+          :key="item._id"
+          :title="item.title"
+          :name="index"
+        >
+         <template #title>
+      <i class="iconfont icon-redu"></i>{{item.title}}
+    </template>
+          <div >
+            <img :src="'https://statics.zhuishushenqi.com' + item.cover" />
+            <span class="zuozhe">作者：{{ item.author }}</span>
+            <span class="minorCate">类型：{{ item.minorCate }}</span>
+            <span class="latelyFollower">近期阅读量：{{ item.latelyFollower }}</span>
+            <div class="shortIntro">{{ item.shortIntro }}</div>
+             <el-button class="clickYuedu" @click="toDetail(item)">点击阅读</el-button>
           </div>
         </el-collapse-item>
       </el-collapse>
@@ -126,7 +141,7 @@ import {
   EndListsUrl,
   PopularityListsUrl,
   PraiseListsUrl,
-  TicketListUrl
+  TicketListUrl,
 } from "@/tools/api";
 
 export default defineComponent({
@@ -140,7 +155,8 @@ export default defineComponent({
       endList: [],
       popularityList: [],
       praiseList: [],
-      ticketList:[]
+      ticketList: [],
+      activeNames:0
       // firstPraisePic: [],
     });
     //获取点击榜API
@@ -193,7 +209,7 @@ export default defineComponent({
     };
     getPraiseListsUrlList();
 
-        //获取点击榜API
+    //获取点击榜API
     const getTicketListsUrlList = async () => {
       let { data } = await zgaxios("GET", `${TicketListUrl}`);
       state1.ticketList = data.ranking.books;
@@ -298,6 +314,30 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+@font-face {
+  font-family: "iconfont"; /* Project id 2617959 */
+  src: url("//at.alicdn.com/t/font_2617959_gr38gyksm8h.woff2?t=1623979995392")
+      format("woff2"),
+    url("//at.alicdn.com/t/font_2617959_gr38gyksm8h.woff?t=1623979995392")
+      format("woff"),
+    url("//at.alicdn.com/t/font_2617959_gr38gyksm8h.ttf?t=1623979995392")
+      format("truetype");
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: red;
+  margin-left: 0.3rem;
+}
+
+.icon-redu:before {
+  content: "\e61a";
+}
+
 .container {
   background-color: #f5f5f5;
 }
@@ -373,10 +413,15 @@ export default defineComponent({
   color: orange;
   cursor: pointer;
 }
-.moreBtn {
-  width: 5rem;
-  margin: 0 center;
+
+
+.grid-content {
+  position: relative;
 }
+ .moreBtn {
+  width:5rem;
+  top: 800px;
+ }
 .secondCo {
   background-color: white;
   width: 18rem;
@@ -389,19 +434,57 @@ export default defineComponent({
   width: 18rem;
   margin: 1rem Auto;
 }
-.h2ticket{
+.h2ticket {
   padding-top: 0.3rem;
 }
-/deep/.el-collapse-item__header{
-
+/deep/.el-collapse-item__header {
   color: #333;
   font-size: 0.3rem;
   margin-left: 0.3rem;
 }
+
 /deep/.el-collapse-item__header:hover {
   color: orange;
   cursor: pointer;
 }
+
+.chouti {
+  position: relative;
+ 
+}
+.zuozhe {
+  position: absolute;
+  left: 3.6rem;
+  font-size: 0.35rem;
+}
+.minorCate {
+  position: absolute;
+  left: 3.6rem;
+  top: 2rem;
+  font-size: 0.28rem;
+  color: rgb(172, 172, 172);
+}
+.latelyFollower {
+  position: absolute;
+  top: 2.5rem;
+  left: 3.6rem;
+  font-size: 0.28rem;
+  color: rgb(172, 172, 172);
+}
+.shortIntro {
+  position: absolute;
+  top: 3.2rem;
+  left: 3.6rem;
+  font-size: 0.25rem;
+  text-indent: 2em;
+  color: rgb(172, 172, 172);
+}
+.clickYuedu{
+  position: absolute;
+  left: 3.6rem;
+  top: 4.8rem;
+}
+
 </style>
 
 
