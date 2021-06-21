@@ -1,7 +1,5 @@
 <template>
-  <el-container   v-loading.fullscreen.lock="fullscreenLoading"
-    element-loading-text="目录加载中"
-    element-loading-background="rgba(0, 0, 0, 0.85)">
+  <el-container v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="目录加载中" element-loading-background="rgba(0, 0, 0, 0.85)">
     <el-main>
       <div class="content">
         <div class="CountHead">
@@ -30,75 +28,73 @@
         </el-row>
       </div>
       <div class="footer">
-        <el-pagination
-          layout="prev, pager, next"
-          :total="totalList.length"
-          page-size="100"
-          hide-on-single-page
-          @current-change="sizechange"
-        ></el-pagination>
+        <el-pagination layout="prev, pager, next" :total="totalList.length" page-size="100" hide-on-single-page @current-change="sizechange"></el-pagination>
       </div>
     </el-main>
   </el-container>
 </template>
 <script lang='ts'>
-import Pagination from "../components/Pagination/index.vue";
-import { defineComponent, toRefs, ref, reactive, computed } from "vue";
-import { detailUrl, detailList } from "../tools/api";
+import Pagination from '../components/Pagination/index.vue'
+import { defineComponent, toRefs, ref, reactive, computed } from 'vue'
+import { detailUrl, detailList } from '../tools/api'
 import { useStore } from 'vuex'
-import zgaxios from "../tools/zgaxios";
+import zgaxios from '../tools/zgaxios'
 import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
 import { ElMessage, ElLoading } from 'element-plus'
-var JSONbigString = require('json-bigint')({"storeAsString": true});
+var JSONbigString = require('json-bigint')({ storeAsString: true })
 export default defineComponent({
   setup(props, context) {
     const store = useStore()
-    const { state,  commit } = useStore()
-    let fullscreenLoading = ref(true);
+    const { state, commit } = useStore()
+    let fullscreenLoading = ref(true)
     const router = useRouter()
     const text: any = reactive({
       list: [],
-      count: [],//根据page来获取
-      totalList:[],//总数据
-      categoryName:state.bookDetails.categoryName,//类名
-      chapterStatus:state.bookDetails.update.chapterStatus,//书本的状态
-      bookId:state.bookDetails.bookId,
-    });
-    const staduce = computed(()=>{
-      return text.chapterStatus=='END'? '完本':'连载'
+      count: [], //根据page来获取
+      totalList: [], //总数据
+      categoryName: state.bookDetails.categoryName, //类名
+      chapterStatus: state.bookDetails.update.chapterStatus, //书本的状态
+      bookId: state.bookDetails.bookId,
+    })
+    const staduce = computed(() => {
+      return text.chapterStatus == 'END' ? '完本' : '连载'
     })
     const getcatalogue = async () => {
-      
-      let {data}  = await axios(`http://yuenov.com/app/open/api/chapter/getByBookId?bookId=${text.bookId}`,{
-         // `transformResponse` 在传递给 then/catch 前，允许修改响应数据
-        transformResponse: [function (data) {
-          // 对 data 进行任意转换处理
-          return JSONbigString.parse(data);
-        }],
-      });
+      let { data } = await axios(
+        `http://yuenov.com/app/open/api/chapter/getByBookId?bookId=${text.bookId}`,
+        {
+          // `transformResponse` 在传递给 then/catch 前，允许修改响应数据
+          transformResponse: [
+            function (data) {
+              // 对 data 进行任意转换处理
+              return JSONbigString.parse(data)
+            },
+          ],
+        }
+      )
       if (data.result.code == 0) {
         text.list = data.data
-        text.totalList = data.data.chapters;
-        text.count = text.totalList.slice(0,99)
+        text.totalList = data.data.chapters
+        text.count = text.totalList.slice(0, 99)
         fullscreenLoading.value = false
         addList()
-      }else if(data.result.code == 1009){
-          fullscreenLoading.value = false
-          ElMessage.error('请稍候重新加载页面')
+      } else if (data.result.code == 1009) {
+        fullscreenLoading.value = false
+        ElMessage.error('请稍候重新加载页面')
       }
-    };
-    getcatalogue();
-    function addList(){
-      store.commit('pushList',text.totalList )
     }
-    const sizechange = function(page) {
-      let first = (page-1)*100
-      let last = page*100
-      text.count = text.totalList.slice(first,last)
-    };
-    function goToChap(id){
-      store.commit('pushChapterId',id)
+    getcatalogue()
+    function addList() {
+      store.commit('pushList', text.totalList)
+    }
+    const sizechange = function (page) {
+      let first = (page - 1) * 99
+      let last = page * 99y
+      text.count = text.totalList.slice(first, last)
+    }
+    function goToChap(id) {
+      store.commit('pushChapterId', id)
       router.push('/chapter')
     }
     return {
@@ -107,9 +103,9 @@ export default defineComponent({
       staduce,
       fullscreenLoading,
       goToChap,
-    };
-  }
-});
+    }
+  },
+})
 </script>
 <style scoped lang="less">
 .footer {
