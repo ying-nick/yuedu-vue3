@@ -90,7 +90,7 @@ export default defineComponent({
     }
     const sizechange = function (page) {
       let first = (page - 1) * 99
-      let last = page * 99y
+      let last = page * 99
       text.count = text.totalList.slice(first, last)
     }
     function goToChap(id) {
